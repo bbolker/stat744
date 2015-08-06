@@ -2,11 +2,11 @@ Materials for a course in parameter estimation for (nonlinear) stochastic dynami
 
 Everything below is tentative/subject to modification.
 
-**Schedule**: Monday/Thursday 14:30-16:00, Hamilton Hall 207.
+**Schedule**: Monday/Thursday 14:30-16:00, Hamilton Hall 207.  (This will certainly conflict with some schedules; priority for rescheduling will be given in the order: course organizer > enrolled students > postdocs and unenrolled students > other faculty.)
 
-**Course goal/plan**: broad practical survey of methods for estimating parameters from nonlinear stochastic dynamical systems, focused on ecological/evolutionary/epidemiological examples. Most classes will consist of student presentations/worked exercises on specific methods.
+**Course goal/plan**: A broad, practically oriented survey of methods for estimating parameters from (nonlinear stochastic) dynamical systems, focused on ecological/evolutionary/epidemiological examples. Most classes will consist of student presentations/worked exercises on specific methods.
 
-**Background**: fluency in statistical computation in (preferably) R or another programming language; basic understanding of maximum likelihood/Bayesian estimation methods (e.g., up through chapter 6-7 in Bolker *Ecological Models and Data*).
+**Background**: Fluency in statistical computation in (preferably) R or another programming language; basic understanding of maximum likelihood/Bayesian estimation methods (e.g., chapters 6-7 in Bolker [Ecological Models and Data](http://ms.mcmaster.ca/~bolker/emdbook/)).
 
 Topics
 ==========
@@ -34,6 +34,8 @@ Software tools
 Sources
 ===========
 
-* Casella and Robert
-* Doucet *et al.*
+(as with this entire document, these are initial/tentative ideas)
+
+* Robert and Casella (*MC Statistical Methods* and/or *MC methods with R*)
+* Doucet *et al.* (*Intro to sequential MC*)
 * Bolker *Ecological Models and Data* chapter 11
