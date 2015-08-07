@@ -25,11 +25,12 @@ Topics
 Software tools
 ============
 
-* `BUGS` and derivatives
-* Stan
-* NIMBLE
-* adaptive differentiation/Laplace approximation tools (AD Model Builder, Template Model Builder)
-* `pomp`
+* [BUGS](http://www.mrc-bsu.cam.ac.uk/software/bugs/) and derivatives ([JAGS](http://mcmc-jags.sourceforge.net/) etc.)
+* [Stan](mc-stan.org) (or see [here!](https://www.youtube.com/watch?v=pWow8Qe1snQ))
+* [NIMBLE](http://r-nimble.org/)
+* adaptive differentiation/Laplace approximation tools ([AD Model Builder](http://www.admb-project.org/), [Template Model Builder](https://github.com/kaskr/adcomp))
+* [pomp](http://kingaa.github.io/pomp/)
+
 
 Sources
 ===========
