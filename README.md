@@ -41,4 +41,4 @@ Sources
 
 * Robert and Casella (*MC Statistical Methods* and/or *MC methods with R*)
 * Doucet *et al.* (*Intro to sequential MC*)
-* Bolker *Ecological Models and Data* [chapter 11](materials/Bolker_ch11.pdf)
+* Bolker *Ecological Models and Data* [chapter 11](materials/Bolker_ch11.pdf) (click on `Raw` to download/save ...)
