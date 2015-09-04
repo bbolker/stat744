@@ -2,7 +2,9 @@ Materials for a course in parameter estimation for (nonlinear) stochastic dynami
 
 Everything below is tentative/subject to modification.
 
-**Schedule**: Monday/Thursday 14:30-16:00, Hamilton Hall 207.  (This will certainly conflict with some schedules; priority for rescheduling will be given in the order: course organizer > enrolled students > postdocs and unenrolled students > other faculty.)
+**Schedule**: Monday/Thursday 14:30-16:00, Hamilton Hall 207. **The first class meeting will be on Thursday 14 September** (sorry for Mosaic-assisted confusion!)  (This will certainly conflict with some schedules; priority for rescheduling will be given in the order: course organizer > enrolled students > postdocs and unenrolled students > other faculty.)  
+
+**Registration**: if you are having trouble registering (the course is capped at 18 students), please contact me (`bolker@mcmaster.ca`) and Cc: `graduate@math.mcmaster.ca`.
 
 **Course goal/plan**: A broad, practically oriented survey of methods for estimating parameters from (nonlinear stochastic) dynamical systems, focused on ecological/evolutionary/epidemiological examples. Most classes will consist of student presentations/worked exercises on specific methods.
 
@@ -39,4 +41,4 @@ Sources
 
 * Robert and Casella (*MC Statistical Methods* and/or *MC methods with R*)
 * Doucet *et al.* (*Intro to sequential MC*)
-* Bolker *Ecological Models and Data* chapter 11
+* Bolker *Ecological Models and Data* [chapter 11](materials/Bolker_ch11.pdf)
