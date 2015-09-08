@@ -2,7 +2,7 @@ Materials for a course in parameter estimation for (nonlinear) stochastic dynami
 
 Everything below is tentative/subject to modification.
 
-**Schedule**: Monday/Thursday 14:30-16:00, Hamilton Hall 207. **The first class meeting will be on Thursday 14 September** (sorry for Mosaic-assisted confusion!)  (This will certainly conflict with some schedules; priority for rescheduling will be given in the order: course organizer > enrolled students > postdocs and unenrolled students > other faculty.)  
+**Schedule**: Mondays (KTH 107) and Thursdays (BSB 122) 14:30-16:00. **The first class meeting will be on Monday 14 September**.
 
 **Registration**: if you are having trouble registering (the course is capped at 18 students), please contact me (`bolker@mcmaster.ca`) and Cc: `graduate@math.mcmaster.ca`.
 
