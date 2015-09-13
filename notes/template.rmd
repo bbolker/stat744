@@ -1,0 +1,18 @@
+---
+title: ""
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::tufte_handout
+bibliography: nonlindyn.bib
+header-includes:
+   - \\usepackage[utf8]{inputenc}
+---
+
+# Overview/logistics
+
+* applied focus
+* all class materials at https://github.com/bbolker/stat744
+* class-led, in pairs
+    * Monday: lecture
+	* Thursday: practical exercise
+	

@@ -1,0 +1,46 @@
+---
+title: "Introduction"
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: tufte_handout
+bibliography: ../nonlin.bib
+header-includes:
+   - \usepackage[utf8]{inputenc}
+---
+
+# Overview/logistics
+
+* applied focus
+* all class materials at https://github.com/bbolker/stat744
+* class-led, in pairs
+    * Monday: lecture
+	* Thursday: practical exercise
+* [topics](../topics.md)
+
+# Big picture
+
+* dynamical models
+   * involve both *process* and *observation* error/noise
+   
+-----------------------------------------------------------------------------
+time          process         state          space           model     
+------------  -------------   -----------    ----------      -----------------
+continuous    deterministic   continuous                     ODE 
+
+continuous    stochastic      continuous                     stochastic ODE 
+
+continuous    deterministic,  continuous                     difference equation
+              stochastic
+			   
+discrete	  stochastic      discrete                       Markov process
+			   
+continuous    stochastic      discrete                       continuous-time MP
+ 
+----------------------------------------------------------------------
+
+* nonlinearity
+   * variance doesn't change predictably
+* non-Gaussian 
+   * constrained bounds $\to$ generalized linearity
+   * variances don't add predictably
+   
