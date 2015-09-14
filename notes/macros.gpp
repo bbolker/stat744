@@ -1,0 +1,2 @@
+<#define fixme|{\\color{red} \\emph{#1} \\color{black}}>
+<#define Rpkg|\\href{https://cran.r-project.org/web/packages/#1/index.html}{#1}>

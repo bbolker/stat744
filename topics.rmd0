@@ -1,0 +1,22 @@
+---
+title: "Topics"
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::tufte_handout
+bibliography: nonlin.bib
+header-includes:
+   - \\usepackage[utf8]{inputenc}
+---
+
+* classical time-series (ARIMA) models
+* trajectory/gradient matching [@Ellner+2002;@raue_lessons_2013]
+* Kalman filtering (basic & ensemble) [@Schnute1994]
+* Integrated Nested Laplace Approximation ([INLA](http://www.r-inla.org))
+* particle filtering: <#Rpkg pomp> [@Ionides+2006]
+* MCMC: JAGS/BUGS, [Stan](http://mc-stan.org)
+* Approximate Bayesian computation
+* synthetic likelihood (<#Rpkg synlik>; <#Rpkg pomp> probe-matching)
+* [NIMBLE](http://r-nimble.org)
+* automatic differentiation: [Template Model Builder](https://github.com/kaskr/adcomp) (ADMB?)
+* spatiotemporal models
+* data cloning?

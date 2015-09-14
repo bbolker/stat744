@@ -5,7 +5,7 @@ date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
 output: tufte_handout
 bibliography: ../nonlin.bib
 header-includes:
-   - \usepackage[utf8]{inputenc}
+   - \\usepackage[utf8]{inputenc}
 ---
 
 # Overview/logistics
@@ -39,8 +39,23 @@ continuous    stochastic      discrete                       continuous-time MP
 ----------------------------------------------------------------------
 
 * nonlinearity
-   * variance doesn't change predictably
+   * variance changes unpredictably
 * non-Gaussian 
    * constrained bounds $\to$ generalized linearity
    * variances don't add predictably
-   
+
+# Geometry: process-error-only vs observation-error-only
+
+# Simulation
+
+* important for testing, calibration, simulation-based methods
+* need `for` loops, can rarely vectorize
+* `deSolve` package for ODEs
+* stochastic ODEs: code your own [Euler-Maryuma](https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method) (easy) or [Milstein](https://en.wikipedia.org/wiki/Milstein_method), or use something from Darren Wilkinson's <#Rpkg smfsb> package [`library("sos"); findFn("maruyama")`]
+* discrete time: standard `r*` functions (`rnorm`, `rpois`, `rbinom`, `rnbinom` ...)
+* speed: implement in C++ (<#Rpkg Rcpp>; [NIMBLE](http://r-nimble.org)) ...
+
+# Methods overview
+
+* MCMC/Gibbs sampling
+* Laplace approximation
