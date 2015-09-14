@@ -1,1 +1,11 @@
 *~
+*.aux
+*.log
+*.bbl
+*.toc
+*.snm
+*.vrb
+*.out
+*.blg
+*.tex
+*.nav

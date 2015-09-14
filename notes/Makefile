@@ -1,3 +1,6 @@
+%.pdf: %.Rnw
+	echo "library(knitr); knit2pdf(\"$*.rmd\")" | R --slave
+
 %.rmd: %.rmd0 macros.gpp
 	gpp -H --include macros.gpp $*.rmd0  > $*.rmd
 

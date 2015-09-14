@@ -1,0 +1,1085 @@
+\documentclass[english]{beamer}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+\usepackage{natbib}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{bm}
+%\usepackage{multicolumn}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\let\oldemph=\emph
+\renewcommand{\emph}[1]{{\color{red} {\textbf{#1}}}}
+\newcommand{\pkglink}[1]{\href{http://cran.r-project.org/web/packages/#1}{\nolinkurl{#1}}}
+\newcommand{\rflink}[1]{\href{https://r-forge.r-project.org/projects/#1/}{\nolinkurl{#1}}}
+\newcommand{\fnlink}[2]{\href{http://stat.ethz.ch/R-manual/R-patched/library/#1/html/#2.html}{\nolinkurl{#1:#2}}}
+\newcommand{\code}[1]{{\tt #1}}
+\newcommand{\ssqobs}{\sigma^2_{\mbox{\small obs}}}
+\newcommand{\ssqproc}{\sigma^2_{\mbox{\small proc}}}
+\newcommand{\obs}[1]{#1_{\text{\small obs}}}
+\newcommand{\obst}[1]{#1_{\text{\small obs}}(t)}
+\newcommand{\obstm}[1]{#1_{\text{\small obs}}(t-1)}
+
+\bibliographystyle{notitle}
+
+
+\usetheme{Berlin}
+\setbeamercovered{transparent}
+
+\usepackage{babel}
+\begin{document}
+
+\makeatletter
+\def\newblock{\beamer@newblock}
+\makeatother 
+
+
+% http://tex.stackexchange.com/questions/38015/beamer-best-way-to-span-long-enumerations-on-different-frames
+\makeatletter
+\newenvironment{cenumerate}{%
+  \enumerate
+  \setcounter{\@enumctr}{\csname saved@\@enumctr\endcsname}%
+}{%
+  \expandafter\xdef\csname saved@\@enumctr\endcsname{\the\value{\@enumctr}}%
+  \endenumerate
+}
+\newenvironment{cenumerate*}{%
+  \enumerate
+}{%
+  \expandafter\xdef\csname saved@\@enumctr\endcsname{\the\value{\@enumctr}}%
+  \endenumerate
+}
+\makeatother
+<<opts,echo=FALSE>>=
+require("knitr")
+knit_hooks$set(crop=hook_pdfcrop)
+opts_chunk$set(fig.width=4,fig.height=4,
+               out.width="0.6\\textwidth",
+               fig.align="center",
+               tidy=FALSE)
+@
+<<libs,echo=FALSE,message=FALSE>>=
+library(reshape)
+library(lattice)
+## library(lme4)
+## library(plotrix)
+library(ggplot2)
+theme_set(theme_bw())
+source("labfuns.R")
+@ 
+
+\title[Stochastic-dynamic estimation]{Estimation of parameters \\ for stochastic dynamic models}
+\author{Ben~Bolker}
+\institute{McMaster University \\
+Departments of Mathematics \& Statistics and Biology}
+
+\date{20 June 2013}
+% \pgfdeclareimage[height=0.5cm]{uflogo}{letterhdwm}
+% \logo{\pgfuseimage{uflogo}}
+\AtBeginSection[]{
+  \frame<beamer>{ 
+     \frametitle{Outline}   
+     \tableofcontents[currentsection] 
+   }
+ }
+
+\begin{frame}
+\titlepage
+\end{frame}
+% \beamerdefaultoverlayspecification{<+->}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents{}
+\end{frame}
+
+\section{Philosophy}
+\subsection{ }
+
+\begin{frame}
+\frametitle{Modeling}
+
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Typical stats} &
+\textbf{Typical math} \\
+\hline
+stochastic & deterministic \\
+static & dynamic \\
+phenomenological & mechanistic
+\end{tabular}
+\end{center}
+Standard time-series models (ARIMA, spectral/wavelet analyses) are
+(mostly) phenomenological
+\end{frame}
+
+\begin{frame}
+\frametitle{Process and measurement error}
+
+\begin{itemize}
+\item{For stochastic models need to define both a \emph{process model} and an \emph{observation model} (= measurement model)
+\begin{description}
+\item[Process model]{$Y(t+1) \sim F(Y(t))$}
+\item[Measurement model]{$\obst{Y} \sim Y(t)$}
+\end{description}}
+\pause
+\item{Only \emph{process} error affects the
+future dynamics of the process (usually)}
+\pause
+\item{Might decompose process model into a deterministic model for the expectation and (additive?) noise around the expectation: e.g. $Y(t)=\mu + \epsilon$, $Y(t) \sim \text{Poisson}(\exp(\eta))$}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Consequences}
+\begin{itemize}
+\item Process error induces dynamic \emph{changes in variance} 
+\pause
+\item Process+observation error induce \emph{correlations}
+between subsequent observations
+\pause
+\item Observation at next time step depends
+on \emph{unobserved} value at current time step
+\pause
+\item Simple statistical methods \\
+(i.e. uncorrelated, equal variance) \\
+are incorrect
+\end{itemize}
+\end{frame}
+
+<<runsim2,echo=FALSE>>=
+tvec  <-  1:200
+a.true <- 5
+b.true <- 0.05 ## 0.01
+x0  <-  rnorm(200,mean=a.true+b.true*tvec,sd=2)
+x  <-  x0[-200]
+y  <-  x0[-1]
+lm.ols  <-  lm(x0~tvec)
+lm1  <-  lm(y~x)
+lm2  <-  lm(x~y)
+tmpf <- function(p) {
+  a <- p[1]
+  b <- p[2]
+  sum((y-b*x-a)^2/(b^2+1))
+}
+O1  <-  optim(fn=tmpf,par=c(1,1))
+a1  <-  arima(x0,c(1,0,0))  ## what was this for??
+@ 
+
+\begin{frame}
+\frametitle{Linear example}
+<<procerr1,echo=FALSE,fig.height=4,fig.width=8,out.width="1.0\\textwidth",crop=TRUE>>=
+op <- par(pty="s",mfrow=c(1,2),cex=1.5,mgp=c(2.5,1,0),
+  mar=c(4,4,2,1)+0.1,las=1,lwd=2,bty="l")
+plot(x0,xlab="Time",ylab="N(t)",type="l")
+abline(lm.ols,lwd=2)
+plot(x,y,
+     xlab="N(t)",ylab="N(t+1)",col="gray")
+xvec  <-  seq(floor(min(x)),ceiling(max(x)),length=100)
+matlines(xvec,predict(lm1,interval="prediction",
+                      newdata=data.frame(x=xvec)),
+         col=1,lty=c(1,2,2))
+invisible(require(ellipse,quietly=TRUE))
+cov1  <-  cov(cbind(x,y))
+lines(ellipse(cov1,centre=c(mean(x),mean(y))),lty=2)
+## calculate principal axis
+e1  <-  eigen(cov1)$values[1]
+rmaslope  <-  sqrt(coef(lm1)[2]*coef(lm2)[2])
+## y = a+e1*x
+##abline(a=mean(y)-e1*mean(x),b=e1)
+##abline(a=mean(y)-rmaslope*mean(x),b=rmaslope,col=2)
+abline(a=O1$par[1],b=O1$par[2],lty=2)
+par(xpd=NA)
+legend(2,22,c("process error","observation error"),
+       lty=1:2,bty="n",cex=0.5)
+par(xpd=FALSE)
+par(op)
+@ 
+How should we interpret this single realization?
+
+\end{frame}
+<<linsim,echo=FALSE>>=
+## linear simulation with process/observation error
+linsim <- function(nt=20,N0=2,dN=1,sd_process=sqrt(2),
+  sd_obs=sqrt(2)) {
+  Nobs <- numeric(nt)
+  N_cur <- N0
+  Nobs[1] <- N_cur+rnorm(1,sd=sd_obs)
+  for (i in 2:nt) {
+    N_cur=N_cur+dN+rnorm(1,sd=sd_process)
+    Nobs[i] <- N_cur+rnorm(1,sd=sd_obs)
+  }
+  Nobs
+}
+@
+
+<<runlinsim,echo=FALSE,cache=TRUE>>=
+## alternative: use plyr::raply()
+set.seed(101)
+linN  <-  linsim()
+nsim <- 1000
+nt <- 20
+Nmat_obsonly  <-  matrix(ncol=nsim,nrow=nt)
+for (j in 1:nsim) {
+  Nmat_obsonly[,j]  <-  linsim(sd_process=0,sd_obs=2)
+}
+env_obs  <-  t(apply(Nmat_obsonly,1,quantile,c(0.025,0.975)))
+Nmat_proconly  <-  matrix(ncol=nsim,nrow=nt)
+for (j in 1:nsim) {
+  Nmat_proconly[,j]  <-  linsim(sd_process=2,sd_obs=0)
+}
+env_proc  <-  t(apply(Nmat_proconly,1,quantile,c(0.025,0.975)))
+Nmat_procobs  <-  matrix(ncol=nsim,nrow=nt)
+for (j in 1:nsim) {
+  Nmat_procobs[,j]  <-  linsim()
+}
+env_procobs  <-  t(apply(Nmat_proconly,1,quantile,c(0.025,0.975)))
+@ 
+
+\section{Stochastic simulation}
+\subsection{Discrete time}
+\begin{frame}
+\frametitle{Linear model}
+\begin{columns}
+\begin{column}{6cm}
+<<echo=FALSE,fig.align='left',out.width="\\textwidth">>=
+par(mgp=c(2.5,0.75,0),las=1,bty="l")
+colvec <- c("red","blue")
+plot(1:nt,linN,ylim=c(-8,35),type="b",xlab="Time",lwd=2,
+     ylab="Population density")
+matlines(1:nt,env_obs,type="l",lty=2,col=colvec[2])
+matlines(1:nt,env_proc,type="l",lty=3,col=colvec[1])
+abline(a=2,b=1,col=adjustcolor("black",alpha=0.5),lwd=2)
+par(xpd=NA)
+text(13,30,"Process only",adj=0,col=colvec[1])
+text(14,22.5,"Observation only",adj=0,col=colvec[2])
+@
+\end{column}
+\begin{column}{6cm}
+\begin{equation*}
+\begin{split}
+N(1) & =  a \\
+N(t+1) & \sim \text{Normal}(N(t)+b,\ssqproc) \\
+\obst{N} & \sim  \text{Normal}(N(t),\ssqobs)
+\end{split}
+\end{equation*}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R code (version 1)}
+<<lincode1>>=
+## set up parameters etc.
+nt <- 20; a <- 6; b <- 1
+sd_proc <- sqrt(2)
+sd_obs <- sqrt(2)
+N <- Nobs <- numeric(nt)
+set.seed(101)  ## for reproducibility
+## actual model
+N[1] <- a
+Nobs[1] <- rnorm(1,N[1],sd_obs)
+for (i in 1:nt) {
+  N[i+1] <- rnorm(1,N[i]+b,sd_proc)
+  Nobs[i+1] <- rnorm(1,N[i+1],sd_proc)
+}
+@
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R code (version 2)}
+<<lincode2,results="hide">>=
+library("deSolve")
+linfun <- function(t,y,parms) {
+  g <- with(as.list(c(y,parms)), {
+     N_new <- rnorm(1,N+b,sd_proc)
+     c(N=N_new,Nobs=rnorm(1,N_new,sd_obs))
+  })
+  list(g,NULL)
+}
+set.seed(101)
+N0 <- c(N=a,Nobs=rnorm(1,a,sd_obs))
+linparms <- c(a=6,b=1,sd_proc=sd_proc,sd_obs=sd_obs)
+ode(N0,1:nt,linfun,linparms,method="iteration")
+@
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R code (version 3)}
+
+For this particular example, we can cheat
+because the process error doesn't really affect
+the future dynamics --- it just accumulates:
+<<lincode3,results="hide">>=
+N_det <- a+b*(0:(nt-1))
+set.seed(101)  ## for reproducibility
+N <- N_det+cumsum(c(0,rnorm(nt-1,0,sd_proc)))
+N_obs <- rnorm(nt,N,sd_obs)
+@
+\end{frame}
+
+<<defdiscsim,cache=TRUE,echo=FALSE>>=
+## discrete pop with process/observation error
+  ## equilibrium of N(t+1)=N*a/(b+N): a/(b+N)=1 or N=a-b
+  ## with detection probability p we get (a-b)*p
+  ## pure process: Poisson variation; p=1, mean=(a-b), var=(a-b)
+  ## pure observation: Binomial variation around (a-b)*p;
+  ## mean = (a-b)*p, var= (a-b)*p*(1-p)
+  ## solve: M,V equal with (a1-b1) = (a2-b2)*p
+  ##                       (a1-b1) = (a2-b2)*p*(1-p)
+  ##                       poismean = (a2-b2)*p
+  ##                       can't do it -- not possible
+  ## have to settle for equal means
+dsim = function(nt=20,N0=(a-b),a=6,b=1,p=1,
+  proc_err=TRUE) {
+  Nobs <- numeric(nt)
+  N_cur <- N0
+  Nobs[1] <- rbinom(1,size=N_cur,prob=p)
+  for (i in 2:nt) {
+    if (proc_err) {
+      N_cur  <-  rpois(1,N_cur*a/(b+N_cur))
+      Nobs[i]  <-  rbinom(1,size=N_cur,prob=p)
+    } else {
+      N_cur  <-  N_cur*a/(b+N_cur)
+      Nobs[i]  <-  rbinom(1,size=floor(N_cur)+rbinom(1,size=1,prob=N_cur-floor(N_cur)),
+            prob=p)
+    }
+  }
+  Nobs
+}
+nt <- 20
+dN <- dsim()
+nsim <- 1000
+nt <- 20
+dNdet <- numeric(20)
+dNdet[1] <- 5
+for (i in 2:20) dNdet[i] <- dNdet[i-1]*6/(dNdet[i-1]+5)
+dNmat_obsonly  <-  matrix(ncol=nsim,nrow=nt)
+for (j in 1:nsim) {
+  dNmat_obsonly[,j]  <-  dsim(proc_err=FALSE,p=5/8,a=9)
+}
+denv_obs  <-  t(apply(dNmat_obsonly,1,quantile,c(0.025,0.975)))
+dNmat_proconly  <-  matrix(ncol=nsim,nrow=nt)
+for (j in 1:nsim) {
+  dNmat_proconly[,j]  <-  dsim(p=1)
+}
+denv_proc  <-  t(apply(dNmat_proconly,1,quantile,c(0.025,0.975)))
+@ 
+\begin{frame}
+\frametitle{Hyperbolic nonlinear model}
+\begin{columns}
+\begin{column}{6cm}
+<<echo=FALSE,fig.align='left',out.width="\\textwidth",crop=TRUE>>=
+par(mgp=c(2.5,0.75,0),las=1,bty="l",xpd=NA)
+colvec <- c("red","blue")
+plot(1:nt,dN,ylim=c(0,12),type="b",xlab="Time",lwd=2,
+     ylab="Population density")
+matlines(1:nt,denv_obs,type="l",lty=2,col=colvec[2])
+matlines(1:nt,denv_proc,type="l",lty=3,col=colvec[1])
+lines(1:nt,dNdet)
+text(13,9,"Process only",adj=0,col=colvec[1])
+text(14,7.2,"Observation only",adj=0,col=colvec[2])
+@
+\end{column}
+\begin{column}{6cm}
+\begin{equation*}
+\begin{split}
+N(1) & =  N_0 \\
+N(t+1) & \sim  \text{Poisson}(aN(t)/(b+N(t))) \\
+\obst{N} & \sim  \mbox{Binomial}(N(t),p)
+\end{split}
+\end{equation*}
+\end{column}
+\end{columns}
+(Equating (1) process-error-only and observation-error-only and \\ (2) deterministic and stochastic version is fairly hard \ldots)
+\end{frame}
+
+\subsection{Continuous time}
+
+\begin{frame}
+\frametitle{Stochastic ODEs}
+\begin{itemize}
+\item continuous-time, continuous-state
+\item ordinary differential equations plus a \emph{Wiener process} \\
+(= derivative of a Brownian motion)
+\item delicate analysis (For biologists: \cite{turelli_random_1977,roughgarden_theory_1995}. For mathematicians: \cite{oksendal_stochastic_2003})
+\item Specialized integration methods
+\item Better for cellular/physiological than population models?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Markov processes}
+\begin{itemize}
+\item continuous-time, discrete-state
+\item specify (limits of) probabilities of transitions per unit time, e.g. $P(N \to N+1)$ in the interval $(t,t+dt)$ is $rN(t) \, dt$
+\item Even harder than SDEs to analyze rigorously \ldots
+\item But computationally straightforward: \emph{Gillespie algorithm} and variations \citep{gillespie_stochastic_2007}: exponentially distributed time between transitions
+\end{itemize}
+\end{frame}
+
+\section{Simple approaches}
+\subsection{Trajectory matching}
+
+\begin{frame}
+\frametitle{Trajectory matching}
+\begin{itemize}
+\item Easiest approach: just simulate the deterministic
+version of the model (i.e., with neither observation
+nor process error) and compare
+\item Because measurement error is (typically)
+independent at each observation, just have to multiply
+probabilities/add log-likelihoods
+\item for Normally distributed, equal-variance error, maximum likelihood estimation is equivalent to OLS fitting
+\item Very common for ODE model fitting, e.g. \cite{GaniLeach2001,vanVeen+2005}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pseudo-code}
+<<traj_pseudo,eval=FALSE>>=
+## deterministic dynamics:
+## function of parameters, possibly including ICs
+determ_fun <- function(determ_params) { ... }
+## objective function (neg. log-likelihood, SSQ, ...)
+## 'params' includes process and observation parameters
+obj_fun <- function(params,data) { 
+  estimate <- determ_fun(params[determ_params]))
+  obj <- fun(estimate,data,params[obs_params])
+  return(obj)
+}
+find_minimum(obj_fun,starting_params,...)
+@
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Real code (using \code{for} loops)}
+<<traj_real,results="hide">>=
+determ_fun <- function(p,nt) {
+  with(as.list(p),a+b*(1:nt))
+}
+obj_fun <- function(p,nt,Nobs) { 
+  estimate <- determ_fun(p[c("a","b")],nt)
+  ## negative log-lik. of Normal 
+  obj <- -sum(dnorm(Nobs,estimate,p["sd"],log=TRUE))
+  return(obj)
+}
+optim(fn=obj_fun,par=c(a=5,b=2,sd=1),nt=20,Nobs=linN)
+@
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Real code (using \code{mle2()})}
+<<traj_real2,results="hide",message=FALSE>>=
+library(bbmle)
+determ_fun <- function(a,b,nt) a+b*(1:nt)
+mle2(Nobs~dnorm(determ_fun(a,b,nt),sd),
+     data=list(Nobs=linN,nt=nt),
+     start=list(a=5,b=2,sd=1),
+     method="Nelder-Mead")
+@
+\code{mle2()} simplifies computation of confidence intervals, likelihood profiles, predicted values, etc..
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Real code (using linear regression, \code{lm()})}
+\begin{columns}
+\begin{column}{6cm}
+<<lin_ggplot2,echo=FALSE,fig.align='left',out.width="\\textwidth">>=
+linDF <- data.frame(Time=1:nt,
+                    Nobs=linN)
+ggplot(linDF,aes(x=Time,y=Nobs))+
+  geom_point()+geom_line()+
+  geom_smooth(method="lm")
+@
+\end{column}
+\begin{column}{6cm}
+<<lmex,results="hide",tidy=FALSE>>=
+linDF <- data.frame(Time=1:nt,
+                    Nobs=linN)
+lm(Nobs~Time,data=linDF)
+@
+\end{column}
+\end{columns}
+\end{frame}
+
+<<procobssim1,echo=FALSE>>=
+## simulate logistic y with process and observation error
+set.seed(1001)
+r  <-  1
+K  <-  10
+t0  <-  5
+n0  <-  1
+tot.t  <-  10
+dt <- 0.5
+sd.proc <-  1
+sd.obs  <-  1
+set.seed(1001)
+tvec  <-  seq(1,tot.t,by=dt)
+n <- length(tvec)
+y  <-  numeric(n)
+ydet <- numeric(n)
+y[1]  <-  n0
+ydet[1]  <-  n0
+e.proc  <-  rnorm(n,mean=0,sd=sd.proc)
+e.obs  <-  rnorm(n,mean=0,sd=sd.obs)
+for (i in 2:n) {
+  ydet[i]  <-  ydet[i-1]+r*ydet[i-1]*(1-ydet[i-1]/K)*dt
+  y[i]  <-  y[i-1]+(r*y[i-1]*(1-y[i-1]/K)+e.proc[i-1])*dt ## process only
+}
+## sd is variance in GROWTH RATE: should translate to
+## sd.proc/4 with delta-t=0.5
+y.procobs  <-  y+e.obs
+y.obs  <-  ydet+e.obs
+X  <-  cbind(ydet,y,y.procobs,y.obs)
+@ 
+
+<<shooting1,echo=FALSE>>=
+t0  <-  1
+## fit to logistic by shooting
+shootfun  <-  function(n0,r,K,sigma) {
+  y.pred  <-  K/(1+(K/n0-1)*exp(-r*(tvec-t0)))
+  -sum(dnorm(y.procobs,y.pred,sd=sigma,log=TRUE))
+}
+m.shoot  <-  mle2(shootfun,start=list(n0=1,r=1,K=10,sigma=1),
+  method="Nelder-Mead")
+@ 
+
+<<shoot0,echo=FALSE>>=
+## calculate diagonal points???
+## find the intersection of (xn,yn)-a*(x+y) and (x,K/(1+(K/n0-1)*exp(r*(x-t0))))
+##  xn + a*D = x
+##  yn - a*D = K/(1+(K/n0-1)*exp(r*(x-t0)))
+## solve for D:
+##  yn - a*D = K/(1+(K/n0-1)*exp(r*(xn+a*D-t0)))
+## transcendental, I'm afraid
+intdist  <-  function(x,y,pars) {
+  tmpf  <-  function(D) { with(as.list(pars),y-D-K/(1+(K/(x+D)-1)*exp(-r*dt)))}
+  D  <-  uniroot(tmpf,c(-10,10))$root
+}
+D  <-  numeric(n-1)
+for (i in 1:(n-1)) {
+  D[i]  <-  intdist(y.procobs[i],y.procobs[i+1],coef(m.shoot))
+}   
+@ 
+
+\begin{frame}
+\frametitle{Logistic model fit}
+<<logist_traj_fig,fig.height=4,fig.width=8,out.width="\\textwidth",crop=TRUE,echo=FALSE>>=
+op = par(mfrow=c(1,2))
+par(cex=1.5,mar=c(4,4,0,1)+0.1,
+  mgp=c(2.5,0.75,0),las=1,bty="l",
+  mfrow=c(1,2))
+## N vs t
+plot(tvec,y.procobs,xlab="Time",ylab="N(t)",ylim=c(0,15))
+with(as.list(coef(m.shoot)),curve(K/(1+(K/n0-1)*exp(-r*(x-t0))),add=TRUE))
+y.pred  <-  with(as.list(coef(m.shoot)),K/(1+(K/n0-1)*exp(-r*(tvec-t0))))
+segments(tvec,y.procobs,tvec,y.pred,lty=2)
+points(tvec,y.procobs,pch=16,col="gray")
+##text(6,4,paste(names(coef(m.shoot)),round(coef(m.shoot),2),sep="=",collapse="\n"))
+## N(t+1) vs N(t)
+## FIXME: not sure this is really an improvement
+## ignore MASS:eqscplot
+plot(y.procobs[-n],y.procobs[-1],xlab="N(t)",ylab="N(t+1)",
+         xlim=c(0,15),ylim=c(0,15))
+with(as.list(coef(m.shoot)),curve(K/(1+(K/x-1)*exp(-r*dt)),add=TRUE))
+segments(y.procobs[-n],y.procobs[-1],y.procobs[-n]+D,y.procobs[-1]-D,lty=2)
+points(y.procobs[-n],y.procobs[-1],pch=16,col="gray")
+par(op)
+@
+\end{frame}
+
+\subsection{Gradient matching}
+
+\begin{frame}
+\frametitle{Gradient matching}
+\begin{itemize}
+\item Next-easiest approach: assume \emph{only} process error (no measurement error)
+\item $N(t+1)$ depends only on $N(t)$ (which we know exactly): \emph{conditional independence}
+\item \emph{One-step-ahead prediction}
+\item Simple for discrete-time models \\
+(we need to specify $N(t+1) \sim N(t)$ anyway)
+\item Somewhat more complicated for continuous-time models
+  \citep{Ellner+2002}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pseudo-code}
+<<grad_pseudo,eval=FALSE>>=
+## deterministic dynamics:
+## function of parameters and previous values
+onestep_fun <- function(determ_params,Nt) { ... }
+## objective function (neg. log-likelihood, SSQ, ...)
+obj_fun <- function(params,data) { 
+  obj <- ... ## numeric vector of length (nt-1)
+  for (i in 1:(nt-1)) {
+     estimate <- onestep_fun(N[i],params[determ_params]))
+     obj[i] <- fun(estimate,N[i+1],params[obs_params])
+  }
+  return(sum(obj))
+}
+find_minimum(obj_fun,starting_params,...)
+@
+\end{frame}
+
+<<onestep0,echo=FALSE>>=
+t0 = 1
+## fit to logistic by one-step-ahead
+stepfun  <-  function(r,K,sigma) {
+  y2  <-  y.procobs[-n]
+  y.pred  <-  K/(1+(K/y2-1)*exp(-r*dt))
+  -sum(dnorm(y.procobs[-1],y.pred,sd=sigma,log=TRUE))
+}
+m.step  <-  mle2(stepfun,start=list(r=1,K=10,sigma=1),method="Nelder-Mead",
+  control=list(parscale=c(r=1,K=10,sigma=1)))
+@ 
+
+
+\begin{frame}
+\frametitle{Logistic growth fit}
+<<onestep,echo=FALSE,fig.width=8,fig.height=4,out.width="\\textwidth",crop=TRUE>>=
+op  <-  par(cex=1.5,mar=c(4,4,0,1)+0.1,
+  mgp=c(2.5,0.75,0),las=1,bty="l",
+  mfrow=c(1,2))
+plot(tvec,y.procobs,pch=16,ylim=c(0,15),
+xlab="time",ylab="N(t)")
+logist  <-  function(x0,t,r=1,K=10) {
+  K/(1+(K/x0-1)*exp(-r*dt))
+}
+y.pred = with(as.list(coef(m.step)),K/(1+(K/y.procobs[-n]-1)*exp(-r*dt)))
+arrows(tvec[-n],y.procobs[-n],tvec[-1],y.pred,length=0.1,angle=20)
+points(tvec[-1],y.pred)
+segments(tvec[-1],y.pred,tvec[-1],y.procobs[-1],lty=2)
+##text(6,4,paste(names(coef(m.step)),round(coef(m.step),2),sep="=",collapse="\n"))
+legend("topleft",c("observed","predicted"),
+       pch=c(16,1))
+##
+plot(y.procobs[-n],y.procobs[-1],xlab="N(t)",ylab="N(t+1)",xlim=c(0,15),ylim=c(0,15))
+with(as.list(coef(m.step)),curve(K/(1+(K/x-1)*exp(-r*dt)),add=TRUE))
+segments(y.procobs[-n],y.pred,y.procobs[-n],y.procobs[-1],lty=2)
+points(y.procobs[-n],y.procobs[-1],pch=16,col="gray")
+par(op)
+@ 
+\end{frame}
+
+\subsection{Comparison}
+\begin{frame}
+\frametitle{Comparison}
+
+How can we use these?
+
+\begin{itemize}
+\item Try both and hope the answers are not 
+importantly different \ldots
+\item Use biological knowledge of whether
+process $\gg$ observation error or vice versa
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Logistic fit comparisons}
+<<lsum,echo=FALSE,warning=FALSE>>=
+efun <- function(method,m,s="sigma") {
+    e <- cbind(method=method,est=coef(m),
+      setNames(as.data.frame(confint(m,quiet=TRUE,method="quad")),
+                             c("lwr","upr")))
+    e$par <- rownames(e)
+    e$par[grepl("^sigma",e$par)] <- s
+    e
+}
+lsum <- rbind(subset(efun("traj",m.shoot,s="sd_obs"),par!="n0"),
+      efun("grad",m.step,s="sd_proc"),
+      data.frame(method="true",est=c(1,10,1,1),
+                 lwr=NA,upr=NA,par=c("r","K","sd_obs","sd_proc")))
+@ 
+<<lsumfig,echo=FALSE,fig.width=8,out.width="\\textwidth",warning=FALSE>>=
+ggplot(lsum,aes(x=par,y=est,colour=method,ymin=lwr,ymax=upr))+
+    geom_pointrange(position=position_dodge(width=0.5))+
+    facet_wrap(~par,nrow=1,scale="free")
+@ 
+\end{frame}
+
+\section{Fancier methods}
+\subsection{SIMEX}
+\begin{frame}
+\frametitle{SIMEX}
+\begin{itemize}
+\item \textbf{SIM}ulation-\textbf{EX}trapolation method
+\item Requires (1) an independent estimate of the observation error; (2) that we can sensibly add \emph{additional} observation error to the data
+\item Slightly easier for Normal errors
+\item Probably most sensible for experimental data?
+\item Examples: \cite{Ellner+2002,MelbourneChesson2006}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Procedure}
+\begin{itemize}
+\item based on estimated observation error, pick a range of increased error values, e.g. 
+tripling the existing observation variance in 4–8 steps
+\item for each error magnitude, generate a data set with that increased error (more stable to inflate a single set of errors)
+\item estimate parameters for each set using gradient matching (i.e. assume $\ssqobs=0$)
+\item fit a linear or quadratic regression model
+for $\text{parameter}=f(\text{total error}$)
+\item extrapolate the fit to zero
+\end{itemize}
+\end{frame}
+
+<<simlogistdata,echo=FALSE>>=
+simlogistdata  <-  function(seed=1001,
+  r=1,K=10,n0=1,t0=1,tot.t=10,dt=0.5,
+  sd.proc=1,sd.obs=1) {
+  if (!is.null(seed)) set.seed(seed)
+  tvec  <-  seq(1,tot.t,by=dt)
+  n <- length(tvec)
+  y  <-  numeric(n)
+  ydet <- numeric(n)
+  y[1]  <-  n0
+  ydet[1]  <-  n0
+  e.proc  <-  rnorm(n,mean=0,sd=sd.proc)
+  e.obs  <-  rnorm(n,mean=0,sd=sd.obs)
+  for (i in 2:n) {
+    ydet[i]  <-  ydet[i-1]+r*ydet[i-1]*(1-ydet[i-1]/K)*dt
+    y[i]  <-  y[i-1]+(r*y[i-1]*(1-y[i-1]/K)+e.proc[i-1])*dt ## process only
+  }
+  y.procobs  <-  y+e.obs
+  y.obs  <-  ydet+e.obs
+  cbind(tvec,y.procobs)
+}
+@ 
+
+<<onestep1,echo=FALSE>>=
+## fit to logistic by one-step-ahead (assume proc. error only)
+stepfun2  <-  function(r,K,sigma,y) {
+  ystart  <-  y[-n]
+  yend  <-  y[-1]
+  y.pred  <-  K/(1+(K/ystart-1)*exp(-r*dt))
+  -sum(dnorm(yend,y.pred,sd=sigma,log=TRUE))
+}
+jagged  <-  FALSE
+newdata  <-  simlogistdata(tot.t=100,sd.proc=2)
+n  <-  nrow(newdata)
+y.procobs  <-  newdata[,2]
+tvec  <-  newdata[,1]
+randvals  <-  rnorm(n,mean=0,sd=1)
+simex0  <-  function(s,...) {
+  y.simex = y.procobs+if (jagged) rnorm(n,mean=0,sd=s) else randvals*s
+  coef(mle2(stepfun2,start=list(r=1,K=10,sigma=1),
+                      data=list(y=y.simex),...))
+}     
+sdvec  <-  seq(0,2,length=10)
+simextab  <-  t(sapply(sdvec,simex0,method="Nelder-Mead"))
+predmat  <-  apply(simextab,1,
+  function(X) {
+    r=X[1]; K=X[2]; n0=y.procobs[1]
+    K/(1+(K/n0-1)*exp(-r*(tvec-t0)))
+  })
+##matplot(predmat,type="b")
+rvec  <-  simextab[,"r"]
+Kvec  <-  simextab[,"K"]
+tsdvec  <-  sqrt(sd.obs^2+sdvec^2)
+tsdvec2a  <-  seq(0,1,length=40)
+tsdvec2b  <-  seq(1,max(tsdvec),length=40)
+q.r = lm(rvec~tsdvec+I(tsdvec^2))
+q.K = lm(Kvec~tsdvec+I(tsdvec^2))
+l.r = lm(rvec~tsdvec)
+l.K = lm(Kvec~tsdvec)
+@
+
+\begin{frame}
+\frametitle{Logistic fit}
+<<simexfig,echo=FALSE,fig.width=6,out.width="0.9\\textwidth">>=
+op=par(mar=c(5,5,2,5)+0.1,las=1,cex=1.5,lwd=2,bty="l")
+plot(tsdvec,rvec,xlim=c(0,max(tsdvec)),
+     xlab="Total observation error",ylab="",ylim=c(0.9,max(rvec)))
+mtext(side=2,"r",line=3,cex=1.5)
+lines(tsdvec2a,predict(q.r,newdata=data.frame(tsdvec=tsdvec2a)),lty=2)
+lines(tsdvec2b,predict(q.r,newdata=data.frame(tsdvec=tsdvec2b)))
+abline(h=1,lty=3)
+points(par("usr")[1],coef(q.r)[1],pch=16,xpd=NA)
+## K plot
+par(new=TRUE)
+plot(tsdvec,Kvec,pch=2,xlim=c(0,max(tsdvec)),ylim=c(9,10.5),axes=FALSE,
+     xlab="",ylab="",col="darkgray")
+lines(tsdvec2a,predict(q.K,newdata=data.frame(tsdvec=tsdvec2a)),lty=2,col="darkgray")
+lines(tsdvec2b,predict(q.K,newdata=data.frame(tsdvec=tsdvec2b)),col="darkgray")
+axis(side=4,col="darkgray",col.axis="darkgray")
+mtext(side=4,at=9.75,line=par("mgp")[1],"K",col="darkgray")
+abline(h=10,lty=3,col="darkgray")
+points(par("usr")[2],coef(q.K)[1],pch=16,col="darkgray",xpd=NA)
+par(op)
+@ 
+\end{frame}
+
+\subsection{Kalman filter}
+
+\begin{frame}
+\frametitle{Kalman filter}
+\begin{itemize}
+\item General approach to account for dynamic variance, expected population state
+\item Works for \emph{linear} (typically Normal) models; 
+can be extended to nonlinear models
+\item Natural multivariate extensions:
+include bias, external shocks, etc. \citep{Schnute1994}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Concept and implementation}
+
+\begin{itemize}
+\item \emph{Concept}
+\begin{itemize}
+\item Variance increases with process error; \\
+decreases with (accurate) observations
+\item Expected population state follows expected dynamics; \\
+drawn toward (accurate) observations
+\end{itemize}
+\pause
+\item \emph{Procedure} (pseudo-pseudo-code)
+\begin{itemize}
+\item Run KF for specified values of parameters, $\ssqobs$, $\ssqproc$ to compute $\hat N(t)$, $\sigma^2_N(t)$
+\item Estimate objective function (SSQ) for $\obs{N}|\hat N,\sigma^2_N$
+\item Minimize over $\{\text{parameters},\ssqobs,\ssqproc\}$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Autoregressive model}
+\begin{equation*}
+\begin{split}
+N(t) & \sim \text{Normal}(a + bN(t-1),\ssqproc) \\
+\obst{N} & \sim \text{Normal}(N((t),\ssqobs)
+\end{split}
+\end{equation*}
+\begin{itemize}
+\item $b<1, a>0 \to$ stable dynamics
+\item $b>1 \to$ exponential growth
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Procedure}
+
+\begin{cenumerate*}
+\item Update mean, variance of true density according to previous expected mean and variance:
+\begin{equation*}
+\begin{split}
+\text{mean}(N(t)|\obstm{N}) & \equiv \mu_1  = a + b\mu_0 \\ 
+\mbox{Var}(N(t)|\obstm{N}) & \equiv \sigma^2_1 =  b^2 \sigma^2_0 + \ssqproc
+\end{split}
+\end{equation*}
+\end{cenumerate*}
+\end{frame}
+
+\begin{frame}
+\begin{cenumerate}
+\item Now update the mean and variance of the \emph{observed} density at time $t$:
+\begin{equation*}
+\begin{split}
+\text{mean}(\obst{N}|\obstm{N}) & \equiv \mu_2  =  \mu_1 \\ 
+\text{Var}(\obst{N}|\obstm{N}) & \equiv \sigma^2_2  =  \sigma^2_1 + \ssqobs
+\end{split}
+\end{equation*}
+\end{cenumerate}
+\end{frame}
+
+
+\begin{frame}
+\begin{cenumerate}
+\item Now update true (expected) mean and variance to account for \emph{current} observation:
+\begin{equation*}
+\begin{split}
+\text{mean}(N|\obst{N}) & \equiv \mu_3  =  \mu_1 +  \frac{\sigma^2_1}{\sigma^2_2}(\obst{N}-\mu_2) \\ 
+\text{Var}(N(t)|\obst{N}) & \equiv \sigma^2_3  =  \sigma^2_1\left(1 - \frac{\sigma^2_1}{\sigma^2_2}\right)
+\end{split}
+\end{equation*}
+\end{cenumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pseudo-code}
+{\small
+<<pseudoKF,eval=FALSE>>=
+KFpred <- function(params,var_proc,var_obs,init) {
+  set_initial_values
+  for (i in 2:nt) {
+     ## ... calculate mu{1-3}, sigma^2{1-3} as above
+     N[i] <- mu_3; Var[i] <- sigmasq_3
+  }
+  return(list(N=N,Var=Var))
+}
+KFobj <- function(params,var_proc,var_obs,init,Nobs)
+   pred <- KFpred(params,var_proc,var_obs,init)
+   obj_fun(Nobs,mean=pred$N,sd=sqrt(pred$Var))
+}
+minimize(KFobj,start_values,Nobs)
+@
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Extended Kalman filter}
+To fit (mildly) nonlinear models with
+the deterministic skeleton
+$$
+N(t+1) = f(N(t)),
+$$  we just replace
+$a$ and $b$ in the autoregressive model $N(t+1)=a+b N(t)$
+with the coefficients of the first two terms of the \emph{Taylor expansion} of $f()$:
+$$
+f(N(\tau)) \approx f(N(t)) + \frac{df}{dN} (N(\tau)-N(t)) + \ldots
+$$
+
+<<echo=FALSE,eval=FALSE>>=
+a <- calc_pop_add(N[i-1],params)   ## maybe constant
+b <- calc_pop_mult(N[i-1],params)  ## ditto
+@ 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Multivariate extension \citep{Schnute1994}}
+\begin{equation*}
+\begin{split}
+\text{process: } \boldsymbol{X}_t & = 
+\boldsymbol{A}_t + \boldsymbol{B}_t \boldsymbol{X}_{t-1}+\boldsymbol{\delta}_t \\
+\text{observation: } \boldsymbol{Y}_t & = 
+\boldsymbol{C}_t + \boldsymbol{D}_t \boldsymbol{X}_t+\boldsymbol{\epsilon}_t
+\end{split}
+\end{equation*}
+
+Allows for bias, cross-species effects in both process and observation, correlation in process and observation noise \ldots 
+\end{frame}
+
+\section{State space models}
+
+\subsection{General intro}
+\begin{frame}
+\frametitle{State space models}
+\begin{itemize}
+\item models that address the fundamental problem that
+the probability of a set of observations depends on the
+\emph{unobserved} true values
+\item somehow have to deal with (integrate over?) the range of possible values of the \emph{latent variables}
+\item problems are generally very high-dimensional (many unobserved values), so brute force fails: \\ stochastic (\emph{Monte Carlo}) integration
+\item exploit conditioning: if we know $N(t)$, $N(t-1)$ and $N(t)$ are \emph{conditionally} independent
+\end{itemize}
+\end{frame}
+
+\subsection{Markov chain Monte Carlo}
+\begin{frame}
+\frametitle{Markov chain Monte Carlo}
+Very general way of calculating Bayesian \emph{posterior densities}
+\begin{description}
+\item[Gibbs sampling] exploit conditioning: 
+$$
+\text{Prob}(A,B,C) \propto \text{Prob}(A|B,C) \cdot \text{Prob}(B|A,C) \cdot \text{Prob}(C|A,B)
+$$
+This means that we can sample the conditional probabilities \emph{sequentially} and get the right answer.
+\item[Rejection sampling] (Metropolis-Hastings): we can pick new values of parameters at random, then pick a random number to decide whether to keep them. If our rule satisfies
+\begin{equation*}
+\frac{\text{Prob}(A)}{\text{Prob}(B)} = %
+\frac{P(\text{jump } B \to A) P(\text{accept }A|B)}%
+{P(\text{jump } A \to B) P(\text{accept }B|A)}
+\label{eq:mcmccrit}
+\end{equation*}
+then in the long run our chain will converge to the right distribution
+\end{description}
+\end{frame}
+
+\begin{frame}
+\frametitle{Black boxes/magic}
+Given enough time and thought, you can construct your
+own Gibbs and Metropolis-Hastings samplers.  Alternatively,
+you can use a powerful but opaque tool called BUGS (Bayesian Inference Using Gibbs Sampling), which exists in several incarnations (\code{WinBUGS}, \code{OpenBUGS}, \code{JAGS}).
+\pause
+
+BUGS allows you to specify a model in a specialized language (that looks a lot like R); it then constructs samplers for you and runs a Markov chain.  It can be accessed via R (\code{R2jags} package) or MATLAB (\url{https://code.google.com/p/matbugs/}).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BUGS code for the logistic function}
+{\small
+<<bugsmodel>>=
+model <- function() {
+  t[1] <- n0    ## initial values ...
+  o[1] ~ dnorm(t[1],tau.obs)
+  for (i in 2:N) {   ## step through observations ...
+     v[i] <- t[i-1]+r*t[i-1]*(1-t[i-1]/K)
+     t[i] ~ dnorm(v[i],tau.proc)
+     o[i] ~ dnorm(t[i],tau.obs)
+  }
+  r ~ dunif(0.1,maxr) ## priors ...
+  K ~ dgamma(0.005,0.005)
+  tau.obs ~ dgamma(0.005,0.005)
+  tau.proc ~ dgamma(0.005,0.005)
+  n0 ~ dgamma(1,n0rate)
+}
+@
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dependency structure for logistic model}
+  \begin{center}
+  \includegraphics[height=1.75in]{dynam-DAG}
+  \end{center}
+\end{frame}
+
+  
+\begin{frame}
+\frametitle{Running BUGS}
+\begin{itemize}
+  \item \emph{Good news}: BUGS code is (relatively) intuitive
+  \item \emph{Bad news}:
+    \begin{itemize}
+    \item Debugging is hard
+    \item Different parameterizations
+    \item Need to figure out how long to run chains \\
+      (convergence diagnostics)
+    \item Poor mixing
+    \item Slow computation
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Other approaches}
+\begin{frame}
+\frametitle{Frequentist methods}
+\begin{itemize}
+\item MCMC is usually done in a Bayesian framework; \\
+opens various cans of worms
+\item there are many other related approaches,
+some classical
+\begin{itemize}
+\item sequential Monte Carlo/particle filters
+\citep{Ionides+2006,Doucet+2001,deValpine2004}: R \code{pomp} package 
+\item data cloning \citep{Lele+2007}: R \code{dclone} package
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Continuous-time models}
+I know this is possible via particle filtering
+methods, but I've never tried it \ldots
+
+\end{frame}
+
+\begin{frame}
+\frametitle{References}
+\let\emph\oldemph
+\tiny
+\bibliography{stochdyn}
+\end{frame}
+
+\end{document}

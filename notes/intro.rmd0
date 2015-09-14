@@ -46,6 +46,10 @@ continuous    stochastic      discrete                       continuous-time MP
 
 # Geometry: process-error-only vs observation-error-only
 
+* in general, processes are subject to both *measurement error* (=observation eror, observation noise) and *process error* (noise)
+* trajectory-matching ("shooting") vs. gradient-matching ("one-step-ahead")
+* See Bolker chapter 11 for pictures
+
 # Simulation
 
 * important for testing, calibration, simulation-based methods
@@ -53,7 +57,13 @@ continuous    stochastic      discrete                       continuous-time MP
 * `deSolve` package for ODEs
 * stochastic ODEs: code your own [Euler-Maryuma](https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method) (easy) or [Milstein](https://en.wikipedia.org/wiki/Milstein_method), or use something from Darren Wilkinson's <#Rpkg smfsb> package [`library("sos"); findFn("maruyama")`]
 * discrete time: standard `r*` functions (`rnorm`, `rpois`, `rbinom`, `rnbinom` ...)
-* speed: implement in C++ (<#Rpkg Rcpp>; [NIMBLE](http://r-nimble.org)) ...
+* continuous-time, discrete-space: Gillespie algorithm or tau-leaping: <#Rpkg smfsb>, <#Rpkg GillespieSSA>, <#Rpkg pomp>, <#Rpkg StochKit2R> ...
+* speed: may need to implement in C++ (<#Rpkg Rcpp>; [NIMBLE](http://r-nimble.org)) ...
+
+# The geometry of inference
+
+* Wald approximations
+* likelihood profiles
 
 # Methods overview
 
