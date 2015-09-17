@@ -1,0 +1,201 @@
+---
+title: "Autoregressive models and simulation"
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::tufte_handout
+bibliography: ../nonlin.bib
+header-includes:
+   - \\usepackage[utf8]{inputenc}
+   - \\usepackage{amsmath}
+---
+
+## Topics
+
+* semi-simple autoregressive models
+* tips for statistical computing
+* parametric bootstrapping
+* the geometry of optimization
+* the geometry of statistical inference 
+
+## Semi-simple AR models
+
+@dennis_density_1994 [@dennis_estimating_2006]
+
+```{r pkgs,message=FALSE}
+library("ggplot2"); theme_set(theme_bw())
+```
+
+The basic Ricker model of population dynamics:
+
+$$
+\\begin{split}
+N_{t+1}  & = N_t \\exp(a+bN_t+\\sigma Z_t) \\\\
+Z_t & \sim N(0,1)
+\\end{split}
+$$
+
+Makes ecological sense (usually expressed in ecology as $N_{t+1}=rN_t \exp(-cN_t)$.  $Z_t$ incorporates *process error*.
+Log-transforming makes it into a *linear autoregressive* model
+(linearity in the *parameters* $a$, $b$).
+
+$$
+X_{t+1} = X_t + a + b e^{X_t} + \\sigma Z_t
+$$
+
+
+|----|-----|----|
+$a=0,b=0$ | zero-drift Brownian motion |
+$a \neq 0, b=0$ | Brownian motion with drift (exp growth/decay) | 
+$a \neq 0, b \neq 0$ | density-dependent growth |
+$a \neq 0, b < 0 $   | regulation |
+
+Data from Dennis and Taper (Yellowstone grizzlies):
+
+```{r dtdata}
+grizzly <- data.frame(n=c(33,36,34,39,35,34,38,36,37,41,39,51,47,57,48,59,64),
+                      t=1973:1989)
+```
+
+Lagging variables in R is a little bit clunky; we have to drop the first and
+last elements respectively.  `head(x,-1)` is an alternative
+to `x[-n]`.  `lag()` doesn't work the way you think it does (!)
+```{r growthrate}
+r <- log(grizzly$n[-1]/grizzly$n[-length(grizzly$n)])
+```
+
+Look at the data:
+```{r plot1,fig.width=8,fig.height=6}
+par(las=1,bty="l",mfrow=c(1,2))
+plot(n~t,data=grizzly,type="b",xlab="time",ylab="pop size")
+plot(grizzly$n[-length(grizzly$n)],r,
+     xlab="pop size",ylab="logarithmic growth rate")
+```
+
+Transform data and fit:
+```{r}
+## R tip: use with() to simplify extraction from data frames --
+## **never** attach()
+dd <- with(grizzly,data.frame(xlag1=log(n[-length(n)]),
+                 x=log(n[-1])))
+m2 <- lm(x~offset(xlag1)+exp(xlag1),data=dd)
+## equivalently:
+## lm(x-xlag1~exp(xlag1),data=dd)
+## (offset may be easier to read)
+s2 <- sigma(m2)^2
+var.unbiased <- function(m)
+    sigma(m)^2*df.residual(m)/nobs(m)
+## D&T use MLE rather than unbiased estimate of variance
+## parameters
+c(coef(m2),var=var.unbiased(m2))
+## test statistic
+coef(summary(m2))[2,"t value"]  
+```
+
+```{r simpmodel}
+## R tip: use update() when possible to simplify code
+m1 <- update(m2, . ~ offset(xlag1))
+c(coef(m1),var.unbiased(m1))
+```
+
+**Parametric bootstrapping**: 
+
+* for *confidence intervals*: simulate from the full model and record values.  Compute quantiles.
+* for *hypothesis tests*: simulate from the null model; fit the null model and the full model
+
+## Simulation
+
+I thought I could use the `simulate()` method in R,
+but as it turns out I can't:
+```{r simfun}
+## simulate new data, add starting value
+simfun <- function(fit,x0=log(grizzly$n[1])) {
+    cc <- coef(fit)
+    a <- coef(fit)[1]
+    b <- if (length(cc)==2) coef(fit)[2] else 0
+    sigma <- sqrt(var.unbiased(fit))
+    res <- c(x0,numeric(nobs(fit)+1))
+    for (i in 2:length(res)) {
+        res[i] <- res[i-1]+a+b*exp(res[i-1])+rnorm(1,sd=sigma)
+    }
+    res
+}
+```
+
+Test simulation function:
+```{r plotsim1,cache=TRUE}
+sim2 <- replicate(200,simfun(m2))
+sim1 <- replicate(200,simfun(m1))
+```
+
+```{r plotsim2,fig.width=6,fig.height=6}
+plot(log(grizzly$n),type="b",ylim=c(3,5.5),lwd=2,col=2)
+matlines(sim2,col=adjustcolor("black",alpha=0.1),lty=1)
+matlines(sim1,col=adjustcolor("blue",alpha=0.1),lty=1)
+legend("topleft",lty=1,col=c("red","black","blue"),
+       lwd=c(2,1,1),c("obs","b!=0","b=0"))
+```
+
+```{r}
+## re-fit model with new data
+fitfun <- function(x,orig_fit) {
+    dd <- data.frame(xlag1=x[-length(x)],
+                 x=x[-1])
+    update(orig_fit,data=dd)
+}
+## test:
+all.equal(fitfun(log(grizzly$n),m2),m2)
+## summarize output
+sumfun <- function(fit) {
+    c(coef(fit),
+      var=sigma(fit)^2*df.residual(fit)/nobs(fit))
+}
+## combine all of that stuff
+bootfun <- function(fit) {
+    sumfun(fitfun(simfun(fit),fit))
+}
+```
+
+```{r}
+set.seed(101)
+v <- t(replicate(2000,bootfun(m2)))
+library("ggplot2"); theme_set(theme_bw())
+library("reshape2")
+mv <- melt(v)
+obsvals <- data.frame(Var2=c("(Intercept)","exp(xlag1)","var"),
+                      value=sumfun(m2))
+ggplot(mv,aes(value))+facet_wrap(~Var2,scale="free")+
+    geom_histogram()+
+        geom_vline(data=obsvals,colour="red",aes(xintercept=value))
+## compare estimates
+t(apply(v,2,quantile,c(0.025,0.975)))
+confint(m2)
+```
+
+Should draw a picture ...
+
+## Geometry of optimization [@Press+1994]
+
+* need to find point estimate (best parameters), *or* get close 
+* frequentist MLE, Bayesian maximum *a posteriori* (mode of posterior distribution)
+* geometric analogies; hill-climbing
+* simplest cases: use derivatives
+    * Newton-Raphson (good in theory, but fragile)
+	* conjugate gradients (`method="CG"` in R `optim`)
+	* quasi-Newton (`method="BFGS"` in R `optim`)
+* derivatives can be expensive, fragile
+    * Nelder-Mead (`method="Nelder-Mead"`)
+	* BOBYQA (`nloptr` package)
+* *complications*: noisy surfaces
+    * stochastic *global* optimizers: simulated annealing, genetic algorithms, differential evolution
+* *complications*: multiple peaks
+    * repeated starts
+	* stochastic global optimization
+* similar geometric issues apply to MCMC	
+
+## Geometry of inference [@bolker2008, ch. 6-7]
+
+* Wald intervals: quadratic
+* profile confidence intervals
+* marginal intervals
+
+## References
