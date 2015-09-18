@@ -10,4 +10,6 @@
 
 ## https://github.com/aasgreen/NSERC-Application-Latex-Template
 
+%.html: %.rmd
+	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
 

@@ -1,7 +1,11 @@
+
+
+
 ---
 title: "Autoregressive models and simulation"
 author: "Ben Bolker"
 date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::tufte_handout
 bibliography: nonlin.bib
 header-includes:
    - \usepackage[utf8]{inputenc}
@@ -93,10 +97,10 @@ m2 <- lm(x~offset(xlag1)+exp(xlag1),data=dd)
 ## lm(x-xlag1~exp(xlag1),data=dd)
 ## (offset may be easier to read)
 s2 <- sigma(m2)^2
+## D&T use MLE rather than unbiased estimate of variance parameters:
 var.unbiased <- function(m)
     sigma(m)^2*df.residual(m)/nobs(m)
-## D&T use MLE rather than unbiased estimate of variance
-## parameters
+## parameters plus variance:
 c(coef(m2),var=var.unbiased(m2))
 ## test statistic
 coef(summary(m2))[2,"t value"]  
@@ -122,9 +126,11 @@ but as it turns out I can't, so I have to define my own:
 simfun <- function(fit,x0=log(grizzly$n[1])) {
     cc <- coef(fit)
     a <- cc[1]
-    ## make the function work for either 
+    ## make the function work for either constant or regression model
     b <- if (length(cc)==2) coef(fit)[2] else 0
     sigma <- sqrt(var.unbiased(fit))
+    ## as usual, half the code is setup: the next three lines are
+    ##   the actual meat
     res <- c(x0,numeric(nobs(fit)+1))
     for (i in 2:length(res)) {
         res[i] <- res[i-1]+a+b*exp(res[i-1])+rnorm(1,sd=sigma)
@@ -141,6 +147,8 @@ sim1 <- replicate(200,simfun(m1))
 
 ```{r plotsim2,fig.width=6,fig.height=6}
 plot(log(grizzly$n),type="b",ylim=c(3,5.5),lwd=2,col=2)
+## convenient to plot lots of lines with semi-transparent
+## (adjustcolor(...,'alpha')) colour
 matlines(sim2,col=adjustcolor("black",alpha=0.1),lty=1)
 matlines(sim1,col=adjustcolor("blue",alpha=0.1),lty=1)
 legend("topleft",lty=1,col=c("red","black","blue"),
@@ -158,28 +166,28 @@ fitfun <- function(x,orig_fit) {
 all.equal(fitfun(log(grizzly$n),m2),m2)
 ## summarize output
 sumfun <- function(fit) {
-    c(coef(fit),
-      var=var.unbiased(fit))
+    c(coef(fit),var=var.unbiased(fit))
 }
-## combine all of that stuff
+## combine all of the above
 bootfun <- function(fit) {
     sumfun(fitfun(simfun(fit),fit))
 }
 ```
 
 ```{r runpb1,cache=TRUE}
-set.seed(101)
+set.seed(101)  ## for reproducibility
+## t() transposes results
 v <- t(replicate(2000,bootfun(m2)))
 ```
 
 ```{r plotpb1,message=FALSE,fig.width=10,fig.height=4}
-## using ggplot, a fancy but powerful plotting tool
+## using ggplot, a fancy but powerful plotting tool:
 mv <- melt(as.data.frame(v)) ## restructure data in 'long' format
 obsvals <- data.frame(variable=c("(Intercept)","exp(xlag1)","var"),
                       value=sumfun(m2))
 ggplot(mv,aes(value))+facet_wrap(~variable,scale="free")+
     geom_histogram(bins=30)+
-        geom_vline(data=obsvals,colour="red",aes(xintercept=value))
+    geom_vline(data=obsvals,colour="red",aes(xintercept=value))
 ```
 
 ```{r plotCI,fig.width=8,fig.height=4}
