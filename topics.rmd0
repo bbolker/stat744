@@ -6,17 +6,22 @@ output: rmarkdown::tufte_handout
 bibliography: nonlin.bib
 header-includes:
    - \\usepackage[utf8]{inputenc}
+   - \\hypersetup{colorlinks}
 ---
 
-* classical time-series (ARIMA) models
-* trajectory/gradient matching [@Ellner+2002;@raue_lessons_2013]
-* Kalman filtering (basic & ensemble) [@Schnute1994]
-* Integrated Nested Laplace Approximation ([INLA](http://www.r-inla.org))
-* particle filtering: <#Rpkg pomp> [@Ionides+2006]
-* MCMC: JAGS/BUGS, [Stan](http://mc-stan.org)
-* Approximate Bayesian computation
-* synthetic likelihood (<#Rpkg synlik>; <#Rpkg pomp> probe-matching)
-* [NIMBLE](http://r-nimble.org)
-* automatic differentiation: [Template Model Builder](https://github.com/kaskr/adcomp) (ADMB?)
-* spatiotemporal models
-* data cloning?
+1. stochastic simulation (stochastic ODE, discrete- and continuous-time Markov processes) (<#Rpkg GillespieSSA>, <#Rpkg smfsb>)
+2. classical time-series (ARIMA) models [@Diggle1990]
+3. trajectory/gradient matching [@Ellner+2002;@bolker2008;@raue_lessons_2013]
+4. Kalman filtering (basic & ensemble) [@Schnute1994;@bolker2008]
+5. Markov chain Monte Carlo: [@bolker2008] JAGS/BUGS, [Stan](http://mc-stan.org)
+6. sequential MC/particle filtering: <#Rpkg pomp> [@Ionides+2006;@bhadra_malaria_2011;@king_inapparent_2008]
+7. synthetic likelihood [@Wood2010] (<#Rpkg synlik>; <#Rpkg pomp> probe-matching)
+8. Approximate Bayesian computation [@csillery_approximate_2010] (<#Rpkg abc>; <#Rpkg EasyABC>)
+9. Integrated nested Laplace approximation ([INLA](http://www.r-inla.org);
+@rue_approximate_2009; [more papers](http://www.r-inla.org/papers))
+10. [NIMBLE](http://r-nimble.org)
+11. data cloning (@ponciano_hierarchical_2009; <#Rpkg dclone>)
+12. spatiotemporal models
+13. other ...
+
+## References

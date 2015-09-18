@@ -6,5 +6,6 @@ output: rmarkdown::tufte_handout
 bibliography: nonlin.bib
 header-includes:
    - \\usepackage[utf8]{inputenc}
+   - \\hypersetup{colorlinks}
 ---
 

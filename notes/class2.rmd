@@ -1,12 +1,8 @@
-
-
-
 ---
 title: "Autoregressive models and simulation"
 author: "Ben Bolker"
 date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
-output: rmarkdown::tufte_handout
-bibliography: ../nonlin.bib
+bibliography: nonlin.bib
 header-includes:
    - \usepackage[utf8]{inputenc}
    - \usepackage{amsmath}
@@ -59,8 +55,8 @@ $$
 
 ------------------------  ------------------------------------------------
 $a=0,b=0$                 zero-drift Brownian motion 
-$a \neq 0, b=0$          Brownian motion with drift (exp growth/decay)  
-$a \neq 0, b \neq 0$    density-dependent growth 
+$a \neq 0, b=0$           Brownian motion with drift (exp growth/decay)  
+$a \neq 0, b \neq 0$       density-dependent growth 
 $a \neq 0, b < 0$         regulation 
 ------------------------  ------------------------------------------------
 
