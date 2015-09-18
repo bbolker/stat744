@@ -1,3 +1,6 @@
+
+
+
 ---
 title: "Autoregressive models and simulation"
 author: "Ben Bolker"
@@ -5,8 +8,8 @@ date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
 output: rmarkdown::tufte_handout
 bibliography: ../nonlin.bib
 header-includes:
-   - \\usepackage[utf8]{inputenc}
-   - \\usepackage{amsmath}
+   - \usepackage[utf8]{inputenc}
+   - \usepackage{amsmath}
 ---
 
 ## Topics
@@ -39,26 +42,26 @@ library("reshape2")
 The basic Ricker model of population dynamics:
 
 $$
-\\begin{split}
-N_{t+1}  & = N_t \\exp(a+bN_t+\\sigma Z_t) \\\\
-Z_t & \\sim N(0,1)
-\\end{split}
+\begin{split}
+N_{t+1}  & = N_t \exp(a+bN_t+\sigma Z_t) \\
+Z_t & \sim N(0,1)
+\end{split}
 $$
 
-Makes ecological sense (usually expressed in ecology as $N_{t+1}=rN_t \\exp(-cN_t)$.  $Z_t$ incorporates *process error*.
+Makes ecological sense (usually expressed in ecology as $N_{t+1}=rN_t \exp(-cN_t)$.  $Z_t$ incorporates *process error*.
 Log-transforming makes it into a *linear autoregressive* model
 (linearity in the *parameters* $a$, $b$).
 
 $$
-X_{t+1} = X_t + a + b e^{X_t} + \\sigma Z_t
+X_{t+1} = X_t + a + b e^{X_t} + \sigma Z_t
 $$
 
 
 ------------------------  ------------------------------------------------
 $a=0,b=0$                 zero-drift Brownian motion 
-$a \\neq 0, b=0$          Brownian motion with drift (exp growth/decay)  
-$a \\neq 0, b \\neq 0$    density-dependent growth 
-$a \\neq 0, b < 0$         regulation 
+$a \neq 0, b=0$          Brownian motion with drift (exp growth/decay)  
+$a \neq 0, b \neq 0$    density-dependent growth 
+$a \neq 0, b < 0$         regulation 
 ------------------------  ------------------------------------------------
 
 Data from Dennis and Taper (Yellowstone grizzlies):
