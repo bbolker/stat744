@@ -233,12 +233,12 @@ for `sum(res2>=F_obs)/length(res2)`.
 
 * re-do the analysis for the elk data set in `notes/DTelk.txt`.
 Dennis and Taper give the results as
-   * model 1 (density-independent): $a=0.0145$, $sigma^2=0.0685$
-   * model 2 (density-dependent): $a=0.731$, $b=-4.93 times 10^{-4}$, $sigma^2=0.0465$
-   * $hat P = 0.044$
+   * model 1 (density-independent): $a=0.0145$, $\sigma^2=0.0685$
+   * model 2 (density-dependent): $a=0.731$, $b=-4.93 \times 10^{-4}$, $\sigma^2=0.0465$
+   * $\hat P = 0.044$
 * write a general function to do these PB tests   
 * Try the parametric bootstrap using the likelihood ratio test (e.g., see `anova(m1,m2,test="Chisq")`) instead.  Why is the answer different?
 * Explore alternate models for the data.  The *Gompertz state-space model*
-uses $X_t=X_{t-1} + a+ b X_{t-1} + sigma Z_t$ (i.e., substituting $bX_{t-1}$ for $b exp(X_{t-1}$). Another alternative would be a *generalized Ricker*, using $X_t = (c+1) X_{t-1} + a + b exp{X_t-1} + sigma Z_t$ ...
+uses $X_t=X_{t-1} + a+ b X_{t-1} + \sigma Z_t$ (i.e., substituting $bX_{t-1}$ for $b \exp(X_{t-1}$). Another alternative would be a *generalized Ricker*, using $X_t = (c+1) X_{t-1} + a + b \exp{X_t-1} + \sigma Z_t$ ...
 
 

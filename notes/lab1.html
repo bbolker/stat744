@@ -63,7 +63,7 @@ img {
 <div id="header">
 <h1 class="title">Autoregressive models and simulation: exercise</h1>
 <h4 class="author"><em>Ben Bolker</em></h4>
-<h4 class="date"><em>10:23 21 September 2015</em></h4>
+<h4 class="date"><em>10:30 21 September 2015</em></h4>
 </div>
 
 
@@ -216,12 +216,12 @@ abline(v=F_obs,col=&quot;blue&quot;)</code></pre>
 <h2>If you’re finished/bored …</h2>
 <ul>
 <li>re-do the analysis for the elk data set in <code>notes/DTelk.txt</code>. Dennis and Taper give the results as</li>
-<li>model 1 (density-independent): <span class="math">\(a=0.0145\)</span>, <span class="math">\(sigma^2=0.0685\)</span></li>
-<li>model 2 (density-dependent): <span class="math">\(a=0.731\)</span>, <span class="math">\(b=-4.93 times 10^{-4}\)</span>, <span class="math">\(sigma^2=0.0465\)</span></li>
-<li><span class="math">\(hat P = 0.044\)</span></li>
+<li>model 1 (density-independent): <span class="math">\(a=0.0145\)</span>, <span class="math">\(\sigma^2=0.0685\)</span></li>
+<li>model 2 (density-dependent): <span class="math">\(a=0.731\)</span>, <span class="math">\(b=-4.93 \times 10^{-4}\)</span>, <span class="math">\(\sigma^2=0.0465\)</span></li>
+<li><span class="math">\(\hat P = 0.044\)</span></li>
 <li>write a general function to do these PB tests<br /></li>
 <li>Try the parametric bootstrap using the likelihood ratio test (e.g., see <code>anova(m1,m2,test=&quot;Chisq&quot;)</code>) instead. Why is the answer different?</li>
-<li>Explore alternate models for the data. The <em>Gompertz state-space model</em> uses <span class="math">\(X_t=X_{t-1} + a+ b X_{t-1} + sigma Z_t\)</span> (i.e., substituting <span class="math">\(bX_{t-1}\)</span> for <span class="math">\(b exp(X_{t-1}\)</span>). Another alternative would be a <em>generalized Ricker</em>, using <span class="math">\(X_t = (c+1) X_{t-1} + a + b exp{X_t-1} + sigma Z_t\)</span> …</li>
+<li>Explore alternate models for the data. The <em>Gompertz state-space model</em> uses <span class="math">\(X_t=X_{t-1} + a+ b X_{t-1} + \sigma Z_t\)</span> (i.e., substituting <span class="math">\(bX_{t-1}\)</span> for <span class="math">\(b \exp(X_{t-1}\)</span>). Another alternative would be a <em>generalized Ricker</em>, using <span class="math">\(X_t = (c+1) X_{t-1} + a + b \exp{X_t-1} + \sigma Z_t\)</span> …</li>
 </ul>
 </div>
 
