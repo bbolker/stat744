@@ -1,0 +1,96 @@
+
+
+
+---
+title: "Inference geometry"
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::tufte_handout
+bibliography: nonlin.bib
+header-includes:
+   - \usepackage[utf8]{inputenc}
+   - \hypersetup{colorlinks}
+---
+
+```{r pkgs,message=FALSE}
+library("bbmle")
+library("emdbook")
+library("ellipse")
+library("viridis")
+library("MCMCpack")
+```
+
+```{r knitopts,echo=FALSE}
+library("knitr")
+opts_chunk$set(echo=FALSE)
+```
+
+```{r setup}
+n <- 20  ## originally 20
+set.seed(101)
+x <- rnorm(n)
+y <- rnbinom(n,mu=1,size=exp(1+0.5*x))
+nll <- function(a,b) {
+    -sum(dnbinom(y,mu=1,size=exp(a+b*x),log=TRUE))
+}
+m1 <- mle2(y~dnbinom(mu=1,size=exp(logk)),
+      parameters=list(logk~x),
+      start=c(logk=0),
+      data=data.frame(x,y),
+     method="BFGS")
+levels <- c(0.5,0.95,0.99)
+cc <- curve3d(nll,xlim=c(-3,5),ylim=c(-4,4),
+              n=c(61,61),sys3d="none")
+```
+```{r prof,cache=TRUE,warning=FALSE}
+pp <- profile(m1,std.err=0.1,alpha=0.01,maxsteps=1000)
+p1 <- pp@profile[[1]]$par.vals
+p2 <- pp@profile[[2]]$par.vals
+```
+
+```{r}
+dx <- diff(cc$x)[1]
+dy <- diff(cc$y)[1]
+scvals <- exp(-cc$z)/sum(exp(-cc$z)) ## probabilities
+scvals2 <- cumsum(sort(scvals))
+## ss <- sample(seq_along(scvals),size=10000,replace=TRUE,
+##        prob=scvals)
+## xmat <- cc$x[row(scvals)]
+## ymat <- cc$y[col(scvals)]
+## vals <- cbind(xmat[ss],ymat[ss])
+## image(cc$x,cc$y,cc$z)
+## points(jitter(vals[,1]),jitter(vals[,2]),
+##        col=adjustcolor("black",alpha=0.3))
+## need to use > 1-level ...
+w <- which(scvals2>0.01)[1]
+critval <- sort(scvals)[w]  ## val
+
+## various attempts at MCMC
+if (FALSE) {
+    mm <- MCMCmetrop1R(ll2,coef(m1),
+                       V=vcov(m1),mcmc=5e6,thin=1000,
+                       seed=1001,tune=0.01)
+    mm2 <- as.matrix(mm)
+}
+```
+
+```{r output,fig.width=6,fig.height=6}
+image(cc$x,cc$y,cc$z,
+      col=viridis(20),useRaster=TRUE)
+with(cc,contour(x,y,z,add=TRUE,levels=-logLik(m1)+
+                    qchisq(levels,df=2)/2,
+                labels=levels))
+for (L in levels) {
+    lines(ellipse(vcov(m1),centre=coef(m1),level=L),lty=2)
+}
+lines(p1[,1],p1[,2],col="blue")
+lines(p2[,1],p2[,2],col="purple")
+contour(cc$x,cc$y,scvals,level=critval,add=TRUE,col=2)
+contour(cc$x,cc$y,scvals,add=TRUE,col=2)
+ll2 <- function(cc) {
+    sum(dnbinom(y,mu=1,size=exp(cc[1]+cc[2]*x),log=TRUE))
+}
+## points(mm2[,1],mm2[,2],col="red",pch=".")
+```
+
+
