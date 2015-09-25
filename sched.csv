@@ -1,0 +1,11 @@
+date,number,topic,personnel
+"24, 28 Sep",1,KF,"Brar, Krishnaswamy"
+"1, 5 Oct",2,MCMC,"He, Wang"
+"8, 19 Oct",3,"synthetic likelihood","Ehsani,  Stacey"
+"22,26 Oct",4,sMC,"Tao (?), Qin"
+"29 Oct, 2 Nov",5,ABC,"Neelangol, Liu"
+"5, 9 Nov",6,INLA,"Kibrett, Kampo, Feng"
+"12, 16 Nov",7,"data cloning","La Rosa, Ghimire"
+"19, 23 Nov",8,spatiotemporal,"Barrows, Gonzalez"
+"26, 30 Nov",9,NIMBLE,"Li, Kain"
+"3, 7 Dec",,wrap-up,
