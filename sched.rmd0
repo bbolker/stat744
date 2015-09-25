@@ -1,0 +1,23 @@
+---
+title: "presentation schedule"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: rmarkdown::html_document
+bibliography: notes/nonlin.bib
+---
+
+```{r echo=FALSE,results="asis",message=FALSE,warning=FALSE}
+library("knitr")
+library("pander")
+library("dplyr")
+dd <- read.csv("sched.csv")
+dd <- dd[,1:4]
+topics <- read.csv("topics.csv")
+dd2 <- arrange(merge(dd,topics,by.x="topic",by.y="title",all.x=TRUE),number)
+panderOptions('table.split.cells', 20)
+panderOptions('table.style','multiline')
+panderOptions('table.alignment.default','left')
+pander(dd2)
+## kable(dd)
+```
+
+## References
