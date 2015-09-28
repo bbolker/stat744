@@ -9,3 +9,5 @@
 *.blg
 *.tex
 *.nav
+.Rhistory
+.DS_Store
