@@ -1,0 +1,75 @@
+
+
+
+---
+title: "Kalman Filter extras"
+author: "Ben Bolker"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+bibliography: nonlin.bib
+---
+
+## Base R
+
+```{r baseR}
+makeKFmod <- function(par) {
+    list(T=1,Z=1,h=exp(par[1]),V=exp(par[2]),
+         a=0,P=1e7,Pn=1e7)
+}
+KalmanLike(Nile,makeKFmod(c(0,0)))
+KFlik <- function(p) {
+    KalmanLike(Nile,makeKFmod(p))$Lik
+}
+opt1 <- optim(fn=KFlik,par=c(0,0))
+opt1$value
+## KalmanLike estimates a scale parameter 'kappa'
+## that applies to both the observation and the
+## process variance
+k2 <- KalmanRun(Nile,makeKFmod(opt1$par),update=TRUE)
+opt1$par+log(k2$values["s2"])  ## matches dlm result
+```
+
+```{r baseRplot}
+plot(Nile, main = "Nile flow")
+tvec <- c(time(Nile))  ## extract time vector, drop time-series attributes
+lines(x=tvec,y=k2$states, col = "blue")
+```
+
+## FKF package
+
+```{r FKF,message=FALSE}
+library("FKF")
+runFKF <- function(par) {
+    fkf(a0=0, P0=matrix(1e7), dt=0, ct=0, Tt=matrix(1), Zt=matrix(1), HHt=matrix(exp(par[2])),
+        GGt=matrix(exp(par[1])), yt=rbind(Nile))
+}
+KFlik <- function(par) {
+    -runFKF(par)$logLik
+}
+KFlik(c(0,0))
+opt2 <-optim(fn=KFlik,par=c(0,0))
+opt2$par
+FKFres <- runFKF(opt2$par)
+
+```{r FKFplot}
+plot(Nile, main = "Nile flow")
+tvec <- c(time(Nile))  ## extract time vector, drop time-series attributes
+lines(x=tvec,y=FKFres$att, col = "purple")
+```
+
+## KFAS package
+
+Adapted directly from `?KFAS`:
+
+```{r KFAS}
+library("KFAS")
+(modelNile <- SSModel(Nile~SSMtrend(1,Q=list(matrix(NA))),H=matrix(NA)))
+modelNile <- fitSSM(inits=c(log(var(Nile)),log(var(Nile))),model=modelNile,
+                  method='BFGS',
+                    ## control=list(REPORT=1,trace=1)
+                    )$model
+c(c(log(modelNile$H)),log(modelNile$Q))  ## matches nileMLE$par
+out <- KFS(modelNile,filtering='mean',smoothing='mean')
+plot(Nile, main = "Nile flow")
+tvec <- c(time(Nile))  ## extract time vector, drop time-series attributes
+lines(x=tvec[-length(tvec)],y=fitted(out,filtered=TRUE)[-1], col = "cyan")
+```
