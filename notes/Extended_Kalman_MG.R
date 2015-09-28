@@ -1,4 +1,3 @@
-
 # Idea and source code taken from 
 #  http://www.magesblog.com/2015/01/extended-kalman-filter-example-in-r.html
 #  Modified by Athinthra K S
@@ -22,15 +21,16 @@ nuProPop <- rnorm(nObs, mean=0, sd=sqrt(ProVariancePop))
 nuobs <- rnorm(nObs, mean=0, sd=sqrt(obsVariance)) 
 pop <- p0
 for (i in 2:nObs){
-pop[i] <- logistF(r,pop[i-1] , k, deltaT, nuProPop[i])+ nuobs[i]
+    pop[i] <- logistF(r,pop[i-1] , k, deltaT, nuProPop[i])+ nuobs[i]
 }
 
 Estimate <- data.frame(Rate=rep(NA, nObs),
                        Population=rep(NA,nObs))
 
-library(numDeriv)
+library(numDeriv)  ## for jacobian()
+
 f <- function(x, k, deltaT){
-  c(r=x[1],logistF(r=x[1], p=x[2], k,deltaT,0 ))
+    c(r=x[1],logistF(r=x[1], p=x[2], k,deltaT,0 ))
 }
 H <- t(c(0, 1))
 
@@ -42,6 +42,7 @@ R <-  obsVariance
 x <- c(r, p0)
 P <-  diag(c(144, 25))
 
+## Extended Kalman filter code:
 for(i in 1:nObs){
   # Observation
   xobs <- c(0, pop[i])
@@ -62,7 +63,7 @@ for(i in 1:nObs){
 
 # Plot output
 
-time <- c(1:nObs)*deltaT
-plot(y=pop, x=time, t='l', main="Population growth", 
+time <- (1:nObs)*deltaT
+plot(y=pop, x=time, type='l', main="Population growth", 
      xlab="Time", ylab="Population")
-lines(y=Estimate$Population, x=time, col="orange", lwd=2)
+lines(time,Estimate$Population, col="orange", lwd=2)
