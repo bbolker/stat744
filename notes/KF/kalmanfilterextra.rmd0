@@ -70,3 +70,11 @@ plot(Nile, main = "Nile flow")
 tvec <- c(time(Nile))  ## extract time vector, drop time-series attributes
 lines(x=tvec[-length(tvec)],y=fitted(out,filtered=TRUE)[-1], col = "cyan")
 ```
+
+## dse package
+
+## Table of equivalents/features?
+
+* table of notation/parameter equivalence
+* `NA` values supported; 
+* time-varying forcing (all but `dse`)

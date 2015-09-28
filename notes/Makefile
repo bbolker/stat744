@@ -16,5 +16,7 @@
 %.html: %.rmd
 	echo "library(rmarkdown); render(\"$*.rmd\",output_format=\"html_document\")" | R --slave
 
+clean:
+	rm -Rf *.aux *.log *.out *.bbl *.blg *.toc *.nav *~
 
 
