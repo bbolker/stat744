@@ -3,7 +3,7 @@
 
 ---
 title: "Kalman Filter lab"
-author: "Sina Brar, Krishna ..."
+author: "Sina Brar and Athinthtra Krishnaswamy"
 date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
 bibliography: nonlin.bib
 ---
@@ -28,7 +28,7 @@ Afterwards, try doing this example using the `FKF` package.
 Read through the `FKF` documentation either [online](https://cran.r-project.org/web/packages/FKF/FKF.pdf) or via `help(package="FKF")`.
 
 Then, use either the `dlm` or `FKF` package to do Kalman filtering on the 
-[nhtemp]() or [JohnsonJohnson]() datasets in R.
+[nhtemp]() or [JohnsonJohnson]() datasets in R, using the same model.
 
 Commands to install packages:
 ```{r install_pkgs,eval=FALSE}
@@ -150,7 +150,8 @@ Plot the flow data together with filtered values of the state vectors:
 
 ```{r plot}
 plot(Nile, main = "Nile flow")
-lines(x=(1871:1970),y=nileFilt$m[-1], col = "red")
+tvec <- c(time(Nile))  ## extract time vector, drop time-series attributes
+lines(x=tvec,y=nileFilt$m[-1], col = "red")
 ```
 
 

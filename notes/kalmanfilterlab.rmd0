@@ -1,6 +1,6 @@
 ---
 title: "Kalman Filter lab"
-author: "Sina Brar, Krishna ..."
+author: "Sina Brar and Athinthtra Krishnaswamy"
 date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
 bibliography: nonlin.bib
 ---
