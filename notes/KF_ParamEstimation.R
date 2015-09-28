@@ -1,12 +1,12 @@
-#Parameter Estimation using Kalman Filter
-#Code written by Athinthra K S,
-#                School of Compuational Science and Engineering
-#                McMaster University.
+## Parameter Estimation using th Kalman Filter
+## Code written by Athinthra K S,
+##                School of Computational Science and Engineering
+##                McMaster University.
 
-# Stats744 Class Excercise
+## Stats744 Class Excercise
 
-# Change the parameters and observe the error plot
-#y=a*x^2
+## Change the parameters and observe the error plot
+## y=a*x^2
 
 func <- function(a,x){
   (a^2)*x^2+x+1
@@ -21,14 +21,14 @@ StaVariance <- 10
 ParamTrue <- 4
 set.seed(1234)
 datVariance <- 10
-nObs = 500
+nObs <- 500
 deltaX <- 0.01
 nu <- rnorm(nObs, mean=0, sd=sqrt(datVariance)) 
 y <- c( func(ParamTrue, (1:(nObs))*deltaX)) + nu
 
 #Xdata
-xdata <-c((1:nObs)*deltaX)
-ParamEstimate <- (rep(NA, nObs))
+xdata <- (1:nObs)*deltaX
+ParamEstimate <- rep(NA, nObs)
 
 #Linearization
 G <- function(a,x){2*a*x^2}
@@ -42,23 +42,26 @@ ak <- a0
 Sigma <-  datVariance
 
 for(i in 1:nObs){
-  # Observation
+  # Observation step
   xk <- (i)*deltaX
   yk <- func(ak,xk)
   
-  #Predict
-  ak <- ak+0
+  # Prediction step
+  ak <- ak+0  ## R??
   ek <- y[i]-yk
   Sigma <- Sigma+Q
   
   SigTermInv <- (G(ak, xk) %*% Sigma %*% G(ak, xk) + R)^(-1)
   K <- G(ak,xk) %*% Sigma %*% SigTermInv
 
-  # Update
+  # Updating step
   ak <- ak+K*ek
   Sigma <- (1-K*G(ak, xk))*Sigma
-  ParamEstimate[i] <- ak}
+  ParamEstimate[i] <- ak
+}
 
-# calculate eror and plot
+# calculate error and plot
 LogError <- log(abs(ParamEstimate-ParamTrue))
 plot(LogError)
+plot(ParamEstimate,ylim=c(-10,10),type="l")
+abline(h=4,col="red")

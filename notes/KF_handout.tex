@@ -17,25 +17,48 @@
 \begin{document}
 \section{EKF - Tracking}
 A logistic growth model with rate $r$ and carrying capacity $k$ can be written as
-$$\frac{dp}{dt}=rp\left( 1-\frac{p}{k}\right)$$
+$$
+\frac{dp}{dt}=rp\left( 1-\frac{p}{k}\right)
+$$
 with initial guess $p_0$, the logistic growth model can be analytically solved as.
-$$p=\frac{kp_0exp(rt)}{k+p_0(exp(rt)-1)}$$
-A population data is modeled based on the analytical solution of logistic growth model with additive random process error
-$$p_{t}=\frac{kp_{t-1}exp(r \Delta t)}{k+p_{t-1}(exp(r \Delta t)-1)} + v$$
-An extended Kalman Filter is used to track the population given that the variance of process and observation error is known. state space is assumed as $x=[r \text{  }  p]^T$ and observation model is given as
-$$z=[0\text{  }  1][r\text{  }  p]^T+w$$
+$$
+p=\frac{kp_0\exp(rt)}{k+p_0(\exp(rt)-1)}
+$$
+Population data is modeled based on the analytical solution of the logistic growth model with additive random process error
+$$
+p_{t}=\frac{kp_{t-1}\exp(r \Delta t)}{k+p_{t-1}(\exp(r \Delta t)-1)} + v
+$$
+
+% use \> for spacing:
+% http://tex.stackexchange.com/questions/74353/what-commands-are-there-for-horizontal-spacing
+An extended Kalman Filter is used to track the population given that the variance of process and observation error is known. The state space is assumed to be $x=[r \>  p]^T$ and observation model is given as
+$$
+z=[0 \>  1][r \>  p]^T+w
+$$
 In the given code the sample data is  synthetically generated and tracking algorithm is implemented.
 
 \subsection{Exercise 1}
-In the sample code only population in the state space is assumed to have additive process error. Modify the code such that rate of population growth also has additive process error. 
+In the sample code only the population size is assumed to have additive process error. Modify the code such that rate of population growth also has additive process error. 
+
 \subsection{Exercise 2}
-Implement Kalman filter tracking algorithm for the same logistic population growth by using Euler's explicit time stepping scheme.
-$$p_t=p_{t-1}+\Delta t \left( rp_{t-1}\left( 1-\frac{p_{t-1}}{k}\right)+ v\right )$$
+Implement the Kalman filter tracking algorithm for the same logistic population growth by using Euler's explicit time stepping scheme.
+$$
+p_t=p_{t-1}+\Delta t \left( rp_{t-1}\left( 1-\frac{p_{t-1}}{k}\right)+ v\right )
+$$
 
 \section{EKF - Parameter Estimation}
-A sample code for estimating parameter a in the equation $$y=a^2x^2+x+1$$ is given in the sample code.  The data is synthetically generated to observe the error of estimated parameter form the true value of the parameter.
-\subsection{Excercise 3}
-Estimate the initial velocity ($v_0$) of the projectile for the given data in projectile.txt using initial angle as $\theta = pi/4$. Projectile motion equation is 
-$$x=v_0t\cos(\theta)$$
-$$y=v_0t\sin(\theta)-\frac{gt^2}{2}$$
+
+A sample code for estimating parameter $a$ in the equation $y=a^2x^2+x+1$ is given in the sample code.  The data is synthetically generated to observe the error of estimated parameter from the true value of the parameter.
+
+\subsection{Exercise 3}
+Estimate the initial velocity ($v_0$) of the projectile for the given data in {\tt projectile.txt} using the initial angle as $\theta = \pi/4$. 
+The equation of the projectile's motion is
+
+\begin{equation*}
+\begin{split}
+x & =v_0t\cos(\theta) \\
+y & =v_0t\sin(\theta)-\frac{gt^2}{2}
+\end{split}
+\end{equation*}
+
 \end{document}
