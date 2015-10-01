@@ -1,9 +1,14 @@
 \documentclass{article}
-
+\usepackage{natbib}
+\usepackage{bibentry}
+\nobibliography*
+\bibliographystyle{plain}
+\usepackage{alltt}
 \addtolength{\hoffset}{-2cm}
 \addtolength{\textwidth}{3.5cm}
 \addtolength{\voffset}{-2cm}
 \addtolength{\textheight}{3cm}
+\newcommand{\code}[1]{\texttt{#1}}
 
 \usepackage{amsmath}		 	
 \usepackage{amsfonts}	 	
@@ -64,7 +69,7 @@
 \end{itemize}
 
 \end{itemize}
-%----------------------------Extended Kalman Filter---------------------------------------------
+%----------------------------Extended Kalman Filter------------------
 \newpage
 \section{Extended Kalman Filter}
  \begin{itemize}
@@ -131,7 +136,7 @@ $$w_k=w_{k-1}+u_k$$ $$y_k=G(x_k,w_k)+e_k$$
 \vspace{5pt}
 
 \begin{tabular}{c | c | c | c | c}		
- & \verb|FKF| & \verb|dlm| & \verb|dse| & \verb|KFAS| \\ 
+ & \code{FKF} & \code{dlm} & \code{dse} & \code{KFAS} \\ 
  \hline
  System& $\alpha_{t} = T\alpha_{t-1} + d + H\eta_t$ 
  & $\alpha_{t} = G\alpha_{t-1} + w_t$ & $\alpha_{t} = F\alpha_{t-1} + Gu_t + Q\eta_t$& $\alpha_{t} = T\alpha_{t-1}+ R\eta_t$\\
@@ -146,20 +151,20 @@ Model & $\eta_t \sim N(0, I) $ & $  w_t \sim N(0, W)$ &$ \eta_t \sim N(0, I) $ &
 Model & $\epsilon_t \sim N(0,I) $ & $v_t \sim N(0, V)$& $\epsilon_t \sim N(0,I)$& $\epsilon_t \sim N(0,H)$\\
 & $G\epsilon_t \sim N(0, GG^T)$ & & $R\epsilon_t \sim N(0, RR^T)$& \\
 \hline  
-Function & \verb|fkf(a0, P0, dt, ct, Tt,|& \verb|dlm(m0, C0, FF, V, GG, W)|& \verb|SS (F, G, H, Q, R, z0, P0)|& \verb|KFAS(a1, P1, Z, T,| \\
+Function & \code{fkf(a0, P0, dt, ct, Tt,}& \code{dlm(m0, C0, FF, V, GG, W)}& \code{SS (F, G, H, Q, R, z0, P0)}& \code{KFAS(a1, P1, Z, T,} \\
 
-& \verb|Zt, HHt, GGt, yt)|& & & \verb|H, Q, R, y, u)|\\
+& \code{Zt, HHt, GGt, yt)}& & & \code{H, Q, R, y, u)}\\
 \hline
-Function & \verb|a0| = initial mean & \verb|m0| = initial mean& \verb|z0| = initial mean& \verb|a1| = initial mean\\
+Function & \code{a0} = initial mean & \code{m0} = initial mean& \code{z0} = initial mean& \code{a1} = initial mean\\
 
-Arguments& \verb|P0| = initial covariance & \verb|C0| = initial covariance & \verb|P0| = initial covariance& \verb|P1| = initial covariance\\
+Arguments& \code{P0} = initial covariance & \code{C0} = initial covariance & \code{P0} = initial covariance& \code{P1} = initial covariance\\
 
-& \verb|dt, ct| = $d, c$ & \verb|FF, GG| = $F, G$ & \verb|F, G, H| = $F, G, H$& \verb|T, Z| = $T, Z$\\
+& \code{dt, ct} = $d, c$ & \code{FF, GG} = $F, G$ & \code{F, G, H} = $F, G, H$& \code{T, Z} = $T, Z$\\
 
-& \verb|Tt, Zt| = $Z, T$ & \verb|V, W| = $V, W$& \verb|Q, R| = $Q, R$& \verb|H, Q, R| = $H, Q, R$\\
+& \code{Tt, Zt} = $Z, T$ & \code{V, W} = $V, W$& \code{Q, R} = $Q, R$& \code{H, Q, R} = $H, Q, R$\\
 
-& \verb|HHt, GGt| = $HH^T, GG^T$& & &\verb|y| = data\\
-& & & &\verb|u| = parameters in Non-Gaussian case\\
+& \code{HHt, GGt} = $HH^T, GG^T$& & &\code{y} = data\\
+& & & &\code{u} = parameters in Non-Gaussian case\\
 \hline
 \hline
 
@@ -180,21 +185,20 @@ Missing Values & $\checkmark$ & $\checkmark$&   & $\checkmark$ \\
 
 \subsection{\tt dlm}
 \subsubsection*{Required File}
-\verb|dlmlab.rmd| 
+\code{dlmlab.rmd} 
 \subsubsection*{Exercise}
-Go through the \verb|dlmlab.r| file to understand how the \verb|dlm| package works with a simple linear model. To familiarize yourself with the different \verb|R| packages one can use for Kalman Filtering, try repeating this example with one of the following packages: \verb|FKF, dse, KFAS| 
-
+Go through the \code{dlmlab.r} file to understand how the \code{dlm} package works with a simple linear model. To familiarize yourself with the different \code{R} packages one can use for Kalman Filtering, try repeating this example with one of the following packages: \code{FKF, dse, KFAS} 
 
 \subsection{EKF - Tracking}
 \subsubsection*{Required File}
- \verb|trackinglab.r|
+ \code{trackinglab.r}
 \subsubsection*{Background Information}
 A logistic growth model with rate $r$ and carrying capacity $k$ can be written as
 $$\frac{dp}{dt}=rp\left( 1-\frac{p}{k}\right)$$
 with initial guess $p_0$, the logistic growth model can be analytically solved as.
-$$p=\frac{kp_0exp(rt)}{k+p_0(exp(rt)-1)}$$
+$$p=\frac{kp_0\exp(rt)}{k+p_0(\exp(rt)-1)}$$
 A population data is modeled based on the analytical solution of logistic growth model with additive random process error
-$$p_{t}=\frac{kp_{t-1}exp(r \Delta t)}{k+p_{t-1}(exp(r \Delta t)-1)} + v$$
+$$p_{t}=\frac{kp_{t-1}\exp(r \Delta t)}{k+p_{t-1}(\exp(r \Delta t)-1)} + v$$
 An extended Kalman Filter is used to track the population given that the variance of process and observation error is known. state space is assumed as $x=[r \text{  }  p]^T$ and observation model is given as
 $$z=[0\text{  }  1][r\text{  }  p]^T+w$$
 In the given code the sample data is  synthetically generated and tracking algorithm is implemented.
@@ -207,7 +211,7 @@ $$p_t=p_{t-1}+\Delta t \left( rp_{t-1}\left( 1-\frac{p_{t-1}}{k}\right)+ v\right
 
 \subsection{EKF - Parameter Estimation}
 \subsubsection*{Required File}
-\verb|paramestimationlab.r|
+\code{paramestimationlab.r}
 \subsubsection*{Background Information}
 A sample code for estimating parameter a in the equation $$y=a^2x^2+x+1$$ is given in the sample code.  The data is synthetically generated to observe the error of estimated parameter form the true value of the parameter.
 \subsubsection*{Exercise 1}
@@ -216,23 +220,26 @@ $$x=v_0t\cos(\theta)$$
 $$y=v_0t\sin(\theta)-\frac{gt^2}{2}$$
 \section{References}
 
-Linear Kalman Filter
+\subsection{Linear Kalman Filter}
+
 \begin{itemize}
 \item \href{http://www.cs.unc.edu/~tracker/media/pdf/SIGGRAPH2001_CoursePack_08.pdf}{An Introduction to the Kalman Filter}
 \item \href{http://www.robots.ox.ac.uk/~ian/Teaching/Estimation/LectureNotes2.pdf}{Derivation of Kalman Filter}
 \item \href{https://en.wikipedia.org/wiki/Kalman_filter}{Wikipedia Article on Kalman Filter}
 \end{itemize}
-Extended Kalman Filter
+
+\subsection{Extended Kalman Filter}
 \begin{itemize}
-\item Yaakov Bar-Shalom, X. Rong Li, Thiagalingam Kirubarajan; \textbf{Estimation with Applications to Tracking and Navigation}; Wiley Interscience Publication.
+\item \bibentry{barshalom_estimation_2001}
 \item \href{https://en.wikipedia.org/wiki/Extended_Kalman_filter}{Wikipedia Article on Extended Kalman Filter}
 \end{itemize}
-Parameter Estimation
+
+\subsection{Parameter Estimation}
 \begin{itemize}
-\item Simon Haykin; \textbf{Kalman Filtering and Neural Networks}; Wiley Publications.
-\item Wan E. A.; The unscented Kalman filter for nonlinear estimation; Adaptive Systems for Signal Processing, Communications, and Control Symposium 2000. AS-SPCC. The IEEE 2000.
+\item \bibentry{haykin_kalman_2001}
+\item \bibentry{wan_unscented_2000}
 \end{itemize}
-\verb|R| Resources
+\subsection{\code{R} Resource}
 \begin{itemize}
 \item \href{http://core.ac.uk/download/pdf/6340262.pdf}{Kalman Filtering in R}
 \item \href{https://cran.r-project.org/web/packages/FKF/FKF.pdf}{\tt FKF}
@@ -240,4 +247,7 @@ Parameter Estimation
 \item \href{https://cran.r-project.org/web/packages/dse/dse.pdf}{\tt dse}
 \item \href{https://cran.r-project.org/web/packages/KFAS/KFAS.pdf}{\tt KFAS}
 \end{itemize}
+
+\bibliography{../nonlin}
+
 \end{document}
