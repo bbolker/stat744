@@ -1,0 +1,354 @@
+\documentclass[xcolor=dvipsnames,10pt]{beamer}
+%,hyperref={bookmarks=false}
+%\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\renewcommand{\figurename}{}
+\title{{\LaTeX} }
+
+\usetheme{Boadilla}%{Madrid}
+\usecolortheme[named=BlueViolet]{structure}%{dolphin}
+\usefonttheme{professionalfonts}
+\useoutertheme{miniframes} %{infolines}
+\usepackage{xmpmulti}
+\usepackage{ifpdf}
+\AtBeginSection[]{\frame{\frametitle{Outline}\tableofcontents[current]}}
+\renewcommand{\figurename}{\bf Figure}
+\renewcommand{\tablename}{\bf Table}
+\usepackage{caption}
+\usepackage{rotating,threeparttable,booktabs}
+\usepackage{natbib}
+\usepackage{amsfonts,amsmath,amssymb,amsthm,enumerate,array}
+% CJK
+\usepackage{bm,dsfont,multicol}
+\usepackage{verbatim}
+\usepackage{listings}
+
+\captionsetup{labelsep=period,justification=raggedright}
+\renewcommand{\figurename}{\bf Figure}
+\renewcommand{\tablename}{\bf Table}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{rmk}{Remark}
+\newtheorem{proposition}{Proposition}
+\renewcommand{\thethm}{\arabic{thm}}
+\renewcommand{\thelemma}{\arabic{lemma}}
+\renewcommand{\thecor}{\arabic{cor}}
+\renewcommand{\thermk}{\arabic{rmk}}
+
+%\ifpdf
+%\hypersetup{pdfpagemode=FullScreen}
+%\else
+%\DeclareGraphicsRule{*}{eps}{.bb}{}
+%\fi
+
+\let\WriteBookmarks\relax
+
+\linespread{1.2}
+
+\newenvironment{num}
+ {\leftmargini=6mm\leftmarginii=8mm
+  \begin{itemize}}{\end{itemize}}
+
+%--------------------------------------------------------%
+
+\title[]{\textbf{Particle Filtering}}
+\vspace*{10pt}
+\author[]{\textsc{STATS 744}\\
+\vspace*{20pt}
+}
+\institute[STATS 744]{\\
+           \vspace*{20pt}}
+\date{\textcolor[rgb]{0.50,0.00,0.00}{Oct. 22nd, 2015}}
+\begin{document}
+\begin{frame}
+\titlepage
+\end{frame}
+%--------------------------------------------------------%
+
+\raggedright
+\begin{frame}
+\frametitle{Outline} \normalsize \tableofcontents
+\end{frame}
+%--------------------------------------------------------%
+\section{Introduction}
+\subsection{}
+\begin{frame}[c]
+\frametitle{Introduction}
+\begin{itemize}
+\item Usually, prior knowledge about the phenomenon being modelled is available.
+\item Inferences on unknown quantities are based on the posterior.
+\item It is necessary to update the posterior distribution when new data is available.
+\item New observations come sequentially.
+\item For example, tracking an aircraft using radar, estimating the volatility of financial instruments using stock market data.
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+\begin{itemize}
+\item If the data are modelled by a linear Gaussian state-space model, we can derive an exact analytical expression to compute the evolving sequence of posterior distribution by Kalman filter.
+\item If the data are modelled as partially observed, finite state-space Markov chain, we can obtain the analytical solution by hidden Markov model.
+\item Sequential Monte Carlo methods are a set of simulation-based methods which provide a convenient and attractive approach to computing the posterior distribution.
+\end{itemize}
+\end{frame}
+
+%--------------------------------------------------------%
+\section{Preliminary}
+\subsection{Importance Sampling}
+\begin{frame}[c]
+\frametitle{Importance Sampling}
+\begin{itemize}
+\item Suppose one is interested in evaluating the expected value
+\begin{eqnarray}
+E_{\pi}(f(X))=\int f(x)\pi(x)dx.\notag
+\end{eqnarray}
+\item Sampling from $\pi$ is hard but we can easily sample from $g$.
+\item If $g$ is an $importance~density$ having property that $g(x)=0$ implies $\pi(x)=0$, then one can write
+\begin{eqnarray}
+E_{\pi}(f(X))=\int f(x)\frac{\pi(x)}{g(x)}g(x)dx=E_{g}(f(X)\omega(X)).\notag
+\end{eqnarray}
+where $\omega(x)=\frac{\pi(x)}{g(x)}$ is $importance~function$.
+\item Approximate the expected value of interest by generating a random sample of size $N$ from g and computing
+\begin{eqnarray}
+\frac{1}{N}\sum\limits_{i=1}^{N}f(x^{(i)})\omega(x^{(i)})\approx E_{\pi}(f(X)).\notag
+\end{eqnarray}
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------%
+\subsection{Hidden Markov Model}
+\begin{frame}[c]
+\frametitle{Hidden Markov Model}
+\begin{itemize}
+\item For unobserved true discrete-state Markov process $X_{t}$, it can only be inaccurately measured through a variable $Y_{t}$.
+\item Assume an initial distribution for $X_{0}$;
+\item The true process evolves to the next time step
+\begin{eqnarray}
+X_{t+1}\sim f_{1}(X_{t},\theta);\notag
+\end{eqnarray} 
+\item The observed process for each time point
+\begin{eqnarray}
+Y_{t}\sim f_{2}(X_{t},\theta),\notag
+\end{eqnarray}
+where $f_{i}$ are some known distributions and $\theta$ is a parameter vector.
+\end{itemize}
+\end{frame}
+
+%--------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+\begin{itemize}
+\item From the observations $Y_{1:t}$, we can sample $X_{t}$ from the target posterior distribution $p(X_{t}|Y_{1:t})$ by using 
+\begin{eqnarray}
+p(X_{t}|Y_{1:t})&=&\frac{p(X_{t},Y_{1:t})}{p(Y_{1:t})}\notag\\
+&=&\frac{p(Y_{t}|X_{t})p(X_{t}|Y_{1:t-1})}{p(Y_{1:t})}\notag\\
+&\propto & p(Y_{t}|X_{t})p(X_{t}|Y_{1:t-1})\notag
+\end{eqnarray}
+\item We can sample from importance density $p(X_{t}|Y_{1:t-1})$ by $f_{1}$ and $f_{2}$.
+\item $p(Y_{t}|X_{t})$ is importance function.
+\end{itemize}
+\end{frame}
+
+
+%-------------------------------------------------------------------------------------------------------------------
+\section{The Basic Particle Filtering}
+\subsection{}
+\begin{frame}[c]
+\frametitle{The Basic Particle Filtering}
+\begin{itemize}
+\item Particle filtering is how sequential Monte Carlo is usually referred to in applications to state space models.
+\item This method is easier to understand when viewed as an extension of importance sampling.
+\item Give a starting particles based on the distribution assumption for $X_{0}$.
+\item Resample $X_{0}$ with replacement according to weights.
+\item The resampled particles are used to predict $X_{1}$.
+\item Take $X_{1}$ as starting point for the next iteration.
+\item The algorithm can be described as next page.
+
+\end{itemize}
+\end{frame}
+%-------------------------------------------------------------------------------------------------------------------%
+
+
+
+
+%------------------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{pf1.png}
+\caption{Pseudocode by David Champredon}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+%-------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.5]{pf2.png}
+\caption{Design by David Champredon}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------------------------%
+\section{Numerical Example}
+\subsection{}
+\begin{frame}[c]
+\frametitle{Numerical Example}
+\begin{itemize}
+\item The data are generated from a local level model with system variance 1 and observation variance 2.
+\item The initial distribution is $N(10,9)$.
+\item We record the observations $Y$.
+\item The number of particles is 1000.
+\item Setting the threshold step to 500 then we do resampling whenever the effective sample size drops below one half of the number of particles.
+\item We can compare the filtering state estimates and their deviations computed with the Kalman filter and particle filter.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Part 1: initialization}
+\small
+<<particle_ex1>>=
+library("dlm")
+### Generate data
+mod <- dlmModPoly(1,dV=2,dW=1,m0=10,C0=9)
+n <- 100
+set.seed(23)
+simData <- dlmForecast(mod=mod,nAhead=n,sampleNew=1)
+y <- simData$newObs[[1]]
+
+### Basic Particle Filter - optimal importance density
+N <- 1000
+N_0 <- N/2
+pfOut <- matrix(NA_real_,n+1,N)
+wt <- matrix(NA_real_,n+1,N)
+importanceSd <- sqrt(drop(W(mod)-W(mod)^2/(W(mod)+V(mod))))
+predSd <- sqrt(drop(W(mod)+V(mod)))
+@
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Part 2: sampling}
+\small
+<<part2>>=
+pfOut[1,] <- rnorm(N,mean=m0(mod),sd=sqrt(C0(mod))); wt[1,] <- rep(1/N,N) 
+for (it in 2:(n+1)) {
+    ## generate particles
+    means <- pfOut[it-1,]+W(mod)*(y[it-1]-pfOut[it-1,])/(W(mod)+V(mod))
+    pfOut[it,] <- rnorm(N,mean=means,sd=importanceSd)
+    ## update the weights
+    wt[it,] <- dnorm(y[it-1],mean=pfOut[it-1,],sd=predSd)*wt[it-1,]
+    wt[it,] <- wt[it,]/sum(wt[it,])
+    N.eff <- 1/crossprod(wt[it,])  ## need to resample?
+    if (N.eff < N_0) {             ## multinomial resampling
+        index <- sample(N,N,replace=TRUE,prob=wt[it,])
+        pfOut[it,] <- pfOut[it,index]
+        wt[it,] <- 1/N
+    }
+}
+@
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Part 3}
+<<part3>>=
+### Compare exact filtering distribution with PF approximation
+modFilt <- dlmFilter(y,mod)
+thetaHatKF <- modFilt$m[-1]
+sdKF <- with(modFilt,sqrt(unlist(dlmSvd2var(U.C,D.C))))[-1]
+pfOut <- pfOut[-1,]
+wt <- wt[-1,]
+thetaHatPF <- sapply(1:n,function(i) weighted.mean(pfOut[i,],wt[i,]))
+sdPF <- sapply(1:n,function(i)
+    sqrt(weighted.mean((pfOut[i,]-thetaHatPF[i])^2,wt[i,])))
+@
+\end{frame}
+
+\begin{frame}[c]
+\frametitle{Particle vs Kalman filter results}
+<<partplot,echo=FALSE,fig.height=4,fig.width=7,out.width="\\textwidth">>=
+ff <- function(x,f,t) {
+    data.frame(index=seq_along(x),value=x,filter=f,type=t)
+}
+allDat <- rbind(ff(thetaHatKF,"Kalman","thetahat"),
+                ff(thetaHatPF,"particle","thetahat"),
+                ff(sdKF,"Kalman","std dev"),
+                ff(sdPF,"particle","std dev"))
+library("ggplot2"); theme_set(theme_bw())
+ggplot(allDat,aes(index,value,colour=filter))+geom_line()+
+    facet_grid(type~.,scale="free")+
+        scale_colour_brewer(palette="Set1")+
+            theme(panel.margin=grid::unit(0,"lines"))
+## par(mfrow=c(2,1))
+## plot.ts(cbind(thetaHatKF,thetaHatPF),plot.type="s",
+##         lty=c("dotted","longdash"),xlab="",ylab=expression(m[t]))
+## legend("topleft",c("Kalman","Particle"),
+##        lty=c("dotted","longdash"),bty="n")
+## plot.ts(cbind(sdKF,sdPF),plot.type="s",
+##         lty=c("dotted","longdash"),
+##         xlab="",ylab=expression(sqrt(C[t])))
+## legend("topright",c("Kalman","Particle"),
+##        lty=c("dotted","longdash"),bty="n")
+@
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------------------------%
+%------------------------------------------------------------------------------------------------------------------------------%
+\section{Iterative Filtering}
+\subsection{}
+\begin{frame}[c]
+\frametitle{Iterative Filtering}
+\begin{itemize}
+\item Instead of performing a single particle filter from the observed data $Y_{1:T}$, we estimate the  posterior distribution of $X_{t}$ at each time step.
+\item This method iterates several times through the process.
+\item The idea is changing the constant parameter $\theta$ into the dynamic $\theta(t)$ following a Gaussian process.
+\item It converges to maximum likelihood estimator since the variance of $\theta(t)$ tends to $0$.
+\item The algorithm is listed on next page.
+
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{pf4.png}
+\caption{Design by David Champredon}
+\end{center}
+\end{figure}
+
+\end{frame}
+%------------------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[c]
+\frametitle{}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{pf3.png}
+\caption{Pseudocode by David Champredon}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+%---------------------------------------------------------------------------------------------------------------------------------%
+
+\section*{}
+\frame{
+$${\fontsize{18pt}{10pt}\selectfont{\textcolor[rgb]{0.50,0.00,0.25}{\textbf{Thanks For Your Patience!
+  }}}}$$
+}
+
+\end{document}
