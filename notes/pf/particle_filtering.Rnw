@@ -102,7 +102,7 @@
 \begin{itemize}
 \item Suppose one is interested in evaluating the expected value
 \begin{eqnarray}
-E_{\pi}(f(X))=\int f(x)\pi(x)dx.\notag
+E_{\pi}(f(X))=\int f(x)\pi(x)\, dx.\notag
 \end{eqnarray}
 \item Sampling from $\pi$ is hard but we can easily sample from $g$.
 \item If $g$ is an $importance~density$ having property that $g(x)=0$ implies $\pi(x)=0$, then one can write
@@ -121,7 +121,7 @@ where $\omega(x)=\frac{\pi(x)}{g(x)}$ is $importance~function$.
 \begin{frame}[c]
 \frametitle{Hidden Markov Model}
 \begin{itemize}
-\item For unobserved true discrete-state Markov process $X_{t}$, it can only be inaccurately measured through a variable $Y_{t}$.
+\item Consider an unobserved true discrete-state Markov process $X_{t}$ that can only be inaccurately measured through a variable $Y_{t}$.
 \item Assume an initial distribution for $X_{0}$;
 \item The true process evolves to the next time step
 \begin{eqnarray}
@@ -152,15 +152,16 @@ p(X_{t}|Y_{1:t})&=&\frac{p(X_{t},Y_{1:t})}{p(Y_{1:t})}\notag\\
 
 
 %-------------------------------------------------------------------------------------------------------------------
-\section{The Basic Particle Filtering}
+\section{Basic Particle Filtering}
 \subsection{}
 \begin{frame}[c]
-\frametitle{The Basic Particle Filtering}
+\frametitle{Basic Particle Filtering}
 \begin{itemize}
 \item Particle filtering is how sequential Monte Carlo is usually referred to in applications to state space models.
 \item This method is easier to understand when viewed as an extension of importance sampling.
-\item Give a starting particles based on the distribution assumption for $X_{0}$.
-\item Resample $X_{0}$ with replacement according to weights.
+\item Generate starting particles based on the distribution assumption for $X_{0}$.
+\item Resample $X_{0}$ with replacement according to weights
+(also called a \emph{bootstrap filter})
 \item The resampled particles are used to predict $X_{1}$.
 \item Take $X_{1}$ as starting point for the next iteration.
 \item The algorithm can be described as next page.
@@ -202,7 +203,7 @@ p(X_{t}|Y_{1:t})&=&\frac{p(X_{t},Y_{1:t})}{p(Y_{1:t})}\notag\\
 \section{Numerical Example}
 \subsection{}
 \begin{frame}[c]
-\frametitle{Numerical Example}
+\frametitle{Numerical Example \href{http://www.stats.ox.ac.uk/~doucet/doucet_defreitas_gordon_smcbookintro.pdf}{(Doucet \emph{et al.} ch. 1)}}
 \begin{itemize}
 \item The data are generated from a local level model with system variance 1 and observation variance 2.
 \item The initial distribution is $N(10,9)$.
@@ -275,7 +276,7 @@ sdPF <- sapply(1:n,function(i)
 
 \begin{frame}[c]
 \frametitle{Particle vs Kalman filter results}
-<<partplot,echo=FALSE,fig.height=4,fig.width=7,out.width="\\textwidth">>=
+<<partplot,echo=FALSE,fig.height=4,fig.width=7,out.width="\\textwidth",message=FALSE,warning=FALSE>>=
 ff <- function(x,f,t) {
     data.frame(index=seq_along(x),value=x,filter=f,type=t)
 }
