@@ -1,0 +1,216 @@
+---
+title: "Particle filtering lab"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+---
+
+
+## SIR model
+
+As a less-trivial dynamical system, consider the following dynamical system
+that models an epidemic outbreak in discrete time.
+
+The state of the system is $\{S,I\}$, where $S$ is the current number of
+susceptible individuals and $I$ is the number of infectious individuals.
+The *hazard* (probability per unit time) that a susceptible will be infected
+is $\beta I$, so the probability of infection within a time step $\Delta t$
+is $p_I(I) = 1-\exp(-\beta I \Delta t)$.  The hazard that an infected individual will
+recover is $\gamma$ (so $p_R=1-\exp(-\gamma \Delta t)$).  Infected individuals
+are observed with probability $p_C$.
+
+$$
+\begin{split}
+\textrm{inf(t)} & \sim \textrm{Binom}(p_I(I,t), S(t)) \\
+\textrm{rec(t)} & \sim \textrm{Binom}(p_R, I(t)) \\
+S(t+1) & = S(t)-\textrm{inf}(t) \\
+I(t+1) & = I(t)+\textrm{inf}(t)-\textrm{rec}(t) \\
+I_{\textrm{obs}}(t) & \sim \textrm{Binom}(p_C, I(t))
+\end{split}
+$$
+```{r SIR1}
+## stochastic update of the system
+SIR_f1 <- function(xstart,times,params,...) {
+    res <- with(as.list(c(xstart,params)), { ## R magic
+     infprob <- 1-exp(-beta*I/N*dt)
+     recoveryprob <- 1-exp(-gamma*dt)
+     newinf <- rbinom(1,prob=infprob,size=S)
+     newrecover <- rbinom(1,prob=recoveryprob,size=I)
+     c(S=S-newinf,I=I+newinf-newrecover)  
+  })
+  return(res)
+}
+SIR_f1B <- function(xstart,times,params,...) {
+    ## in pomp, xstart, params are provided as _matrices_.
+    ## if we want to use with() magic we need to transpose
+    ## them and then turn them into data frames ...
+    ff <- function(x) as.data.frame(t(x))
+    nrep <- ncol(xstart)
+    nvars <- nrow(xstart)
+    res <- with(c(ff(xstart),ff(params)), { ## R magic
+                    infprob      <- 1-exp(-beta*I/N*dt)
+                    recoveryprob <- 1-exp(-gamma*dt)
+                    newinf     <- rbinom(nrep,prob=infprob,size=S)
+                    newrecover <- rbinom(nrep,prob=recoveryprob,size=I)
+                    ## combine in same orientation as xstart ...
+                    rbind(S=S-newinf,I=I+newinf-newrecover)
+                })
+    ## results need to be returned as a 3-dimensional array
+    ## here we have assumed that only a single time step will be requested:
+    ## this will cause problems if we try to use abc or synthetic likelihood
+    ##  in pomp ...
+    res2 <- array(c(xstart,res),dim=c(nvars,nrep,2),
+                  dimnames=list(rownames(xstart),NULL,NULL))
+  return(res2)
+}
+
+params0 <- c(beta=2,gamma=1,dt=1,N=50,report=0.5)
+params1 <- c(beta=2,gamma=1,dt=1,N=50,report=0.5,I.0=0.02)
+X0 <- c(S=49,I=1)
+ 
+SIR_obslik <- function(y,x,t,params,log=FALSE,...)  {
+    d <- with(as.list(c(x,params)),
+              dbinom(y,I,prob=report,log=log)
+              )
+    ## if (any(is.na(d))) browser()
+    return(d)
+}
+SIR_obslik(0,X0,t=0,params0)
+```
+
+Run a simulation:
+```{r sim1}
+set.seed(101)
+nt <- 100
+obsvals <- numeric(nt)
+## assume we actually observe the first case
+obsvals[1] <- X0["I"]
+Xmat <- matrix(NA,ncol=2,nrow=nt,
+               dimnames=list(NULL,names(X0)))
+Xmat[1,] <- X0
+for (i in 2:nt) {
+    Xmat[i,] <- SIR_f1(Xmat[i-1,],i,params0)
+    obsvals[i] <- rbinom(1,prob=params0["report"],size=Xmat[i,"I"])
+}
+```
+
+```{r plotsim1}
+par(las=1,bty="l")
+matplot(cbind(Xmat,obsvals),type="b",col=c(1,2,4),lty=1,
+        pch=1:3,
+        xlab="time",ylab="",
+        xlim=c(0,20))
+legend("topright",col=c(1,2,4),pch=1:3,c("S","I","I(obs)"))
+```
+
+## iterated filtering etc.
+
+```{r pomp1}
+library("pomp")
+P1 <- pomp(data=obsvals,times=1:length(obsvals),
+           t0=0,rprocess=SIR_f1B,dmeasure=SIR_obslik,
+           toEstimationScale=function(params,...) {
+               params[c("beta","gamma")] <- log(params[c("beta","gamma")])
+               params[c("report","I.0")] <- qlogis(params[c("report","I.0")])
+               return(params)
+           },
+           fromEstimationScale=function(params,...) {
+               params[c("beta","gamma")] <- exp(params[c("beta","gamma")])
+               params[c("report","I.0")] <- plogis(params[c("report","I.0")])
+               return(params)
+           },
+           initializer=function(params,t0,...) {
+               with(as.list(params),
+                    {
+                        I0 <- ceiling(I.0*N)
+                        c(S=N-I0,I=I0)
+                    })})
+
+mif2(P1, Nmif = 1, start=params1, transform=TRUE,
+     Np=1000, rw.sd(beta=0.1,gamma=0.1,report=0.1),
+     cooling.fraction.50=0.1)
+```
+
+## Filtering comparison
+
+```{r filt1}
+library("dlm")
+### Generate data
+mod <- dlmModPoly(1,dV=2,dW=1,m0=10,C0=9)
+n <- 100
+set.seed(23)
+simData <- dlmForecast(mod=mod,nAhead=n,sampleNew=1)
+y <- simData$newObs[[1]]
+```
+
+```{r filt2}
+basicPF <- function(y,N=1000,N0=N/2,optimal=FALSE,
+                    m0=10,V=2,W=1,C0=9) {
+    n <- length(y)
+    pfOut <- matrix(NA_real_,n+1,N)
+    wt <- matrix(NA_real_,n+1,N)
+    if (optimal) {
+        predSd <- sqrt(drop(W-W^2/(W+V)))  ## was importanceSd
+        obsSd <- sqrt(drop(W+V))           ## was predSd
+    }  else {
+        predSd <- sqrt(W)
+        obsSd <- sqrt(V)
+    }
+    pfOut[1,] <- rnorm(N,mean=m0,sd=sqrt(C0))
+    wt[1,] <- rep(1/N,N) 
+    for (it in 2:(n+1)) {
+        ## generate particles
+        if (optimal) {
+            means <- pfOut[it-1,]+W*(y[it-1]-pfOut[it-1,])/(W+V)
+        } else {
+            means <- pfOut[it-1,]
+        }
+        pfOut[it,] <- rnorm(N,mean=means,sd=predSd)
+        wt[it,]    <- dnorm(y[it-1],mean=pfOut[it-1,],sd=obsSd)*wt[it-1,]
+        wt[it,]    <- wt[it,]/sum(wt[it,])
+        N.eff <- 1/crossprod(wt[it,])  ## need to resample?
+        if (N.eff < N0) {             ## multinomial resampling
+            index <- sample(N,N,replace=TRUE,prob=wt[it,])
+            pfOut[it,] <- pfOut[it,index]
+            wt[it,] <- 1/N
+        }
+    }
+    pfOut <- pfOut[-1,]
+    wt <- wt[-1,]
+    m <- sapply(1:n,function(i) weighted.mean(pfOut[i,],wt[i,]))
+    sd <-  sapply(1:n,function(i)
+        sqrt(weighted.mean((pfOut[i,]-m[i])^2,wt[i,])))
+    list(mean=m,sd=sd)
+}
+```
+
+## Compare exact filtering distribution with PF approximation
+
+In this particular case I think the KF and the optimal and non-optimal PF give
+almost exactly the same result ...
+```{r filtcomp1}
+modFilt <- dlmFilter(y,mod)
+thetaHatKF <- modFilt$m[-1]
+sdKF <- with(modFilt,sqrt(unlist(dlmSvd2var(U.C,D.C))))[-1]
+PFresult0 <- basicPF(y=y)
+PFresult <- basicPF(y=y,optimal=TRUE)
+plot(PFresult[[1]])
+lines(thetaHatKF)
+lines(PFresult0[[1]],col=2)
+```
+
+```{r filtcomp2}
+ff <- function(x,f,t) {
+    data.frame(index=seq_along(x),value=x,filter=f,type=t)
+}
+allDat <- rbind(ff(thetaHatKF,"Kalman","thetahat"),
+                ff(PFresult[[1]],"particle","thetahat"),
+                ff(PFresult0[[1]],"particle2","thetahat"),
+                ff(sdKF,"Kalman","std dev"),
+                ff(PFresult[[2]],"particle","std dev"),
+                ff(PFresult0[[2]],"particle2","std dev"))
+library("ggplot2"); theme_set(theme_bw())
+ggplot(allDat,aes(index,value,colour=filter))+geom_line()+
+    facet_grid(type~.,scale="free")+
+        scale_colour_brewer(palette="Set1")+
+            theme(panel.margin=grid::unit(0,"lines"))
+```
+
