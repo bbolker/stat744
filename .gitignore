@@ -11,3 +11,5 @@
 *.nav
 .Rhistory
 .DS_Store
+*_cache/
+*_files/
