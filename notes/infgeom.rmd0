@@ -9,6 +9,11 @@ header-includes:
    - \\hypersetup{colorlinks}
 ---
 
+This document is supposed to illustrate the variety of approaches
+to computing interval estimates (i.e., confidence intervals) in
+frequentist and Bayesian frameworks, and especially their geometric
+interpretations.
+
 ```{r pkgs,message=FALSE}
 library("bbmle")
 library("emdbook")
@@ -22,6 +27,29 @@ library("knitr")
 opts_chunk$set(echo=FALSE)
 ```
 
+## Normal data
+
+```{r ex1}
+n <- 5
+set.seed(101)
+z <- rnorm(n)
+m0 <- mle2(z~dnorm(mu,sd=sigma),
+           start=list(mu=0,sigma=1),
+           data=data.frame(z),
+           method="L-BFGS-B",
+           lower=c(mu=-5,sigma=0.002))
+cc <- curve3d(m0@minuslogl(x,y),
+              xlim=c(-0.7,0.7),ylim=c(0.1,1.5),
+              n=c(61,61),sys3d="none")
+with(cc,image(x,y,z))
+pp <- profile(m0)
+p1 <- pp@profile[[1]]$par.vals
+p2 <- pp@profile[[2]]$par.vals
+with(cc,contour(x,y,z,add=TRUE,levels=-logLik(m0)+
+                    qchisq(levels,df=2)/2,
+                labels=levels))
+
+```
 ```{r setup}
 n <- 20  ## originally 20
 set.seed(101)
@@ -38,6 +66,9 @@ m1 <- mle2(y~dnbinom(mu=1,size=exp(logk)),
 levels <- c(0.5,0.95,0.99)
 cc <- curve3d(nll,xlim=c(-3,5),ylim=c(-4,4),
               n=c(61,61),sys3d="none")
+image(cc$x,cc$y,cc$z,
+      col=viridis(20),useRaster=TRUE)
+
 ```
 ```{r prof,cache=TRUE,warning=FALSE}
 pp <- profile(m1,std.err=0.1,alpha=0.01,maxsteps=1000)

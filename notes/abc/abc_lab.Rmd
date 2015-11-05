@@ -5,6 +5,8 @@ date: "October 21, 2015"
 output: pdf_document
 ---
 
+# Preliminaries
+
 There are two packages are available in R to implement approximate bayesian computations -- `abc` and `EasyABC`.
 
 
@@ -13,23 +15,23 @@ First, load the packages:
 ```{r loadpackage,cache=TRUE,message=FALSE}
 library("abc")
 library("EasyABC")
+library("abc.data") ## load data package; automatically installed with abc
+library("ggplot2")
 ```
 
+# abc
 
-\section{abc}
 ```{r abcpackage,cache=TRUE}
-library("abc")
-require(abc.data)
 data(musigma2)
-require(abc.data)
 data(human)
 stat.voight
-?stat.voight
- par(mfcol = c(1,3), mar=c(5,3,4,.5)) 
+## ?stat.voight
+par(mfcol = c(1,3), mar=c(5,3,4,.5)) 
 boxplot(stat.3pops.sim[,"pi"]~models, main="Mean nucleotide diversity") 
 boxplot(stat.3pops.sim[,"TajD.m"]~models, main="Mean Tajima's D") 
 boxplot(stat.3pops.sim[,"TajD.v"]~models, main="Var in Tajima's D")
-cv.modsel <- cv4postpr(models, stat.3pops.sim, nval=5, tol=.01, method="mnlogistic") 
+cv.modsel <- cv4postpr(models, stat.3pops.sim, nval=5,
+                       tol=.01, method="mnlogistic") 
 s <- summary(cv.modsel)
 plot(cv.modsel, names.arg=c("Bottleneck", "Constant", "Exponential"))
 modsel.ha <- postpr(stat.voight["hausa",], 
@@ -99,13 +101,15 @@ par(mfrow=c(2,1),cex=.8)
  plot(res, param=par.italy.sim[, "Ne"])
 ```
 
-\section{EasyABC}
-\section{Model}
+# EasyABC
+
+## Model
+
 Let's consider a stochastic individual-based model to demonstrate how `EasyABC` can be used. This model is drawn from Jabot (2010), representing the stochastic dynamics of an ecological community. 
 
 Each species in the community are given by a local competitive ability as determined by a filtering function of one quantitative trait $t$: $F(t)=1+A\exp\bigg(\frac{-(t-h)^2}{2\sigma^2}\bigg)$. At each time step, one individual drawn at random dies in a local community of size $J$. It is replaced either by an immigrant from the regional pool with probability $\frac{I}{I+J-1}$ or by the descendant of a local individual. Parameter $I$ measures the amount of immigration from the regional pool into the local community. The probability that the replacing individual is of species $i$ is proportional to the abundance of this species in the local community multiplied by its local competitive ability $F_i$. Here, the parameters of interest are $I,h,A,\sigma$ and the local community size $J$ is fixed at 500. The summary statistics are species richness of the community, Shannon's index, the mean of the trait value among individuals and the skewness of the trait value distribution. The model is a built-in model in this package.
 
-\section{ABC schemes}
+## ABC schemes
 
 There are 4 types of schemes available in `EasyABC`: standard rejection algorithm, sequential schemes, coupled to MCMC sequential schemes and a Simulated Annealing algorithm, implemented by `ABC_rejection(), ABC_sequential(), ABC_mcmc()` and `SABC()`, respectively.
 
@@ -113,7 +117,7 @@ All these functions require a model used to generate data and return a set of su
 
 In our example, we have summary statistics of the observed data 
 ```{r summarystat,cache=TRUE}
-sum_stat_obs <- c(100,2.5,20,30000)
+sum_stat_obs <- c(richness=100,shannon=2.5,meantrait=20,skewness=30000)
 ```
 and assume prior distributions 
 ```{r abc,cache=TRUE}
@@ -127,12 +131,32 @@ trait_prior <- list(c("unif",3,5),
 First, let's look at the abc rejection algorithm. 
 ```{r abcrejection,cache=TRUE}
 set.seed(9)
-ABC_rej <- ABC_rejection(model=trait_model, prior=trait_prior,nb_simul=100,
-                         summary_stat_target=sum_stat_obs,tol=.1,use_seed=T)
-ABC_rej
+(ABC_rej <- ABC_rejection(model=trait_model, prior=trait_prior,nb_simul=100,
+                         summary_stat_target=sum_stat_obs,tol=.1,
+                         use_seed=TRUE))
 ```
 
-Here, the `tol` is the percentage of simulations that are nearest the observed summary statistics. The model must be a R function, taking a vector of model parameter values as arguments and return a vector of summary statistics. The available prior distribution are uniform, normal, lognormal and exponential. 
+```{r}
+trDens <- function(pr,n=100000) {
+    lapply(pr,
+           function(x)
+               do.call(paste0("r",x[1]),
+                       as.list(c(n,as.numeric(x[2:3])))))
+}
+par(mfrow=c(2,2))
+mapply(function(x,y) {
+           plot(density(x)); lines(density(y),col=2);
+           rug(y,col=2)
+       },
+       trDens(trait_prior),
+       split(ABC_rej$stats,col(ABC_rej$stats)))
+```
+
+Here, the `tol` is the percentage of simulations that are nearest the
+observed summary statistics. The model must be a R function, taking a
+vector of model parameter values as arguments and return a vector of
+summary statistics. The available prior distribution are uniform,
+normal, lognormal and exponential.
 
 
 ```{r histplot,cache=TRUE,echo=FALSE}
@@ -149,7 +173,9 @@ for (i in 1:4)
 ABC rejection algorithm is computationally inefficient.
 
 
-The idea of ABC-MCMC is to perform a Metropolis-Hastings algorithm to explore the parameter space, and in replacing the step of likelihood ratio computation by simulations of the model.
+The idea of ABC-MCMC is to perform a Metropolis-Hastings algorithm to
+explore e parameter space, and in replacing the step of likelihood
+ratio computation by simulations of the model.
 
 ```{r abcmcmc_marjoram1,cache=TRUE,message=FALSE}
 ABC_Marjoram_original<-ABC_mcmc(method = "Marjoram_original",
@@ -225,41 +251,30 @@ ABC_Lenormand
 ```
 
 ```{r dataframe,cache=TRUE}
-data<-rbind(data.frame(ABC_rej$par,method="rejection"),
-      data.frame(ABC_Marjoram_original$par, method="Marjoram_original"),
-      data.frame(ABC_Marjoram$par,method="Marjoram"),
-      data.frame(ABC_Wegmann$par,method="Wegmann"),
-      data.frame(ABC_Beaumont$par,method="Beaumont"),
-      data.frame(ABC_Drovandi$par,method="Drovandi"),
-      data.frame(ABC_Delmoral$par,method="Delmoral"),
-      data.frame(ABC_Lenormand$par,method="Lenormand")
-      )
-library(ggplot2)
-g1<- ggplot(data) +
-  geom_histogram(aes(x=X1,colour=method,fill=method),binwidth=0.1) + 
-  geom_density(aes(x=X1,colour=method)) + 
-  facet_wrap(~method)
-g2 <- ggplot(data) +
-  geom_histogram(aes(x=X2,colour=method,fill=method),binwidth=0.1) + 
-  geom_density(aes(x=X2,colour=method)) + 
-  facet_wrap(~method)
-g3 <- ggplot(data) +
-  geom_histogram(aes(x=X3,colour=method,fill=method),binwidth=0.1) + 
-  geom_density(aes(x=X3,colour=method)) + 
-  facet_wrap(~method)
-g4 <- ggplot(data) +
-  geom_histogram(aes(x=X4,colour=method,fill=method),binwidth=0.1) + 
-  geom_density(aes(x=X4,colour=method)) + 
-  facet_wrap(~method)
-g1
-g2
-g3
-g4
+mList <- list(rejection=ABC_rej,
+              Marjoram_orig=ABC_Marjoram_original,
+              Marjoram=ABC_Marjoram,
+              Wegmann=ABC_Wegmann,
+              Beaumont=ABC_Beaumont,
+              Drovandi=ABC_Drovandi,
+              Delmoral=ABC_Delmoral,
+              Lenormand=ABC_Lenormand)
+
+resAll <- ldply(mList,
+      function(x) {
+          melt(x$par)
+      })
+
+theme_set(theme_bw())
+ggplot(resAll,aes(value))+geom_histogram()+
+    facet_grid(.id~X2,scale="free")+
+        theme(panel.margin=grid::unit(0,"lines"))
 
 ```
 
 
-\section{Exercise}
+# Exercise
+
 1. Try the socks example by the two packages
 ```{r socks,cache=TRUE}
 sim_sock <- function(nb.mu,nb.sd,beta.a,beta.b){

@@ -58,10 +58,18 @@ Iterated filtering: practical considerations
 usually means writing them in C/C++  
 (`pomp` "Csnippets", `Rcpp`)
 - *particle exhaustion*: how many particles are needed?
-- *cooling schedule* needs to be tuned (cf. *simulated annealing*)
+- tuning:
+    - how many particles?
+    - parallel runs?
+    - *cooling schedule* (cf. *simulated annealing*)
+    
+Practical stuff, cont'd
+========
+
 - convergence diagnostics
 - rough, multimodal surfaces; multiple chains, etc etc
 - MLE approach, so need profiling for confidence intervals
+- "plug & play" property: only need to define dynamical process and observation likelihood model
 
 MIF vs PF
 ===================
@@ -69,3 +77,5 @@ MIF vs PF
 From Ionides *et al.* 2015:
 
 ![](MIF2_1.png)
+
+A=IF1, B=IF2, C=PMCMC, D=densities from 8 PMCMC chains

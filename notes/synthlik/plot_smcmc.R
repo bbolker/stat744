@@ -9,7 +9,7 @@
           cat(msg,"\n")
       }
   }
-    cat("modified .plot.smcmc\n")
+    ## cat("modified .plot.smcmc\n")
     if(!is(x, "smcmc")) stop("object has to be of class \"smcmc\" ")
     chains <- x@chains
     colnames(chains) <- names(x@param)
