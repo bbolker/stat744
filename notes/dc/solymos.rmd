@@ -1,8 +1,11 @@
 ```{r setup}
 library("dclone")
 if (isTRUE(getOption('knitr.in.progress'))) {
-    jags.fit <- function(...) dclone::jags.fit(...,progress.bar="none")
+    ## turn off progress bars
+    dcoptions(verbose=0)
+    options(jags.pb="none")
 }
+load("solymos.rda")  ## poor man's caching
 ```
 
 ```{r datagen}
@@ -58,7 +61,6 @@ nclones(dat2)
 mod2 <- jags.fit(dat2, 
    c("beta", "sigma"), glmm.model, n.iter = 1000)
 ```
-
 
 ```{r dcdim}
 (obj <- dclone(dcdim(data.matrix(1:5)), 2))
@@ -140,7 +142,7 @@ upfun <- function(x) {
 }
 ```
 
-```{r dcmod,cache=TRUE}
+```{r dcmod,eval=FALSE}
 updat <- list(Y = Y, X = X, n = n, 
    np = ncol(X), pr = upfun())
 k <- c(1, 5, 10, 20)
@@ -154,20 +156,20 @@ dcmod <- dc.fit(updat, c("beta", "sigma"),
 summary(dcmod)
 ```
 
- ```{r  figdct}
+```{r figdct}
 dct <- dctable(dcmod)
 plot(dct)
 ```
 
- ```{r  figdctsd}
+```{r figdctsd}
 plot(dct, type="log.var")
 ```
 
-```{r  dcdiag}
+```{r dcdiag}
 dcdiag(dcmod)
 ```
 
-```{r  nn}
+```{r nn}
 gamma <- 2.5
 sigma <- 0.2
 tau <- 0.5
@@ -191,7 +193,7 @@ nndat <- list(Y = Y, n = n)
 ```
 
 
-```{r nnmod,cache=TRUE}
+```{r nnmod,eval=FALSE}
 nnmod <- dc.fit(nndat, c("gamma","sigma","tau"), 
    nn.model, n.clones=c(1,10,20,30,40,50), 
    n.iter=1000, multiply="n")
@@ -310,8 +312,10 @@ newdata = NULL, type = c("mu", "lambda", "Y"),
 }
 ```
 
-```{r cheads,cache=TRUE}
+```{r ovenbird}
 data(ovenbird)
+```
+```{r cheads,eval=FALSE}
 obmod <- glmmPois(count ~ uplow + thd, 
    ovenbird, n.clones = 5, n.update = 1000, 
    n.iter = 1000)
@@ -344,6 +348,7 @@ with(ovenbird, points(count ~ thd))
 ```
 
 Save objects for later convenience:
+
 ```{r savestuff}
-save("obmod","nnmod","dcmod",file="solymos.rda")
+save("bhmod","obmod","nnmod","dcmod",file="solymos.rda")
 ```
