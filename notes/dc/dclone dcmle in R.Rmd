@@ -1,0 +1,523 @@
+---
+title: "Data Cloning in R"
+author: "Jennifer La Rosa, Laxman Ghimire"
+date: "November 16, 2015"
+output: html_document
+---
+
+All code obtained from the following references with some edits made by myself and Ben Bolker (thank you!):
+
+1) http://datacloning.org/usage.html written by Peter Solymos
+
+2) Solymos, P., (2010). dclone: Data Cloning in R. "The R Journal"" {2(2)}, 29-37.
+
+3) https://github.com/datacloning/dcexamples/blob/master/misc/paramecium.R written by Peter Solymos
+
+
+Please install the 'dclone', 'dcmle', 'coda', and 'rjags' packages for this lab. The following setup loads the packages. You may also wish to download the file "solymos.rda" that Professor Bolker placed on the repository and then load it here. 
+```{r setup}
+library(dclone)
+library(rjags)
+library(coda)
+library(dcmle)
+if (isTRUE(getOption('knitr.in.progress'))) {
+    ## turn off progress bars
+    dcoptions(verbose=0)
+    options(jags.pb="none")
+}
+##load("solymos.rda")  ## poor man's caching
+
+## my specific directory, see above for general
+load("C:/Users/Owner/Downloads/solymos (2).rda")
+```
+
+###dclone and dcfit
+
+Let's begin with an example from (1). We consider a Bernoulli model, Y_i~Bin(1,p), for i=1,2,...n. We generate data from this model with sample size n=25 and set the true parameter value of p=0.3.
+```{r}
+set.seed(4321) # set random seed for reproducibility
+n <- 25 # sample size
+p <- 0.3 # true parameter value
+y <- rbinom(n = n, size = 1, prob = p)
+```
+
+We now specify the Bayesian model and conduct analysis by fitting it with rjags via the jags.fit function.
+```{r}
+## model specification
+model <- custommodel("model {
+    for (i in 1:n) {
+        #Y[i] ~ dbin(p, 1) # Binomial(N,p)
+        Y[i] ~ dbern(p) # Bernoulli(p)
+    }
+    p ~ dunif(0.001, 0.999)
+}")
+
+## data
+dat <- list(Y = y, n = n)
+
+## Bayesian MCMC results
+fit <- jags.fit(data = dat, params = "p", model = model)
+
+summary(fit)
+```
+
+Next we implement the data cloning method. First, we specify the same model as above but now generate k clones of the data. Instead of jags.fit as above, we now use the function dc.fit.  
+```{r}
+## dclone-ified model specification
+model <- custommodel("model {
+    for (k in 1:K) {
+        for (i in 1:n) {
+            Y[i,k] ~ dbin(p, 1)
+        }
+    }
+    p ~ dunif(0.001, 0.999)
+}")
+
+## dclone-ified data specification
+dat <- list(Y = dcdim(data.matrix(y)), n = n, K = 1)
+
+## data cloning based MCMC results
+dcfit <- dc.fit(data = dat, params = "p", model = model,
+    n.clones = c(1,2,4,8), unchanged = "n", multiply = "K")
+
+summary(dcfit)
+
+##determine MLE, standard error, Fisher information, and CI
+coef(dcfit) # MLE
+dcsd(dcfit) # asymptotic SEs
+vcov(dcfit) # inverse Fisher information matrix
+confint(dcfit) # asymptotic confidence interval
+```
+
+We use data cloning diagnostics to ensure we do not have issues with identifiability. In this example, the parameter, p, is identifiable. 
+```{r}
+dctable(dcfit)
+plot(dctable(dcfit))
+dcdiag(dcfit)
+plot(dcdiag(dcfit))
+```
+
+###dcmle and makeDcFit
+
+We now demonstrate how to fit data based on the dcmle package. From (3), Solymos demonstrates this via the paramecium dataset. The dcmle function allows us to obtain the MLE and standard error. 
+```{r}
+## Beverton-Holt time series example
+## data and model taken from Ponciano et al. 2009
+## Ecology 90, 356-362.
+paramecium <- makeDcFit(
+  data = list(ncl=1, 
+              n=18, 
+              Y=dcdim(data.matrix(c(17,29,39,63,185,258,267,
+                                    392,510,570,650,560,575,650,550,480,520,500)))),
+  model = function() {
+    for (k in 1:ncl) {
+      for(i in 2:(n+1)){
+        Y[(i-1), k] ~ dpois(exp(X[i, k])) # observations
+        X[i, k] ~ dnorm(mu[i, k], 1 / sigma^2) # state
+        mu[i, k] <- X[(i-1), k] + log(lambda) - log(1 + beta * exp(X[(i-1), k]))
+      }
+      X[1, k] ~ dnorm(mu0, 1 / sigma^2) # state at t0
+    }
+    beta ~ dlnorm(-1, 1) # Priors on model parameters
+    sigma ~ dlnorm(0, 1)
+    tmp ~ dlnorm(0, 1)
+    lambda <- tmp + 1
+    mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+  },
+  multiply = "ncl",
+  unchanged = "n",
+  params = c("lambda","beta","sigma"))
+
+##use dcmle function to compute the MLE
+dcmle(paramecium,n.clones=1:2,n.iter=1000)
+```
+
+###dclone: Data Cloning in R (2010) by Peter Solymos
+
+The main source of example is Solymos' 2010 paper (2). He demonstrates how to utilize R to perform data cloning. The code has been altered slightly by Professor Bolker so that we do not have to tinker with WinBugs. Please note as this paper is from 2010, some of the functions used have now been upgraded or replaced. 
+
+The data cloning method
+
+We commence by generating data once again and setting up our hierarchical model, a Poisson GLMM in this case.
+```{r datagen}
+##Model setup
+set.seed(1234)
+n <- 50
+beta <- c(1.8, -0.9)
+sigma <- 0.2
+x <- runif(n, min = 0, max = 1)
+X <- model.matrix(~ x)
+alpha <- rnorm(n, mean = 0, sd = sigma)
+lambda <- exp(alpha + drop(X %*% beta))
+Y <- rpois(n, lambda)
+```
+
+In order to implement the data cloning method, we must construct a full Bayesian model with a proper prior for each unknown parameter. In this case we choose to use a flat normal prior for the betas and for log(sigma).
+
+Next we create a function for a GLMM model in R. This particular model however is written in the language corresponding to BUGS, which is slightly different than that of R. We do not have to manage different files if we store the BUGS model as an R function as below.   
+```{r bugsmodel}
+glmm.model <- function() {
+   for (i in 1:n) {
+      Y[i] ~ dpois(lambda[i])
+      lambda[i] <- exp(alpha[i] +
+         inprod(X[i,], beta[1,]))
+      alpha[i] ~ dnorm(0, tau)
+   }
+   for (j in 1:np) {
+      beta[1,j] ~ dnorm(0, 0.001)
+   }
+   log.sigma ~ dnorm(0, 0.001)
+   sigma <- exp(log.sigma)
+   tau <- 1 / pow(sigma, 2)
+}
+```
+
+We list the data elements and conduct Bayesian inference via the jags.fit function, which produces an mcmc.list object. 
+```{r bayesian,cache=TRUE}
+dat <- list(Y = Y, X = X, n = n,
+   np = ncol(X))
+mod <- jags.fit(dat, 
+   c("beta", "sigma"), glmm.model, n.iter = 1000)
+```
+
+**Note some code from (2) has been omitted.
+
+The dclone function creates k clones of the data as outlined below. 
+```{r comparison, eval=FALSE}
+dclone(1:5, 1)
+dclone(1:5, 2)
+dclone(matrix(1:4, 2, 2), 2)
+dclone(data.frame(a=1:2, b=3:4), 2)
+```
+
+We use the dclone function to create k clones of the observed data. The nclones function returns the value of k or NULL if k=1. In our example, we set k=2. 
+```{r}
+dat2 <- dclone(dat, n.clones = 2, 
+    multiply = "n", unchanged = "np")
+nclones(dat2)
+```
+
+We then fit a model to the cloned data using jags.fit. 
+```{r clone2,cache=TRUE}
+mod2 <- jags.fit(dat2, 
+   c("beta", "sigma"), glmm.model, n.iter = 1000)
+```
+
+**Note some code from (2) has been omitted. 
+
+We clone over an extra dimension using dcdim to ensure the clones are independent. This is typically used when we have non-independent data. 
+```{r dcdim}
+(obj <- dclone(dcdim(data.matrix(1:5)), 2))
+```
+
+Now that we've demonstrated some methods, let's apply it to the Paramecium data via the Beverton-Holt model, which is presented in Ponciano et al. (2009). This model describes an unobserved time series of actual population abundance via a latent variable component, N_t, t=0,1,...,q, which contains the density dependence, Beta, and the process noise, sigma^2. 
+```{r bhmod}
+beverton.holt <- function() {
+   for (j in 1:k) {
+      for(i in 2:(n+1)){
+         Y[(i-1),j] ~ dpois(exp(log.N[i,j]))
+         log.N[i,j] ~ dnorm(mu[i,j], 1 / sigma^2)
+         mu[i,j] <- log(lambda) + log.N[(i-1),j] 
+             - log(1 + beta * exp(log.N[(i-1),j]))
+      }
+      log.N[1,j] ~ dnorm(mu0, 1 / sigma^2)
+   }
+   beta ~ dlnorm(-1, 1)
+   sigma ~ dlnorm(0, 1)
+   tmp ~ dlnorm(0, 1)
+   lambda <- tmp + 1
+   mu0 <- log(lambda) + log(2) - log(1 + beta * 2)
+}
+```
+
+Our data is as follows. We use dcdim since the model contains another dimension for the clones. 
+```{r bhdata}
+paurelia <- c(17, 29, 39, 63, 185, 258, 267, 
+   392, 510, 570, 650, 560, 575, 650, 550, 
+   480, 520, 500)
+bhdat <- list(Y=dcdim(data.matrix(paurelia)),
+   n=length(paurelia), k=1)
+dcbhdat <- dclone(bhdat, n.clones = 5, 
+   multiply = "k", unchanged = "n")
+```
+
+```{r bhmod_jags,cache=TRUE}
+bhmod <- jags.fit(dcbhdat, 
+   c("lambda","beta","sigma"), beverton.holt, 
+   n.iter=1000)
+```
+
+```{r bhres}
+coef(bhmod)
+```
+These are the MLEs for the parameters. They compare well with the estimates provided by Ponciano et al. (2009). (Beta.hat=0.00235, lambda.hat=2.274, sigma.hat=0.1274).
+
+Iterative model fitting
+
+We demonstrate the function dc.fit, which iteratively fits the model with various values of clones. This can be used to improve MCMC convergence by making the priors more informative throughout the process of iterative model fitting. 
+
+We slightly modify our Poisson GLMM model from above. 
+```{r update}
+glmm.model.up <- function() {
+   for (i in 1:n) {
+      Y[i] ~ dpois(lambda[i])
+      lambda[i] <- exp(alpha[i] + 
+         inprod(X[i,], beta[1,]))
+      alpha[i] ~ dnorm(0, 1/sigma^2)
+   }
+   for (j in 1:np) {
+      beta[1,j] ~ dnorm(pr[j,1], pr[j,2])
+   }
+   log.sigma ~ dnorm(pr[(np+1),1], pr[(np+1),2])
+   sigma <- exp(log.sigma)
+   tau <- 1 / pow(sigma, 2)
+}
+```
+
+We define upfun as a function which updates the priors by specifying a flat prior in the first iteration and uses the updated posterior means and the standard errors for the following iterations. 
+```{r upfun}
+upfun <- function(x) {
+   if (missing(x)) {
+      np <- ncol(X)
+      return(cbind(rep(0, np+1),
+          rep(0.001, np+1)))
+   } else {
+      ncl <- nclones(x)
+      if (is.null(ncl))
+         ncl <- 1
+      par <- coef(x)
+      se <- dcsd(x)
+      log.sigma <- mcmcapply(x[,"sigma"], log)
+      par[length(par)] <- mean(log.sigma)
+      se[length(se)] <- sd(log.sigma) * sqrt(ncl)
+      return(cbind(par, se))
+   }
+}
+```
+
+We apply upfun in our data and specify the updating function in our model. 
+```{r dcmod,eval=FALSE}
+updat <- list(Y = Y, X = X, n = n, 
+   np = ncol(X), pr = upfun())
+k <- c(1, 5, 10, 20)
+dcmod <- dc.fit(updat, c("beta", "sigma"), 
+   glmm.model.up, n.clones = k, n.iter = 1000,
+   multiply = "n", unchanged = "np",
+   update = "pr", updatefun = upfun)
+```
+
+```{r dcmodsumm}
+summary(dcmod)
+```
+
+Diagnostics
+
+We can use the dctable function to see the descriptive statistics stored in each step of the fitting process. We can then plot these results to determine if the algorithm has converged. If the scaled variances are not decreasing at the rate of 1/k, there may be identifiability issues with our parameters. 
+```{r figdct}
+dct <- dctable(dcmod)
+plot(dct)
+```
+
+With increasing k, the means converge to the MLEs and the standard errors are getting smaller. 
+
+```{r figdctsd}
+plot(dct, type="log.var")
+```
+
+The plots demonstrate convergence of the data cloning method.
+
+The results are not affected by the prior if the following statistics are converging to zero as the number of clones increases. 
+```{r dcdiag}
+dcdiag(dcmod)
+```
+
+In the Poisson GLMM model, the posterior distribution is nearly degenerate multivariate normal as required by data cloning. 
+
+We now demonstrate a model with potentially non-identifiable parameters, the normal-normal mixture model. We define and fit this model below. 
+```{r nn}
+gamma <- 2.5
+sigma <- 0.2
+tau <- 0.5
+set.seed(2345)
+mu <- rnorm(n, gamma, tau)
+Y <- rnorm(n, mu, sigma)
+nn.model <- function() {
+   for (i in 1:n) {
+      Y[i] ~ dnorm(mu[i], prec1)
+      mu[i] ~ dnorm(gamma, prec2)
+   }
+   gamma ~ dnorm(0, 0.001)
+   log.sigma ~ dnorm(0, 0.001)
+   sigma <- exp(log.sigma)
+   prec1 <- 1 / pow(sigma, 2)
+   log.tau ~ dnorm(0, 0.001)
+   tau <- exp(log.tau)
+   prec2 <- 1 / pow(tau, 2)
+}
+nndat <- list(Y = Y, n = n)
+```
+
+
+```{r nnmod,eval=FALSE}
+nnmod <- dc.fit(nndat, c("gamma","sigma","tau"), 
+   nn.model, n.clones=c(1,10,20,30,40,50), 
+   n.iter=1000, multiply="n")
+```
+
+```{r nnres}
+dcdiag(nnmod)
+vars <- mcmcapply(nnmod[,c("sigma","tau")],
+   array)^2
+sigma^2 + tau^2
+summary(rowSums(vars))
+```
+
+We see in the results of dcdiag(nnmod) that lambda.max is not converging to zero as k increases and the r.hat value is high, which implies there are problems with identifiability.
+
+Inference and prediction
+
+We obtain the mean of the posterior via coef and the data cloning standard errors via dcsd. 
+```{r  methods}
+coef(dcmod)
+dcsd(dcmod)
+mcmcapply(dcmod, sd) * sqrt(nclones(dcmod))
+```
+
+We get the inverse Fisher information from vcov and Wald-type CI's from confint. 
+```{r  methods2}
+confint(dcmod)
+vcov(dcmod)
+```
+
+We can also make predictions for our Poisson GLMM model by updating our GLMM function. 
+```{r  predmod}
+glmm.pred <- function() {
+   for (i in 1:n) {
+      Y[i] ~ dpois(lambda[i])
+      lambda[i] <- exp(mu[i])
+      mu[i] <- alpha[i] + 
+         inprod(X[i,], beta[1,])
+      alpha[i] ~ dnorm(0, tau)
+   }
+   tmp[1:(np+1)] ~ dmnorm(param[], prec[,])
+   beta[1,1:np] <- tmp[1:np]
+   sigma <- tmp[(np+1)]
+   tau <- 1 / pow(sigma, 2)
+}
+```
+
+We include estimates and the precision matrix to our data and then sample the lambda node via jags.fit. 
+```{r predict,cache=TRUE}
+prec <- make.symmetric(solve(vcov(dcmod)))
+prdat <- list(X = X, n = nrow(X), np = ncol(X), 
+   param = coef(dcmod), prec = prec)
+prmod <- jags.fit(prdat, "lambda", glmm.pred, 
+   n.iter = 1000)
+```
+
+Writing high level functions
+
+We can write high level functions to fit the Poisson GLMM applied to the ovenbird dataset. Here, the Poisson error will account for the random deviations from expected abundances. 
+```{r confun}
+glmmPois <- function(formula, 
+                     data = parent.frame(), n.clones, ...) {
+   lhs <- formula[[2]]
+   Y <- eval(lhs, data)
+   formula[[2]] <- NULL
+   rhs <- model.frame(formula, data)
+   X <- model.matrix(attr(rhs, "terms"), rhs)
+   dat <- list(n = length(Y), Y = Y, 
+      X = X, np = ncol(X))
+   dcdat <- dclone(dat, n.clones, 
+      multiply = "n", unchanged = "np")
+   mod <- jags.fit(dcdat, c("beta", "sigma"), 
+      glmm.model, ...)
+   coefs <- coef(mod)
+   names(coefs) <- c(colnames(X), 
+      "sigma")
+   rval <- list(coefficients = coefs,
+      call = match.call(),
+      mcmc = mod, y = Y, x = rhs, 
+      model = X, formula = formula)
+   class(rval) <- "glmmPois"
+   rval
+}
+print.glmmPois <- function(x, ...) {
+   cat("glmmPois model\n\n")
+   print(format(coef(x), digits = 4), 
+      print.gap = 2, quote = FALSE)
+   cat("\n")
+   invisible(x)
+}
+summary.glmmPois <- function(object, ...) {
+   x <- cbind("Estimate" = coef(object),
+      "Std. Error" = dcsd(object$mcmc),
+      confint(object$mcmc))
+   cat("Call:", deparse(object$call, 
+      width.cutoff = getOption("width")), 
+      "\n", sep="\n")
+   cat("glmmPois model\n\n")
+   printCoefmat(x, ...)
+   cat("\n")
+   invisible(x)
+}
+predict.glmmPois <- function(object, 
+newdata = NULL, type = c("mu", "lambda", "Y"), 
+                             level = 0.95, ...){
+    prec <- solve(vcov(object$mcmc))
+    prec <- make.symmetric(prec)
+    param <- coef(object)
+    if (is.null(newdata)) {
+        X <- object$model
+    } else {
+        rhs <- model.frame(object$formula, newdata)
+        X <- model.matrix(attr(rhs, "terms"), rhs)
+    }
+    type <- match.arg(type)
+    prdat <- list(n = nrow(X), X = X, 
+                  np = ncol(X), param = param, prec = prec)
+    prval <- jags.fit(prdat, type, glmm.pred, ...)
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+    rval <- list(fit = coef(prval), 
+                 ci.fit = quantile(prval, probs = a))
+    rval
+}
+```
+
+```{r ovenbird}
+data(ovenbird)
+```
+```{r cheads,eval=FALSE}
+obmod <- glmmPois(count ~ uplow + thd, 
+   ovenbird, n.clones = 5, n.update = 1000, 
+   n.iter = 1000)
+```
+
+```{r obmodsumm}
+obmod
+summary(obmod)
+```
+
+Below we predict abundances as a function of disturbance by controlling for site characteristics. 
+```{r obpred}
+thd <- seq(0, 100, len = 101)
+ndata <- data.frame(uplow = rep("lowland", 
+                     length(thd)), thd = thd)
+levels(ndata$uplow) <- levels(ovenbird$uplow)
+obpred <- predict(obmod, ndata, "lambda")
+```
+
+```{r  predfig}
+toPlot <- data.frame(thd=ndata$thd, 
+   lambda=obpred$fit, t(obpred$ci.fit))
+with(toPlot, plot(lambda ~ thd, type="n", 
+   ylim=range(toPlot[,-1]), las=1))
+polygon(c(toPlot$thd, rev(toPlot$thd)), 
+   c(toPlot[,3], rev(toPlot[,4])), 
+   col="lightgrey", border=NA)
+lines(toPlot[,2] ~ toPlot$thd, lwd=2)
+with(ovenbird, points(count ~ thd))
+```
+
+We see that the ovenbird abundance was significantly higher in upland sites and there was a negative effect on expected abundance due to human disturbance. 
