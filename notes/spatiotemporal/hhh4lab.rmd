@@ -1,0 +1,385 @@
+---
+title: "Surveillance Package and hhh4"
+author: "Dexter Barrows"
+date:  "November 23, 2015"
+bibliography: bibliography.bib
+output: 
+  html_document: 
+    fig_width: 9.5
+---
+
+***
+
+Code from (@Meyer2014).
+
+
+***
+
+# Setup
+
+Install packages if necessary
+
+```{r, eval = FALSE}
+install.packages("surveillance")
+install.packages("lattice")
+install.packages("animation")
+```
+
+Load required packages
+
+```{r setup, message = FALSE}
+library("surveillance")
+library("lattice")
+library("animation")
+```
+
+Load the data set we'll be using. This data set includes weekly measles incidence data from 17 districts in the Weser-Ems region in lower Germany over 2001-2002:
+
+```{r}
+data("measlesWeserEms")
+```
+
+
+
+
+
+***
+
+# Viewing Data
+
+Initial view of the infection counts over the time period of interest, 2 years from 2001-2002:
+
+```{r}
+plot(measlesWeserEms, type = observed ~ time)
+```
+
+Disease incidence per 100,000 individuals:
+
+```{r}
+plot(measlesWeserEms, type = observed ~ unit,
+    population = measlesWeserEms@map$POPULATION / 100000,
+    labels = list(font = 2), colorkey = list(space = "right"),
+    sp.layout = layout.scalebar(measlesWeserEms@map, corner = c(0.05, 0.05),
+    scale = 50, labels = c("0", "50 km"), height = 0.03))
+```
+
+Plot of incidence time series for districts with positive incidence:
+
+```{r}
+plot(measlesWeserEms, units = which(colSums(observed(measlesWeserEms)) > 0))
+```
+
+Save an animated incidence map in an HTML file. This can take a minute or two to run and produces an index web page `index.html` and resource folders in your working directory:
+
+```{r, eval = FALSE}
+animation::saveHTML(
+    animate(measlesWeserEms, tps = 1:52, total.args = list()),
+    title = "Evolution of the measles epidemic in the Weser-Ems region, 2001",
+    ani.width = 500, ani.height = 600)
+```
+
+
+
+
+
+***
+
+# hhh4 Model Description
+
+The hhh4 model (@Held2005) is for infectious disease count data $Y_{it}$ from neighbouring spatial regions indexed $i = 1,2,...,I$ during times $t = 1,2,...,T$. It primarily models new expected observations conditional on past observations (using autoregression), as well taking into account longer-term endemic behaviour and neighbourhood effects.
+
+It assumes that $Y_{it}$ has a negative binomial distribution with mean:
+
+$$ u_{it} = e_{it} v_{it} + \lambda_{it} Y_{i,t-1} + \phi_{it} \sum_{j \neq i} w_{ji} Y_{j,t-1} $$
+
+and conditional variance $u_{it}(1 + \psi_i u_{it})$, where $\psi > 0$ is an overdispersion parameter. This parameter can be shared such that each $\psi_i \equiv \psi$.
+
+The negative binomial distribution can be replaced with a Poisson distribution, which is equivalent to taking the overdispersion parameters $\psi_i$ to 0.
+
+Further, he parameters $v_{it}$, $\lambda_{it}$, and $\phi_{it}$ can be specified with log-linear predictors, to be discussed later.
+
+Finally, the inter-district transmission weights $w_{ij}$ are taken to be proportional to an exponential decay model $o_{ij}^d$ where each $o_{ij}$ is a neighbour adjacency order and decay parameter $d$. These weights are usually normalized such that $\sum_{i} w_{ji} = 1$.
+
+
+
+
+
+***
+
+# Seasonal Integration
+
+Load basic model:
+
+$$ \mu_{it} = e_i v_t + \lambda Y_{i,t-1} + \phi \sum_{j \neq i} w_{ji} Y_{j,t-1} $$
+
+with seasonal component:
+
+$$ \log(v_t) = \alpha^{(v)} + \beta_t t + \gamma \sin(\omega t) + \delta \cos(\omega t) $$
+
+```{r}
+measlesModel_basic <- list(
+    end = list(f = addSeason2formula(~1 + t, period = measlesWeserEms@freq),
+               offset = population(measlesWeserEms)),
+    ar = list(f = ~1),
+    ne = list(f = ~1, weights = neighbourhood(measlesWeserEms) == 1),
+    family = "NegBin1")
+```
+
+The period for the sinusoidal components is specified as 52 weeks (yearly cycle), with offset proportional to population fractions.
+
+The log-linear predictors for the autoregressive and neighbourhood components are taken to to consists of an intercept only, giving:
+
+$$
+\begin{aligned}
+	\log(\lambda) & = \alpha^{(\lambda)} \\
+	\log(\phi) & = \alpha^{(\phi)}
+\end{aligned}
+$$
+
+The `weights` argument specifies that we only wish to consider influx of disease from directly neighbouring districts, i.e. ones where adjacency order is 1.
+
+Now we fit the model. This is done using a "quasi-Newton algorithm" implemented in the R function `nlminb` to maximize the log-likelihood:
+
+```{r}
+measlesFit_basic <- hhh4(stsObj = measlesWeserEms, control = measlesModel_basic)
+```
+
+Now we look at the results.
+
+The `idx2Exp` argument specifies that we want to see the parameter estimates exponentiated to see $v_t$, $\lambda$, $\phi$, and $exp(\beta_t)$ instead of their logarithmic form contained in the internal model structure.
+
+The `amplitudeShift` argument specifies that we want the sinusoidal components combined into a single sinusoidal wave $A\sin(wt + \varphi)$:
+
+```{r}
+summary(measlesFit_basic, idx2Exp = TRUE, amplitudeShift = TRUE, maxEV = TRUE)
+```
+
+Show the seasonal fit plot:
+
+```{r}
+plot(measlesFit_basic, type = "season", components = "end", main = "")
+```
+
+We can see that the seasonal effect is strongest around week 19/20 (mid-May) and weakest around week 44/45 (early November).
+
+Now if we look at the 95\% confidence interval of the overdispersion parameter $\psi$:
+
+```{r}
+confint(measlesFit_basic, parm = "overdisp")
+```
+
+we can see this suggests that using a Poisson model (equivalent to setting $\psi=0$) would be less adequate. We will test this in the next section.
+
+
+
+
+
+***
+
+# Negative Binomial vs. Poisson Distributions
+
+Compare to Poisson-distributed model assumption:
+
+```{r}
+NegBinAIC   <- AIC(measlesFit_basic)
+PoissonAIC  <- update(measlesFit_basic, family = "Poisson")
+aics            <- AIC(measlesFit_basic, update(measlesFit_basic, family = "Poisson"))
+row.names(aics) <- c("NegBin","Poisson")
+aics <- aics[order(aics[, "AIC"]), ]
+aics$diff 	<- aics$AIC - aics$AIC[1]
+aics
+```
+
+So the negative binomial model clearly works better -- we'll work with that formulation from now on.
+
+
+
+
+
+
+***
+
+# Endemic vs. Epidemic
+
+It may be of interest to separate out what fraction of the infection counts is due to endemic trend and what fraction can be attributed to epidemic outbreak.
+
+We can test this visually by plotting the fitted mean components of the model against the observed incidence. Here we do this for all districts where incidence is $\geq 20$:
+
+```{r}
+districts2plot <- which(colSums(observed(measlesWeserEms)) > 20)
+plot(measlesFit_basic, type = "fitted", units = districts2plot, hide0s = TRUE)
+```
+
+Clearly the epidemic effects are significant in these districts.
+
+Further, the fraction of incidence caused by an epidemic can be estimated by a computational process described in (@Paul2008). This functionality is included in the `surveillance` package, and in the original fitting summary was 0.72 or 72\%. This is in line with what can be seen in the plots above.
+
+
+
+
+
+***
+
+# Integrating the Susceptible Population
+
+Now we will see how we can best integrate the population of Susceptible individuals into the model. While we do not have access to count data for Susceptible individuals, as they are unobservable, we do have access to vaccination count data for school children. We will make the assumption that the fraction of unvaccinated children is proportional to the fraction of susceptible individuals in the population as a whole. Additionally we will assume that these rates do vary by location but do not vary by time. While this approach may lack rigour, we can hopefully rely on the AIC comparisons to tell us if this assumption proves counter-productive or indeed does assist our analysis. Here we will take the fraction of vaccinated individuals in location $i$ to be $v_i$, and so the fraction of unvaccinated individuals, i.e. Susceptibles, will be $(1-v_i)$.
+
+There are two ways in which we can integrate the $(1-v_i)$ counts into the model. First, we can either integrate it into the endemic component or the autoregressive component, and then can be integrated via treating it as a covariate or as a multiplicative offset.
+
+In the case of the covariate option, we can simply add a $\beta_s \log(1-v_i)$ term to the log of the component of interest. This would yield for the endemic component:
+
+$$ \log(v_{i,t}) = \alpha^{(v)} + \beta_t t + \gamma \sin(\omega t) + \delta \cos(\omega t) + \beta_s \log(1 - v_i), $$  
+
+and for the autoregressive model:
+
+$$ \lambda_i Y_{i,t-1} = \exp \left( \alpha^{(\lambda)} + \beta_s \log(1 - v_i) \right) Y_{i,t-1}. $$
+
+In the multiplicative offset option we define $\beta_s \equiv 1$, which simply amounts to multiplication by $(1 - v_i)$. Hence for the endemic component we would have:
+
+$$ \log(v_{i,t}) = \alpha^{(v)} + \beta_t t + \gamma \sin(\omega t) + \delta \cos(\omega t) + \log(1 - v_i), $$
+
+or rearranged as:
+
+$$ v_{i,t} = \exp \left( \alpha^{(v)} + \beta_t t + \gamma \sin(\omega t) + \delta \cos(\omega t) \right) (1 - v_i), $$
+
+and for the autoregressive component:
+
+$$ \lambda_i Y_{i,t-1} = \exp \left( \alpha^{(\lambda)} \right) (1 - v_i) Y_{i,t-1}. $$
+
+Further, the endemic and autoregressive components can be altered independently so each will have 3 possible states: unchanged, covariate modelling, or multiplicative offset, together yielding 9 total possible models.
+
+We will formulate these models and compare them using AIC.
+
+Set up hypotheses testing matrix (for organization):
+
+```{r}
+Soptions <- c("unchanged", "Soffset", "Scovar")
+SmodelGrid <- expand.grid(end = Soptions, ar = Soptions)
+row.names(SmodelGrid) <- do.call("paste", c(SmodelGrid, list(sep = "|")))
+SmodelGrid
+```
+Grid of vaccination count data expanded to a 104-week $\times$ 17-area matrix to make `apply` easier to... apply. Note that as we are treating vaccination rates as temporally invariant, each row of the matrix is identical:
+
+```{r}
+Sprop <- matrix(1 - measlesWeserEms@map@data$vacc1.2004,
+    nrow = nrow(measlesWeserEms), ncol = ncol(measlesWeserEms), byrow = TRUE)
+```
+
+Now use `apply` to refit all modified model combinations:
+
+```{r}
+measlesFits_vacc <- apply(X = SmodelGrid, MARGIN = 1, FUN = function (options) {
+		updatecomp <- function (comp, option) switch(option,
+			"unchanged" = list(),
+			"Soffset" = list(offset = comp$offset * Sprop),
+			"Scovar" = list(f = update(comp$f, ~. + log(Sprop))))
+		update(measlesFit_basic,
+			end = updatecomp(measlesFit_basic$control$end, options[1]),
+			ar = updatecomp(measlesFit_basic$control$ar, options[2]),
+			data = list(Sprop = Sprop))
+  	})
+```
+
+Now use AIC to compare model fits:
+
+```{r}
+aics_vacc <- do.call(AIC, lapply(names(measlesFits_vacc), as.name),
+    envir = as.environment(measlesFits_vacc))
+aics_vacc <- aics_vacc[order(aics_vacc[, "AIC"]), ]
+aics_vacc$diff <- aics_vacc$AIC - aics_vacc$AIC[1]
+aics_vacc
+```
+
+So the `Scovar|unchanged` model seems to work the best, which corresponds to adding a $\beta_s \log(1 - v_i)$ term to the endemic predictor, giving us the model:
+
+$$
+\begin{aligned}
+    \mu_{it} & = e_i v_t + \lambda Y_{i,t-1} + \phi \sum_{j \neq i} w_{ji} Y_{j,t-1} \\
+    \log(v_t) & = \alpha^{(v)} + \beta_t t + \gamma \sin(\omega t) + \delta \cos(\omega t) + \beta_s \log(1 - v_i) \\
+    \log(\lambda) & = \alpha^{(\lambda)}
+\end{aligned}
+$$
+
+We take this model as the one we will use from now on:
+
+```{r}
+measlesFit_vacc <- measlesFits_vacc[["Scovar|unchanged"]]
+```
+
+If we extract the value of $\beta_s$ from the fit using:
+
+```{r}
+coef(measlesFit_vacc, se = TRUE)["end.log(Sprop)", ]
+```
+
+we see that is corresponds to an increase in the number of susceptibles, and distinguishable from the alternative hypothesis of $\beta_s \equiv 1$.
+
+
+
+
+
+
+***
+
+# Spatial Interaction
+
+Previously we have been making the assumption that inter-district transmission is limited only to direct neighbours, and that all neighbours have the same importation potential $\phi$. However neither of these assumptions are terribly realistic, so we will examine what happens if we relax them in this section.
+
+First, we will assume that larger populations will mix more with neighbouring districts than smaller populations, so we will scale the importation potentials $\phi$ proportional to population fractions by multiplying by $e_i^{B_{pop}}$:
+
+```{r}
+measlesFit_nepop <- update(measlesFit_vacc,
+    ne = list(f = ~log(pop)), data = list(pop = population(measlesWeserEms)))
+```
+
+A call to `summary` shows an estimated value for our new parameter $\beta_{pop}$ of about $\beta_{pop} = 2.85$. This and looking at the confidence intervals:
+
+```{r}
+confint(measlesFit_nepop, parm = "ne.log(pop)")
+```
+
+indicates that this new component is having an effect (a value close to 0 would indicate it was not). Further if we compare the AIC scores:
+
+```{r}
+aics_nepop <- AIC(measlesFit_vacc, measlesFit_nepop)
+aics_nepop <- aics_nepop[order(aics_nepop[, "AIC"]), ]
+aics_nepop$diff <- aics_nepop$AIC - aics_nepop$AIC[1]
+aics_nepop
+```
+
+we see a drop, indicating the new model has a better fit.
+
+Now if we allow inter-district disease importing up to an adjacency order of 5:
+
+```{r}
+measlesFit_powerlaw <- update(measlesFit_nepop,
+	ne = list(weights = W_powerlaw(maxlag = 5)))
+```
+
+and compare the AIC scores:
+
+```{r}
+aics_spa <- AIC(measlesFit_nepop, measlesFit_powerlaw)
+aics_spa <- aics_spa[order(aics_spa[, "AIC"]), ]
+aics_spa$diff <- aics_spa$AIC - aics_spa$AIC[1]
+aics_spa
+```
+
+we see a further (slight) reduction.
+
+A `summary` and a `confint` call show a decay parameter estimate of about $d = 4.10$ with a 95\% confidence interval of about 2.03-6.17, indicating that spacial interaction decreases sharply with distance.
+
+We can see this visually by plotting the fitted weights against their corresponding adjacency order:
+
+```{r}
+plot(measlesFit_powerlaw, type = "neweights", plotter = stripplot,
+    panel = function (...) {panel.stripplot(...); panel.average(...)},
+    xlab = expression(o[ji]), ylab = expression(w[ji]))
+```
+
+***
+
+# References
+
+
+
