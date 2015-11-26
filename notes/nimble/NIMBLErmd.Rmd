@@ -1,0 +1,374 @@
+---
+title: "NIMBLE + Wrapup"
+author: "Mike Li, Morgan Kain"
+date:  "`r format(Sys.time(), '%H:%M %d %B %Y')`"
+output: html_document
+---
+
+Our goals for the final presentation are the following: <br />
+1. Describe the use of a powerful tool for MCMC and other applications (Particle Filtering, EM) <br />
+2. Present the steps of a validation process using a variety of methods/platforms <br />
+3. We do not have much new "Thursday Material" so the majority of our time will be spent in R <br />
+
+## NIMBLE: Numerical Inference for statistical Models for Bayesian and Likelihood Estimation
+
+NIMBLE is built in R but compiles your models and algorithms using C++ for speed <br />
+NIMBLE is most commonly used for MCMC but can also be used to implement particle filtering and EM
+1. A system for writing statistical models flexibly, which is an extension of the BUGS language <br />
+2. A library of algorithms such as MCMC. <br />
+3. A language, called NIMBLE, embedded within and similar in style to R, for writing <br />
+  algorithms that operate on BUGS models.
+  <br />
+
+#### Downloading, installing and loading NIMBLE
+
+On Windows, you should download and install Rtools.exe available from http://cran. r-project.org/bin/windows/Rtools/.
+On OS X, you should install Xcode.
+You wil also need the make utility
+
+Please post about installation problems to the nimble-users Google group or email nimble.stats@gmail.com.
+
+After these are installed you can install NIMBLE in R using <br />
+install.packages("nimble", repos = "http://r-nimble.org", type = "source") <br />
+
+You will also need to download STAN using the following commands <br />
+Sys.setenv(MAKEFLAGS = "-j4") <br />
+install.packages("rstan", dependencies = TRUE) <br />
+
+In total you will need the following pakages:
+
+```{r loadpackage, echo=TRUE, message=FALSE}
+library("nimble")
+library("R2jags")
+library("ggplot2")
+library("nimble")
+library("rstan")
+```
+
+#### NIMBLE Overview
+
+<b> Programming in NIMBLE involves a fundamental distinction between: </b> <br />
+  1. the steps for an algorithm that need to happen only once, at the beginning, such as inspecting the model <br />
+  2. the steps that need to happen each time a function is called, such as MCMC iterations. <br />
+    When one writes a nimbleFunction, each of these parts can be provided separately. 
+
+Multiple parameterizations for distributions, similar to those in R, can be used.
+NIMBLE calls non-stochastic nodes “deterministic”, whereas BUGS calls them “logical”. 
+NIMBLE uses “logical” in the way R does, to refer to boolean (TRUE/FALSE) variables.
+Alternative models can be defined from the same model code by using if-then-else statements that are evaluated when the model is defined.
+
+#### Presentation Outline
+The general outline for this presentation follows along with the NIMBLE users manual <br />
+http://r-nimble.org/documentation-2 <br />
+However, the model used here is a simple SIR model written by us <br />
+
+1. Build an SIR model in JAGS. Conduct parameter estimation and forecasting <br />
+2. Translate the model into NIBLE. Conduct parameter estimation and forecasting <br />
+      2.1 Model conversion <br />
+      2.2 Compile the model <br />
+      2.3 Create a basic MCMC specification for the pump model <br />
+      2.4 Compile and run the MCMC <br />
+3. Compare the results between these two approaches (parameter estimates, uncertainty, convergence, computation time) <br />
+      3.1 Customize the MCMC specification and compile and run that <br />
+4. Write the same model in STAN. Conduct parameter estimation and forecasting <br />
+5. Translate this new model into NIMBLE. <br />
+6. Compare all results <br />
+7. Create, compile and run a Monte Carlo Expectation Maximization (MCEM) algorithm, which illustrates some of the flexibility NIMBLE provides to combine R and NIMBLE. <br />
+8. Implement particle filtering for this same model <br />
+9. Write a short nimbleFunction to generate simulations from designated nodes of any model. <br />
+
+##### Build an SIR model in JAGS
+First step is to construct the simulator from which we will obtain our data
+
+```{r}
+simi <- function(beta, gamma, pop, i0,
+                 t0, end, dt, report, seed){
+  if (!is.null(seed)) set.seed(seed)
+  tvec <- seq(1, end, by = dt)
+  n <- length(tvec)
+  I <- S <- pI <- infobs <- foi <- rec <- inf <- numeric(end)
+  
+  ## Initial conditions
+  I[1] <- rnbinom(1, 1, 1/4) + 1
+  S[1] <- pop - I[1]
+  pR <- 1 - exp(-gamma)
+  pI[1] <- 1 - exp(-beta*I[1]*S[1]/pop)
+  inf[1] <- rbinom(1, prob = pI[1], size = S[1])
+  infobs[1] <- rbinom(1, prob = report, size = inf[1])
+  rec[1] <- rbinom(1, prob = pR, size = I[1])
+  
+  ## Generate the Unobserved process I, and observables
+  
+  for (t in 2:end){
+    I[t] <- I[t - 1] + inf[t - 1] - rec[t - 1]
+    S[t] <- S[t - 1] - inf[t - 1]
+    pI[t] <- 1 - exp(-beta*I[t]*S[t]/pop)
+    inf[t] <- rbinom(1, prob = pI[t], size = S[t])
+    infobs[t] <- rbinom(1, prob = report, size = inf[t])
+    rec[t] <- rbinom(1, prob = pR, size = I[t])
+  }
+  
+  cbind(tvec, S, I, inf, infobs)
+}
+```
+
+```{r, echo=FALSE}
+beta <- 0.00015; pop <- 5000; gamma = 0.04; end = 100; report = 0.8; nchain = 3
+
+SIRdata <- simi(beta = beta, pop = pop, gamma = gamma,
+                       end = end, report = report, seed = 482)
+```
+
+Take a peek at what this model produces
+
+```{r, echo=FALSE}
+  ggplot(data.frame(SIRdata), aes(tvec, S)) + geom_point(colour = "blue") + 
+    geom_line(colour = "blue") +
+    geom_point(data = data.frame(SIRdata), aes(tvec, I), colour = "red") +
+    geom_line(data = data.frame(SIRdata), aes(tvec, I), colour = "red") +
+    theme_bw()
+```
+
+
+
+```{r}
+  jagsdat <- list(infobs = SIRdata[, 5], pop = pop, end = end, 
+                  i0 = SIRdata[1, 3])
+
+  parameters <- c("beta", "gamma", "report")
+  
+inits <- list(list(
+	beta = beta/10, 
+	report = 0.2,
+	inf = SIRdata[, 5]*1 + 1
+), list(
+	beta = beta, 
+	report = 0.3,
+	inf = SIRdata[, 5]*1 + 1
+), list(
+	beta = beta*10, 
+	report = 0.4,
+	inf = SIRdata[, 5]*1 + 1
+))
+```
+
+Place 'jagsSIRmodel.bug' in your working directory <br />
+
+##### Note: Many of these builds take a very long time to run. Feel free to adjust "n.iter" or "end" or load the .rda file included
+
+Create the model and examine the MCMC algorithms that JAGS will use to sample <br />
+
+```{r}
+ SIRmodel <- jags.model(file = "jagsSIRmodel.bug", data = jagsdat, inits = inits, 
+             n.chains = length(inits), n.adapt = 1000)
+
+list.samplers(SIRmodel)
+```
+
+Run some chains
+```{r}
+SIRsamples <- jags(data=jagsdat, inits=inits, param=parameters, 
+             model.file = SIR.jagsmodel,   
+             n.chains=length(inits), n.iter=5000, n.burnin=500, 
+             n.thin=20, 
+             refresh = 100)
+```
+
+```{r}
+SIRsamples
+mcmcplot(SIRsamples)
+```
+
+Very poor mixing and far from convergence
+
+Run for a lot longer... (Which we have done previously but will not do here due to time required)
+```{r}
+
+```  
+
+```{r}
+## insert your specific directory
+load(".rda")
+```
+
+```{r}
+
+```  
+
+```{r}
+SIRnimble <- nimbleCode({
+    ## Initial values
+    I[1] <- i0
+    S[1] <- pop - i0
+    pR <- 1 - exp(-gamma)
+    pI[1] <- 1 - exp(-beta*I[1]*S[1]/pop)
+    inf[1] ~ dbin(pI[1], S[1])
+    infobs[1] ~ dbin(report, inf[1])
+    rec[1] ~ dbin(pR, I[1])
+    
+    ## Step through observations
+    for (t in 2:end) {
+      S[t] <- S[t - 1] - inf[t - 1]
+      I[t] <- I[t - 1] + inf[t - 1] - rec[t - 1]
+      pI[t] <- 1 - exp(-beta*S[t]*I[t]/pop)
+      inf[t] ~ dbin(pI[t], S[t])
+      infobs[t] ~ dbin(report, inf[t])
+      rec[t] ~ dbin(pR, I[t])
+    }
+    ## aux variables
+    
+    ## priors
+    beta ~ dgamma(1/2, 1)
+    gamma ~ dunif(0, 1) 
+    report ~ dbeta(1/2, 1/2)
+  })
+```
+
+Set up the model. Here we need:
+1) Constants -- 
+2) Data -- 
+3) Initial Values --
+4) NIMBLE model object -- 
+
+```{r}
+  SIRcons <- list(i0 = SIRdata[1, 3], 
+                     pop = 500, end = 30)
+  
+  SIRdata <- list(infobs = SIRdata[, 5])
+  
+  SIRinits <- list(beta = 0.01, gamma = 0.15, report = 0.2,
+                     inf = SIRdata[, 5] + 1,
+                     rec = round(SIRdata[, 5]/2))
+  
+  SIRout <- nimbleModel(code = SIRnimble, 
+                         name = 'SIR_out', 
+                         constants = SIR_Consts,
+                         data = SIR_Data, 
+                         inits = SIR_Inits)
+  
+
+```
+
+```{r}
+SIR_out$getNodeNames()
+```
+
+```{r}
+SIR_out$infobs
+```
+
+```{r}
+par(mfrow = c(1,1))
+tkplot(SIR_out$graph)
+```
+
+```{r}
+SIR_out$getDependencies(c('beta', 'gamma', 'report'))
+```
+
+```{r}
+SIR_out$getDependencies(c('beta', 'gamma', 'report'), determOnly = TRUE)
+```
+
+```{r}
+C_SIR_out <- compileNimble(SIR_out)
+```
+
+```{r}
+SIR_out_Spec <- configureMCMC(SIR_out, print = TRUE)
+```
+
+```{r}
+SIR_out_Spec$addMonitors(c('beta', 'gamma', 'report'))
+```
+
+```{r}
+SIR_out_MCMC <- buildMCMC(SIR_out_Spec)
+
+SIR_out_MCMC <- compileNimble(SIR_out_MCMC, project = SIR_out)
+```
+
+```{r}
+niter <- 24000
+set.seed(0)
+SIR_out_MCMC$run(niter)
+```
+
+```{r, echo = FALSE}
+  samples <- as.matrix(SIR_out_MCMC$mvSamples)
+  par(mfrow = c(1, 2), mai = c(.6, .5, .1, .2))
+  plot(samples[ , 'beta'], type = 'l', xlab = 'iteration',
+       ylab = expression(beta))
+  plot(samples[ , 'beta'], type = 'l', xlab = 'iteration',
+       ylab = expression(beta), xlim = c(2000, 10000),
+       ylim = c(0.00, 0.02))
+  plot(samples[ , 'report'], type = 'l', xlab = 'iteration',
+       ylab = expression(report))
+  plot(samples[ , 'gamma'], type = 'l', xlab = 'iteration',
+       ylab = expression(gamma))
+```
+
+```{r}
+  mc <- MCMCsuite(code = SIRnimble,
+                  data = SIR_Data,
+                  inits = SIR_Inits,
+                  constants = SIR_Consts,
+                  MCMCs = c("jags", "nimble", "nimble_slice"),
+                  monitors = c("beta", "gamma", "report"),
+                  niter = 10000,
+                  makePlot = TRUE,
+                  savePlot = TRUE)
+```
+
+```{r}
+  acf(samples[, "beta"])
+  acf(samples[, "gamma"])
+  acf(samples[, "report"])
+```
+
+```{r}
+SIR_out_Spec$addSampler(target = c('beta', 'report'), type = 'RW_block',
+                      control = list(adaptInterval = 1000))
+```
+
+```{r}
+SIR_out_Spec$setThin(120)
+```
+
+```{r}
+SIR_out_MCMC <- buildMCMC(SIR_out_Spec)
+```
+
+```{r}
+SIR_out_MCMC <- compileNimble(SIR_out_MCMC, project  = SIR_out,
+                                resetFunctions = TRUE)
+```
+
+```{r}
+SIR_out_MCMC$run(niter)
+  ## NULL
+samplesNew <- as.matrix(SIR_out_MCMC$mvSamples)
+```
+
+```{r}
+  par(mfrow = c(1, 3), mai = c(.6, .5, .1, .2))
+  plot(samplesNew[ , 'beta'], type = 'l', xlab = 'iteration',
+       ylab = expression(beta))
+  plot(samplesNew[ , 'gamma'], type = 'l', xlab = 'iteration',
+       ylab = expression(gamma))
+  plot(samplesNew[ , 'report'], type = 'l', xlab = 'iteration',
+       ylab = "report")
+  par(mfrow = c(1,1))
+  plot(samplesNew[ , 'beta'], samplesNew[ , 'gamma'], 
+       xlab = expression(beta), ylab = expression(gamma))
+```
+
+```{r}
+  acf(samplesNew[, "beta"])
+  acf(samplesNew[, "gamma"])
+  acf(samplesNew[, "report"])
+```
+
+```{r}
+
+```
