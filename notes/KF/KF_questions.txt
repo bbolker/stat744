@@ -1,6 +1,0 @@
-* true vs unbiased
-* extra Jensen's inequality term  $(\partial^2 f/\partial x^2 \cdot \sigma^2 x/2)$ in extended KF if noise is within $f()$? (= $H^T \Sigma H$)
-* independent likelihoods?
-* add links to PDF handout
-* param estimation works for parameters of F, f(), but not W,V (variances)?
-

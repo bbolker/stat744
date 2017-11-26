@@ -1,4 +1,0 @@
-synth lik (Wood et al 2010)
-
-focused on chaotic systems
-
