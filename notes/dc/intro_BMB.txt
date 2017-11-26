@@ -1,0 +1,9 @@
+maybe capitalize MLE?
+
+p. 9 Sample size: did you mean ||y|| (cardinality/length of y)?
+
+p. 10 computationally *simple* -- but not necessarily efficient!!
+
+p. 12 point estimates?
+
+p. 13 "hierarchichal" -> "hierarchical"

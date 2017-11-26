@@ -1,0 +1,22 @@
+Markov chain
+
+Monte Carlo
+
+  * cheap numerics for something that's hard to compute analytically
+
+Thurber essay?
+
+irreducibility implies finite expected transition time?
+
+graphical introduction to MCMC? animated?
+
+
+jwidth <- 1
+rep <- 10000
+chain <- numeric(rep)
+for (i in 1:rep) {
+  proposal <- runif(1,chain[i]-jwidth,chain[i]+jwidth)
+  ratio <- proposal/chain[i]
+  accept <- (ratio>1 || runif(1)<ratio)
+  chain[i+1] <- if (accept) proposal else chain[i]
+}
