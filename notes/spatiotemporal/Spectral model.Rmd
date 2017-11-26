@@ -54,9 +54,12 @@ We simulate the observed process over 20 places and 4 time units:
 ```{r eval = FALSE}
 require(spate)
 n <- 20
-T <- 4
-par <- c(rho0 = 0.1, sigma2 = 0.2, zeta = 0.5, rho1 = 0.1, gamma = 2, alpha = pi/4, muX = 0.2, muY = -0.2, tau2 = 0.01)
-spateSim <- spate.sim(par = par, n = n, T = T, seed = 4)
+Time <- 4
+par <- c(rho0 = 0.1, sigma2 = 0.2, zeta = 0.5, rho1 = 0.1, gamma = 2,
+         alpha = pi/4, muX = 0.2, muY = -0.2, tau2 = 0.01)
+par0 <- c(rho0 = 0.1, sigma2 = 0.2, zeta = 0.5, rho1 = 0.1, gamma = 2,
+         alpha = pi/4, muX = 0.2, muY = -0.2, tau2 = 0.01)
+spateSim <- spate.sim(par = par, n = n, T = Time, seed = 4)
 ```
 
 **Visualization**
@@ -69,8 +72,8 @@ plot(spateSim, mfrow = c(1,4), mar = c(2,2,2,2), indScale = TRUE, cex.axis = 1.5
 We simulate over a little more time units...
 ```{r eval = FALSE}
 n <- 20
-T <- 20
-spateSim <- spate.sim(par = par, n = n, T = T, seed = 1000)
+Time <- 20
+spateSim <- spate.sim(par = par, n = n, T = Time, seed = 1000)
 ```
 
 Extract the observed process:
@@ -111,7 +114,7 @@ spateMCMC
 
 ```{r eval = FALSE}
 #If you skip the MCMC you can use the spateMCMC data
-# data("spateMCMC")
+data("spateMCMC")
 predict <- spate.predict(y = w, tPred = c(17:50), spateMCMC = spateMCMC, Nsim = 200, BurnIn = 10)
 Pmean <- apply(predict, c(1,2), mean)
 Psd <- apply(predict,c(1,2),sd)

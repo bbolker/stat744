@@ -525,6 +525,10 @@ nimCBinits <- list(I=sim$I,
                    reporting=reporting,
                    N0=N0
 )
+
+##
+rjags::set.factory("bugs::Conjugate", FALSE, type="sampler")
+
 NimbleCB <- MCMCsuite(code=nimcode,
                    data=nimCBdata,
                    inits=nimCBinits,
@@ -547,6 +551,7 @@ It is kind of scary considering Nimble is suppose to be this awesome super fast 
 
 ```{r, Jags Example}
 
+## turn off conjugate sampler
 rjags::set.factory("bugs::Conjugate", FALSE, type="sampler")
 
 Jagsmod <- jags.model(file="CB2.bug",data=data,inits=inits)
@@ -610,7 +615,6 @@ NimbleCB <- MCMCsuite(code=nimcode,
 
 print(NimbleCB$timing)
 print(NimbleCB$summary)
-
 ```
 
 Why is default Nimble underperforming? (vs Jags) Take my word, nimble-jags is NOT using conjugate samplers. Nimble slice turns all nodes to slice samplers, thus, nimble-jags and nimble slice is using the same sampler. As you can see Nimble slice is more efficient than JAGS.
@@ -631,7 +635,6 @@ CnewMCMC <- compileNimble(newMCMC,project = mod, resetFunctions = TRUE)
 Cnewtime <- system.time(CnewMCMC$run(iterations))
 Cnewsample <- as.matrix(CnewMCMC$mvSamples)
 effectiveSize(as.mcmc(Cnewsample[,c('beta','effprop','reporting')]))/Cnewtime[3]
-
 ```
 
 ```{r, "combine everything"}
@@ -927,7 +930,6 @@ CBemout <- nimbleModel(code = nimcode,
                          constants = nimCBcon,
                          data = nimCBdata, 
                          inits = nimCBinits)
-
 
 CBmcem <- buildMCEM(model = CBemout, latentNodes = list("I"), 
                       burnIn = 100, 

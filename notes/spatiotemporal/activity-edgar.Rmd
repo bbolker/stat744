@@ -5,7 +5,10 @@ date: "November 23, 2015"
 output: html_document
 ---
 
-Install the animation, automap, scatter3d, sp, spacetime, Stem packages.
+Install the `animation`, `automap`, `scatterplot3d`, `sp`, `spacetime`, `Stem` packages.
+
+```{r install,eval=FALSE}
+```
 
 This package is based on:
 
@@ -33,7 +36,7 @@ The process starts with a $y_0(s)$ vector taken from a distribution $N(\mu_0,\si
 
 **Assumptions**
 
-$\omega_{t}(s)$ is separable, so that, $cov(\omega_{t}(s),\omega_{t}(s+h)) = \sigma^{2}_{\omega}\ exp(-\theta h)\ \forall\ t$.
+$\omega_{t}(s)$ is separable, so that, $cov(\omega_{t}(s),\omega_{t}(s+h)) = \sigma^{2}_{\omega}\ \exp(-\theta h)\ \forall\ t$.
 
 $\nu_{t}(s), \omega_{t}(s)$ and $\eta_{t}(s)$ are independent over time as well as mutually independent.
 
@@ -62,7 +65,9 @@ Observed process: concentration of particulate matter
 saveGIF({
   for(i in 1:nrow(z)) {
     z.i <- z[i,]
-    scatterplot3d(x,y,z.i,zlim = c(floor(range(pm10$z)[1]),ceiling(range(pm10$z)[2])), xlab = "UTMX_km", ylab = "UTMX_km", zlab = "log PM10 concentration", type = "h", lty.hplot = 2, pch = 16)
+    scatterplot3d(x,y,z.i,zlim = c(floor(range(pm10$z)[1]),ceiling(range(pm10$z)[2])),
+                  xlab = "UTMX_km", ylab = "UTMX_km", zlab = "log PM10 concentration",
+                  type = "h", lty.hplot = 2, pch = 16)
   }
 }, movie.name = "PM10.gif", interval = 0.1)
 ```
@@ -72,7 +77,8 @@ Explanatory variable 1 varianble in time: particle primary emissions
 saveGIF({
   for(i in 1:nrow(z)) {
     z.i <- covariates[(i-1)*ncol(z)+1:ncol(z), 2]
-    scatterplot3d(x,y,z.i,zlim = c(floor(range(covariates[,2])[1]),ceiling(range(covariates[,2])[2])), xlab = "UTMX_km", ylab = "UTMX_km", zlab = "PPM (g/s)", type = "h", lty.hplot = 2, pch = 16)
+    scatterplot3d(x,y,z.i,zlim = c(floor(range(covariates[,2])[1]),ceiling(range(covariates[,2])[2])),
+                  xlab = "UTMX_km", ylab = "UTMX_km", zlab = "PPM (g/s)", type = "h", lty.hplot = 2, pch = 16)
   }
 }, movie.name = "PPM.gif", interval = 0.1)
 ```
@@ -81,7 +87,8 @@ We observe more temporal than spatial variation.
 Explanatory variable 2 constant in time: altitude
 ```{r eval = FALSE}
 z.i <- unique(covariates[, 3])
-scatterplot3d(x,y,z.i,zlim = range(covariates[, 3]), xlab = "UTMX_km", ylab = "UTMX_km", zlab = "Altitude (km)", type = "h", lty.hplot = 2, pch = 16)
+scatterplot3d(x,y,z.i,zlim = range(covariates[, 3]),
+              xlab = "UTMX_km", ylab = "UTMX_km", zlab = "Altitude (km)", type = "h", lty.hplot = 2, pch = 16)
 ```
 
 **Estimation**
@@ -90,17 +97,21 @@ scatterplot3d(x,y,z.i,zlim = range(covariates[, 3]), xlab = "UTMX_km", ylab = "U
 
 We define the initial values for the parameters  
 ```{r eval = FALSE}
-phi0 <- list(sigma2eps = 0.1, sigma2omega = 0.2, theta = 0.01, beta = matrix(3.65, 1, 1), G = matrix(0.77, 1, 1), Sigmaeta = matrix(0.3, 1, 1), m0 = as.matrix(0), C0 = as.matrix(1))
+phi0 <- list(sigma2eps = 0.1, sigma2omega = 0.2, theta = 0.01,
+             beta = matrix(3.65, 1, 1), G = matrix(0.77, 1, 1),
+             Sigmaeta = matrix(0.3, 1, 1), m0 = as.matrix(0), C0 = as.matrix(1))
 ```
 
 And the $K(s)$ function (identity function here)  
-```{r eval = FALSE}
+```{r Kfun}
 K <- matrix(1, ncol(z), 1)
 ```
 
 We create the model
-```{r eval = FALSE}
-mod0 <- Stem.Model(z = z, covariates = as.matrix(covariates[, 1]), coordinates = coordinates, phi = phi0, K = K)
+```{r createmodel}
+mod0 <- Stem.Model(z = z,
+               covariates = as.matrix(covariates[, 1]),
+               coordinates = coordinates, phi = phi0, K = K)
 ```
 
 Estimate parameters using the EM algorithm
@@ -118,12 +129,15 @@ AIC0 <- -2*mod0.est$estimates$loglik + 2*length(mod0.est$estimates$phi.hat)
 
 We define the initial values for the parameters  
 ```{r eval = FALSE}
-phi1 <- list(sigma2eps = 0.1, sigma2omega = 0.2, theta = 0.01, beta = matrix(c(3.65, 0.046, -0.904), 3, 1), G = matrix(0.77, 1, 1), Sigmaeta = matrix(0.3, 1, 1), m0 = as.matrix(0), C0 = as.matrix(1))
+phi1 <- list(sigma2eps = 0.1, sigma2omega = 0.2, theta = 0.01,
+             beta = matrix(c(3.65, 0.046, -0.904), 3, 1), G = matrix(0.77, 1, 1),
+             Sigmaeta = matrix(0.3, 1, 1), m0 = as.matrix(0), C0 = as.matrix(1))
 ```
 
 We create and optimize the model
 ```{r eval = FALSE}
-mod1 <- Stem.Model(z = z, covariates = covariates, coordinates = coordinates, phi = phi1, K = K)
+mod1 <- Stem.Model(z = z, covariates = covariates, coordinates = coordinates,
+                   phi = phi1, K = K)
 mod1.est <- Stem.Estimation(mod1)
 ```
 
@@ -151,7 +165,8 @@ Krig.covar <- cbind(rep(1,Krig.n))
 Krig.K <- matrix(1, Krig.n, 1)
 saveGIF({
   for(i in 1:n.times) {
-    mod0.pred <-Stem.Kriging(StemModel = mod0.est, coord.newlocations = Krig.coord, covariates.newlocations = Krig.covar, K.newlocations = Krig.K, time.point = i)
+    mod0.pred <-Stem.Kriging(StemModel = mod0.est, coord.newlocations = Krig.coord,
+                             covariates.newlocations = Krig.covar, K.newlocations = Krig.K, time.point = i)
     z.i <- matrix(mod0.pred$data.newlocations$z, n.grid, n.grid)
     persp(Krig.x, Krig.y, z.i, zlab = "", zlim = range(z), axes = FALSE)
   }
@@ -184,6 +199,11 @@ res <- persp(Krig.x, Krig.y, matrix(alt.new, n.grid, n.grid), zlab = "", axes = 
 z.i <- unique(covariates[, 3])
 points <- trans3d(x,y,z.i, pmat = res)
 points(points, pch = 16)
+
+library("rgl")
+persp3d(Krig.x, Krig.y, matrix(alt.new, n.grid, n.grid), col="gray",zlab = "", axes = FALSE)
+spheres3d(x,y,z.i,radius=4)
+grid3d(c("x","y","z"))
 ```
 
 Concerning the explanatory variable 1 (particle primary emissions) since most of the variation is in time and in that axis variable 1 only changes the slope of the graph, we'll plot a low PPM value (50 g/s)

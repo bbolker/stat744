@@ -7,15 +7,15 @@ output: html_document
 
 ### Implementing INLA
 
-The following are required to perform INLA <br />
-a) The GMRFLib-library   <br />
+The following are required to perform INLA  
+a) The GMRFLib-library  
 b) The INLA package for `R`
 
 Downloading, installing and loading the INLA package
 
 ```{r loadpackage, echo=FALSE}
 #install.packages("sp")   #classes and methods for spatial data 
-#install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
+install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
 library("INLA")
 #?inla   #opens up the help file for all functions
 ```
@@ -25,7 +25,7 @@ Model Specification in the INLA package
 Assume the following model:
 $$
 \begin{split}
-y & \sim \pi(y|\lambda)\\
+y & \sim \pi(\eta|\lambda)\\
 \eta & = g(\lambda) = \beta_{0} + \beta_{1}x_1 + \beta_{2}x_2 + f(x_3)
 \end{split}
 $$
@@ -38,18 +38,18 @@ $f_{1},f_{2},... \sim N(0,Q_{f}^{-1}(\tau_2))$
 The model is specified in R through a formaula, similar to the one used in the glm routine:
 
 ```{r formula, echo=FALSE}
-formula >- y ~x1 + x2 + f(x3)
+formula <- y ~x1 + x2 + f(x3)
 ```
 
 The $f()$ function is used to specify non-linear effects in the model.
 
 Examples of the implemented model are:
 
-* iid: random effects
-* rw1 rw2 arl: smooth effect of covariates or time effect
-* seasonal: seasonal effect
-* besag: spatial effect (CAR model)
-* generic: user defined precision matrix
+* `iid1: random effects
+* `rw1` `rw2` `arl`: smooth effect of covariates or time effect
+* `seasonal`: seasonal effect
+* `besag`: spatial effect (CAR model)
+* `generic`: user defined precision matrix
 
 Main functions of the INLA package
 
@@ -123,11 +123,11 @@ w2 <- c(rep(NA,n), rep(-1,m))  # weights for w_t
 ```
 
 
-Formulating the model
+## Formulating the model
 
-The states, $x_t$, (indexed by "i") follow a Gaussian distribution with a fixed and low log-precision (-10). 
-The $x_{t-1}$ terms (indexed by "j") are modeled as a copy of the $x_t$ terms. 
-The perturbations, $w_t$, (indexed by "l") follow a Gaussian distribution with unknown log-precision.
+The states, $x_t$, (indexed by `i`) follow a Gaussian distribution with a fixed and low log-precision (-10). 
+The $x_{t-1}$ terms (indexed by `j`) are modeled as a copy of the $x_t$ terms. 
+The perturbations, $w_t$, (indexed by `l`) follow a Gaussian distribution with unknown log-precision.
 ```{r model_toy}
 # formulation with default hyperprior
 formula1 <- Y ~ f(i, model="iid", initial=-10, fixed=T) +
@@ -294,6 +294,7 @@ sample = inla.rmarginal(1000,dens)
 
 
 ### Example 3: Childhood undernutrition in Zambia: Spatial analysis
+
 Three different spatial models are considered to analyze the Zambia data. 
 The authors study childhood undernutrition in 57 regions of Zambia. A total of $n_d = 4847$ observation are included in the data set. Stunting for child $i = 1,...,n_d$ is determined using a $Z$ score defined as:
 $$
@@ -319,7 +320,7 @@ $$
 \eta_i=\mu + {\bf z}_i^T \beta + f_1(age_i)+ bmi_i f_2(s_i)
 $$
 
-```{r data_zambia, eval=T}
+```{r data_zambia}
 ##load the data set
 data(Zambia)
 ##load map
@@ -341,7 +342,7 @@ plot(mod)
 
 
 
-```{r formaula_zambia,eval=T}
+```{r formaula_zambia}
 ##MOD1
 formula.mod1 = hazstd ~  agc + edu1 + edu2 + tpr + sex + bmi +
   f(district, model="besag", graph = g, param = c(1,0.01)) +
@@ -364,7 +365,7 @@ formula.mod3 = hazstd ~ edu1 + edu2 + tpr + sex +
 
 
 
-```{r inla_zambia,eval=T}
+```{r inla_zambia}
 ##run the three models
 mod1  =  inla(formula.mod1, data = Zambia, control.family = list(initial = 1),
               control.inla = list(h=1e-4),
@@ -400,7 +401,7 @@ hist(mod3$cpo$pit,br=30)
 ```
 
 
-```{r comp_zambia,eval=T}
+```{r comp_zambia}
 #comparison
 #linear effect pamaeters in the three models for the Zambia data
 a$fixed[,-7]#mod1
@@ -435,7 +436,7 @@ compMlik
 ```
 
 
-```{r plot_zambia,eval=T}
+```{r plot_zambia}
 
 #page12 Fig2.a Estiamted effect of age (posterior mean 
 #together with 2.5% and 97.5% quantiles) useing MOD2
@@ -460,7 +461,7 @@ ggplot(mydata3) +
   geom_line(aes(ID, `0.5quant`)) +   
   geom_line(aes(ID, `0.025quant`), linetype="dashed") +   
   geom_line(aes(ID, `0.975quant`), linetype="dashed") + 
-  ggtitle("Estiamted effect of age (posterior mean 
+  ggtitle("Estimated effect of age (posterior mean 
 together with 2.5% and 97.5% quantiles) using MOD3")
 ```
 

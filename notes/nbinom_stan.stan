@@ -7,9 +7,11 @@ parameters {
     real a;
     real b;
 }
-transformed parameters {
-    vector[J] eta;
-    eta <- exp(a+b*x);
+//transformed parameters {
+//    vector[J] eta;
+//
+//   eta <- exp(a+b*x);
+//}
 model {
     y ~ neg_binomial_2(1.0,eta)
 }

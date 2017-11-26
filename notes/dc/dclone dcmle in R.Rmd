@@ -15,7 +15,7 @@ All code obtained from the following references with some edits made by myself a
 
 
 Please install the 'dclone', 'dcmle', 'coda', and 'rjags' packages for this lab. The following setup loads the packages. You may also wish to download the file "solymos.rda" that Professor Bolker placed on the repository and then load it here. 
-```{r setup}
+```{r setup,message=FALSE}
 library(dclone)
 library(rjags)
 library(coda)
@@ -25,16 +25,13 @@ if (isTRUE(getOption('knitr.in.progress'))) {
     dcoptions(verbose=0)
     options(jags.pb="none")
 }
-##load("solymos.rda")  ## poor man's caching
-
-## my specific directory, see above for general
-load("C:/Users/Owner/Downloads/solymos (2).rda")
+load("solymos.rda")  ## poor man's caching
 ```
 
-###dclone and dcfit
+### dclone and dcfit
 
 Let's begin with an example from (1). We consider a Bernoulli model, Y_i~Bin(1,p), for i=1,2,...n. We generate data from this model with sample size n=25 and set the true parameter value of p=0.3.
-```{r}
+```{r setup1}
 set.seed(4321) # set random seed for reproducibility
 n <- 25 # sample size
 p <- 0.3 # true parameter value
@@ -46,23 +43,21 @@ We now specify the Bayesian model and conduct analysis by fitting it with rjags 
 ## model specification
 model <- custommodel("model {
     for (i in 1:n) {
-        #Y[i] ~ dbin(p, 1) # Binomial(N,p)
+        # equivalent:
+        # Y[i] ~ dbin(p, 1) # Binomial(N,p)
         Y[i] ~ dbern(p) # Bernoulli(p)
     }
     p ~ dunif(0.001, 0.999)
 }")
-
 ## data
 dat <- list(Y = y, n = n)
-
 ## Bayesian MCMC results
 fit <- jags.fit(data = dat, params = "p", model = model)
-
 summary(fit)
 ```
 
 Next we implement the data cloning method. First, we specify the same model as above but now generate k clones of the data. Instead of jags.fit as above, we now use the function dc.fit.  
-```{r}
+```{r dclone1}
 ## dclone-ified model specification
 model <- custommodel("model {
     for (k in 1:K) {
@@ -76,9 +71,12 @@ model <- custommodel("model {
 ## dclone-ified data specification
 dat <- list(Y = dcdim(data.matrix(y)), n = n, K = 1)
 
+maxclones <- 8
+clonevec <- 2^seq(0,round(log2(maxclones)))
 ## data cloning based MCMC results
-dcfit <- dc.fit(data = dat, params = "p", model = model,
-    n.clones = c(1,2,4,8), unchanged = "n", multiply = "K")
+dcfit <- dc.fit(data = dat, params = "p", 
+                model = model,
+    n.clones = clonevec, unchanged = "n", multiply = "K")
 
 summary(dcfit)
 
@@ -89,7 +87,7 @@ vcov(dcfit) # inverse Fisher information matrix
 confint(dcfit) # asymptotic confidence interval
 ```
 
-We use data cloning diagnostics to ensure we do not have issues with identifiability. In this example, the parameter, p, is identifiable. 
+We use data cloning diagnostics to ensure we do not have issues with identifiability. In this example, the parameter, $p$, is identifiable. 
 ```{r}
 dctable(dcfit)
 plot(dctable(dcfit))
@@ -97,9 +95,9 @@ dcdiag(dcfit)
 plot(dcdiag(dcfit))
 ```
 
-###dcmle and makeDcFit
+### dcmle and makeDcFit
 
-We now demonstrate how to fit data based on the dcmle package. From (3), Solymos demonstrates this via the paramecium dataset. The dcmle function allows us to obtain the MLE and standard error. 
+We now demonstrate how to fit data based on the dcmle package. From (3), Solymos demonstrates this via the paramecium dataset. The `dcmle` function allows us to obtain the MLE and standard error. 
 ```{r}
 ## Beverton-Holt time series example
 ## data and model taken from Ponciano et al. 2009
@@ -107,7 +105,7 @@ We now demonstrate how to fit data based on the dcmle package. From (3), Solymos
 paramecium <- makeDcFit(
   data = list(ncl=1, 
               n=18, 
-              Y=dcdim(data.matrix(c(17,29,39,63,185,258,267,
+       Y=dcdim(data.matrix(c(17,29,39,63,185,258,267,
                                     392,510,570,650,560,575,650,550,480,520,500)))),
   model = function() {
     for (k in 1:ncl) {
@@ -129,14 +127,14 @@ paramecium <- makeDcFit(
   params = c("lambda","beta","sigma"))
 
 ##use dcmle function to compute the MLE
-dcmle(paramecium,n.clones=1:2,n.iter=1000)
+dd <- dcmle(paramecium,n.clones=c(1,2,4),n.iter=1000)
 ```
 
-###dclone: Data Cloning in R (2010) by Peter Solymos
+### dclone: Data Cloning in R (2010) by Peter Solymos
 
 The main source of example is Solymos' 2010 paper (2). He demonstrates how to utilize R to perform data cloning. The code has been altered slightly by Professor Bolker so that we do not have to tinker with WinBugs. Please note as this paper is from 2010, some of the functions used have now been upgraded or replaced. 
 
-The data cloning method
+## The data cloning method
 
 We commence by generating data once again and setting up our hierarchical model, a Poisson GLMM in this case.
 ```{r datagen}
@@ -180,9 +178,9 @@ mod <- jags.fit(dat,
    c("beta", "sigma"), glmm.model, n.iter = 1000)
 ```
 
-**Note some code from (2) has been omitted.
+*Note some code from (2) has been omitted.*
 
-The dclone function creates k clones of the data as outlined below. 
+The dclone function creates `k` clones of the data as outlined below. 
 ```{r comparison, eval=FALSE}
 dclone(1:5, 1)
 dclone(1:5, 2)
@@ -190,7 +188,7 @@ dclone(matrix(1:4, 2, 2), 2)
 dclone(data.frame(a=1:2, b=3:4), 2)
 ```
 
-We use the dclone function to create k clones of the observed data. The nclones function returns the value of k or NULL if k=1. In our example, we set k=2. 
+We use the dclone function to create `k` clones of the observed data. The `nclones()` function returns the value of `k` or NULL if `k=1`. In our example, we set `k=2`. 
 ```{r}
 dat2 <- dclone(dat, n.clones = 2, 
     multiply = "n", unchanged = "np")
@@ -203,9 +201,9 @@ mod2 <- jags.fit(dat2,
    c("beta", "sigma"), glmm.model, n.iter = 1000)
 ```
 
-**Note some code from (2) has been omitted. 
+*Note some code from (2) has been omitted.*
 
-We clone over an extra dimension using dcdim to ensure the clones are independent. This is typically used when we have non-independent data. 
+We clone over an extra dimension using `dcdim()` to ensure the clones are independent. This is typically used when we have non-independent data. 
 ```{r dcdim}
 (obj <- dclone(dcdim(data.matrix(1:5)), 2))
 ```
@@ -252,9 +250,9 @@ coef(bhmod)
 ```
 These are the MLEs for the parameters. They compare well with the estimates provided by Ponciano et al. (2009). (Beta.hat=0.00235, lambda.hat=2.274, sigma.hat=0.1274).
 
-Iterative model fitting
+## Iterative model fitting
 
-We demonstrate the function dc.fit, which iteratively fits the model with various values of clones. This can be used to improve MCMC convergence by making the priors more informative throughout the process of iterative model fitting. 
+We demonstrate the function `dc.fit`, which iteratively fits the model with various values of clones. This can be used to improve MCMC convergence by making the priors more informative throughout the process of iterative model fitting. 
 
 We slightly modify our Poisson GLMM model from above. 
 ```{r update}
@@ -274,7 +272,7 @@ glmm.model.up <- function() {
 }
 ```
 
-We define upfun as a function which updates the priors by specifying a flat prior in the first iteration and uses the updated posterior means and the standard errors for the following iterations. 
+We define `upfun` as a function which updates the priors by specifying a flat prior in the first iteration and uses the updated posterior means and the standard errors for the following iterations. 
 ```{r upfun}
 upfun <- function(x) {
    if (missing(x)) {
@@ -295,7 +293,7 @@ upfun <- function(x) {
 }
 ```
 
-We apply upfun in our data and specify the updating function in our model. 
+We apply `upfun()` in our data and specify the updating function in our model. 
 ```{r dcmod,eval=FALSE}
 updat <- list(Y = Y, X = X, n = n, 
    np = ncol(X), pr = upfun())
@@ -310,15 +308,15 @@ dcmod <- dc.fit(updat, c("beta", "sigma"),
 summary(dcmod)
 ```
 
-Diagnostics
+## Diagnostics
 
-We can use the dctable function to see the descriptive statistics stored in each step of the fitting process. We can then plot these results to determine if the algorithm has converged. If the scaled variances are not decreasing at the rate of 1/k, there may be identifiability issues with our parameters. 
+We can use the `dctable` function to see the descriptive statistics stored in each step of the fitting process. We can then plot these results to determine if the algorithm has converged. If the scaled variances are not decreasing at the rate of 1/k, there may be identifiability issues with our parameters. 
 ```{r figdct}
 dct <- dctable(dcmod)
 plot(dct)
 ```
 
-With increasing k, the means converge to the MLEs and the standard errors are getting smaller. 
+With increasing `k`, the means converge to the MLEs and the standard errors are getting smaller. 
 
 ```{r figdctsd}
 plot(dct, type="log.var")
@@ -333,7 +331,7 @@ dcdiag(dcmod)
 
 In the Poisson GLMM model, the posterior distribution is nearly degenerate multivariate normal as required by data cloning. 
 
-We now demonstrate a model with potentially non-identifiable parameters, the normal-normal mixture model. We define and fit this model below. 
+We now demonstrate a model with potentially non-identifiable parameters, the Normal-Normal mixture model. We define and fit this model below. 
 ```{r nn}
 gamma <- 2.5
 sigma <- 0.2
@@ -368,13 +366,13 @@ nnmod <- dc.fit(nndat, c("gamma","sigma","tau"),
 dcdiag(nnmod)
 vars <- mcmcapply(nnmod[,c("sigma","tau")],
    array)^2
-sigma^2 + tau^2
+## sigma^2 + tau^2:
 summary(rowSums(vars))
 ```
 
-We see in the results of dcdiag(nnmod) that lambda.max is not converging to zero as k increases and the r.hat value is high, which implies there are problems with identifiability.
+We see in the results of `dcdiag(nnmod)` that `lambda.max` is not converging to zero as `k` increases and the `r.hat` value is high, which implies there are problems with identifiability.
 
-Inference and prediction
+## Inference and prediction
 
 We obtain the mean of the posterior via coef and the data cloning standard errors via dcsd. 
 ```{r  methods}
@@ -383,7 +381,7 @@ dcsd(dcmod)
 mcmcapply(dcmod, sd) * sqrt(nclones(dcmod))
 ```
 
-We get the inverse Fisher information from vcov and Wald-type CI's from confint. 
+We get the inverse Fisher information from `vcov` and Wald-type CIs from `confint`. 
 ```{r  methods2}
 confint(dcmod)
 vcov(dcmod)

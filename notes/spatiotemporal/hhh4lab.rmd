@@ -10,7 +10,7 @@ output:
 
 ***
 
-Code from (@Meyer2014).
+Code from @Meyer2014.
 
 
 ***
@@ -50,7 +50,7 @@ data("measlesWeserEms")
 Initial view of the infection counts over the time period of interest, 2 years from 2001-2002:
 
 ```{r}
-plot(measlesWeserEms, type = observed ~ time)
+plot(measlesWeserEms, type = observed ~ time, col="gray")
 ```
 
 Disease incidence per 100,000 individuals:
@@ -90,13 +90,15 @@ The hhh4 model (@Held2005) is for infectious disease count data $Y_{it}$ from ne
 
 It assumes that $Y_{it}$ has a negative binomial distribution with mean:
 
-$$ u_{it} = e_{it} v_{it} + \lambda_{it} Y_{i,t-1} + \phi_{it} \sum_{j \neq i} w_{ji} Y_{j,t-1} $$
+$$
+u_{it} = e_{it} v_{it} + \lambda_{it} Y_{i,t-1} + \phi_{it} \sum_{j \neq i} w_{ji} Y_{j,t-1}
+$$
 
 and conditional variance $u_{it}(1 + \psi_i u_{it})$, where $\psi > 0$ is an overdispersion parameter. This parameter can be shared such that each $\psi_i \equiv \psi$.
 
 The negative binomial distribution can be replaced with a Poisson distribution, which is equivalent to taking the overdispersion parameters $\psi_i$ to 0.
 
-Further, he parameters $v_{it}$, $\lambda_{it}$, and $\phi_{it}$ can be specified with log-linear predictors, to be discussed later.
+Further, the parameters $v_{it}$, $\lambda_{it}$, and $\phi_{it}$ can be specified with log-linear predictors, to be discussed later.
 
 Finally, the inter-district transmission weights $w_{ij}$ are taken to be proportional to an exponential decay model $o_{ij}^d$ where each $o_{ij}$ is a neighbour adjacency order and decay parameter $d$. These weights are usually normalized such that $\sum_{i} w_{ji} = 1$.
 
@@ -367,7 +369,7 @@ aics_spa
 
 we see a further (slight) reduction.
 
-A `summary` and a `confint` call show a decay parameter estimate of about $d = 4.10$ with a 95\% confidence interval of about 2.03-6.17, indicating that spacial interaction decreases sharply with distance.
+A `summary` and a `confint` call show a decay parameter estimate of about $d = 4.10$ with a 95\% confidence interval of about 2.03-6.17, indicating that spatial interaction decreases sharply with distance.
 
 We can see this visually by plotting the fitted weights against their corresponding adjacency order:
 
