@@ -5,7 +5,7 @@ date: "`r as.character(Sys.time())`"
 
 ## Personnel
 
-- When e-mailing either the instructor or the TA about the course, **please include "3MB" in the subject and your Mac ID in the body of the e-mail**.
+- When e-mailing either the instructor or the TA about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
 - *Instructor*: Ben Bolker (`bolker@mcmaster.ca`). Office hours TBA; meetings during office hours are preferred but other times may be available by appointment. For more information, see [my web page](http://www.math.mcmaster.ca/bolker). 
 
 ## Class meetings
@@ -20,12 +20,7 @@ TBA
 
 ## Assignments and assessment
 
-- There will be a mid-term exam in class and a cumulative final exam during the time scheduled by the registrar's office. Other assignments will include problem sets and a group project (short progress reports and an individual, written report due at the end of the semester). Final grades will be based on the following components: class participation (10%, see below); assignments (20%); projects (35%); midterm (15%); final exam (20%).
-
-### Assignments
-
-
-### Group projects
+- There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project. Final grades will be based on the following components: class participation (15%, see below); homework (30%); class presentations (25%); project (30%).
 
 ## Course objective and content
 

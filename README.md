@@ -1,4 +1,4 @@
-Materials for a course in data visualization.   Fall 2015.
+Materials for a course in data visualization.  Winter 2018. 
 
 Everything below is tentative/subject to modification.
 
