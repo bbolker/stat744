@@ -1,12 +1,12 @@
 ---
-title: "STAT 744<br>Data visualization<br>Winter 2018"
+title: "STAT 744: Data visualization (Winter 2018)"
 date: "`r as.character(Sys.time())`"
 ---
 
 ## Personnel
 
 - When e-mailing either the instructor or the TA about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
-- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`). Office hours TBA; meetings during office hours are preferred but other times may be available by appointment. For more information, see [my web page](http://www.math.mcmaster.ca/bolker). 
+- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff. Office hours TBA; meetings during office hours are preferred but other times may be available by appointment. For more information, see [my web page](http://www.math.mcmaster.ca/bolker). 
 
 ## Class meetings
 
@@ -23,6 +23,44 @@ TBA
 - There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project. Final grades will be based on the following components: class participation (15%, see below); homework (30%); class presentations (25%); project (30%).
 
 ## Course objective and content
+
+The objective of this course is for students to gain both a theoretical
+and practical grounding in the issues surrounding data visualization in
+statistics and data science, including both the foundational work of
+Cleveland, Tufte, and Wilkinson and recent developments and controversies
+in the area of data visualization. For practical applications the course
+will focus on the `ggplot` package for R, but other more specialized
+platforms (e.g. ggobi, leaflet, D3.js) will also be discussed.
+
+The first half of the course will consist of lectures and demonstrations
+presented by the instructors. The second half of the course will shift
+to a student-led model, where students give presentations focusing on
+various advanced topics and work on a group project.
+
+### part 1: core topics
+
+- data manipulation basics for data visualization
+- graphical principles
+     - Cleveland: perception and hierarchy
+	 - Tufte: minimalism in data presentation
+	 - Wilkinson and Wickham: the grammar of graphics
+- graphics for quality assurance and exploratory data analysis
+- graphics for model diagnostics
+- graphics for inference (coefficient plots etc.)
+- approaches to big data
+- colour theory
+
+### part 2: specialized/student-led topics
+
+(which of these topics are covered and in what order will depend on student feedback)
+
+- info viz vs. data viz: chartjunk and graphics Nazis
+- perspective plotting (`rgl`, `plotly`)
+- high-dimensional data (`ggobi`, `ggvis` etc.)
+- dynamic graphics (`ggvis`, `plotly`, google charts, D3.js (?))
+- spatial data and mapping
+- smoothing for graphical display
+- alternative platforms
 
 ## Legal stuff
 
@@ -84,11 +122,11 @@ In most cases, missed work or tests will be addressed by reweighting the remaini
 
 ### Late work
 
-All assignments are due on Avenue to Learn prior to class, unless otherwise stated. I reserve the right to penalize late work by 10% per day.
+All assignments are due, either on on Avenue to Learn or as commits to a GitHub repository, prior to class, unless otherwise stated. I reserve the right to penalize late work by 10% per day.
 
 ### Online component
 
-We will be using the learning software Avenue to Learn.  Students should be aware that private information such as first and last names, user names for the McMaster e-mail accounts, and program affiliation may be visible to other students in the course. By taking this course you consent to this disclosure. If you have any questions or concerns about this, please discuss them with the course instructor. Grades will be posted on AtL.
+We may be using the learning software Avenue to Learn.  Students should be aware that private information such as first and last names, user names for the McMaster e-mail accounts, and program affiliation may be visible to other students in the course. By taking this course you consent to this disclosure. If you have any questions or concerns about this, please discuss them with the course instructor. Grades will be posted on AtL.
 
 ### Academic Integrity
 
