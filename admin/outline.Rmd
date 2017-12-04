@@ -47,6 +47,7 @@ various advanced topics and work on a group project.
 - graphics for quality assurance and exploratory data analysis
 - graphics for model diagnostics
 - graphics for inference (coefficient plots etc.)
+- ethical issues in data visualization
 - approaches to big data
 - colour theory
 
