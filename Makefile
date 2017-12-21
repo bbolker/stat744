@@ -1,3 +1,15 @@
+# Generations
+
+target = Makefile
+-include target.mk
+
+##################################################################
+
+Sources = Makefile .gitignore README.md sub.mk LICENSE.md
+include sub.mk
+
+######################################################################
+
 sched.html: sched.rmd0 macros.gpp sched.csv topics.csv
 	echo "library(knitr); knit('sched.rmd0')"  | R --slave
 	gpp -H -DHTML=1 --include macros.gpp sched.txt > sched.md
@@ -18,3 +30,7 @@ sched.html: sched.rmd0 macros.gpp sched.csv topics.csv
 %.html: %.rmd
 	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
 
+######################################################################
+
+-include $(ms)/git.mk
+-include $(ms)/visual.mk
