@@ -5,8 +5,14 @@ target = Makefile
 
 ##################################################################
 
-Sources = Makefile .gitignore README.md sub.mk LICENSE.md
+Sources += Makefile .gitignore README.md sub.mk LICENSE.md
 include sub.mk
+
+######################################################################
+
+## Notes
+
+Sources += admin/outline.Rmd TODO.md
 
 ######################################################################
 

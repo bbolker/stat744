@@ -55,7 +55,7 @@ various advanced topics and work on a group project.
 
 (which of these topics are covered and in what order will depend on student feedback)
 
-- info viz vs. data viz: chartjunk and graphics Nazis
+- info viz vs. data viz: chartjunk and graphics purists
 - perspective plotting (`rgl`, `plotly`)
 - high-dimensional data (`ggobi`, `ggvis` etc.)
 - dynamic graphics (`ggvis`, `plotly`, google charts, D3.js (?))
@@ -98,7 +98,7 @@ Students who require academic accommodation must contact Student Accessibility S
 
 ### Grading scheme
 
-I reserve the right to change the weightings in the grading scheme. If changes are made, your grade will be calculated using the original weightings and the new weightings, and you will be given the higher of the two grades. At the end of the course the grades may be adjusted but this can only increase your grade and will be done uniformly. I will use the following grade chart to convert between letter grades, grade points and percentages:
+We reserve the right to change the weightings in the grading scheme. If changes are made, your grade will be calculated using the original weightings and the new weightings, and you will be given the higher of the two grades. At the end of the course the grades may be adjusted but this can only increase your grade and will be done uniformly. We will use the following grade chart to convert between letter grades, grade points and percentages:
 
 A+     A     A-     B+    B 	B- 	  C+    C 	  C-    D+ 	  D     D-    F
 ---    ---   ---    ---   ---   ---   ---   ---   ---   ---   ---   ---   ---
@@ -113,17 +113,11 @@ The instructor and university reserve the right to modify elements of the course
 
 ### Missing tests or work
 
-In the event of an absence for medical or other reasons, students should review and follow the Academic Regulation in the Undergraduate Calendar “Requests for Relief for Missed Academic Term Work” (see [here](http://academiccalendars.romcmaster.ca/con
-tent.php?catoid=13&navoid=2208#Requests_for_Relief_for_Missed_Academic_Term_Work)). Please note these regulations have changed beginning Fall 2015, in particular:
-
-- The time frame within which the MSAF is valid has been reduced from 5 days to 3 days.
-- The upper limit for which an MSAF can be submitted has been reduced from 'less than 30%' to 'less than 25%' of the course weight.
-
 In most cases, missed work or tests will be addressed by reweighting the remaining work or tests. If you must miss a lecture, it is your responsibility to find out what was covered. The best way to do this is to borrow a classmate's notes, read them over, and then ask your instructor if there is something that you do not understand.
 
 ### Late work
 
-All assignments are due, either on on Avenue to Learn or as commits to a GitHub repository, prior to class, unless otherwise stated. I reserve the right to penalize late work by 10% per day.
+All assignments are due, either on Avenue to Learn or as commits to a GitHub repository, prior to class, unless otherwise stated. We will penalize late work by 10% per day.
 
 ### Online component
 
@@ -131,7 +125,7 @@ We may be using the learning software Avenue to Learn.  Students should be aware
 
 ### Academic Integrity
 
-The expectations for this class are fairly simple: however, if you have any questions or concerns **please ask me**. See the McMaster Office of Academic Integrity’s web page for general information.
+The expectations for this class are fairly simple: however, if you have any questions or concerns **please ask**. See the McMaster Office of Academic Integrity’s web page for general information.
 
 You are expected to exhibit honesty and use ethical behavior in all aspects of the learning process.  Academic credentials you earn are rooted in principles of honesty and academic integrity.  Academic dishonesty can result in serious consequences, including a notation on the transcript, or suspension or expulsion from the university.  It is your responsibility to understand what constitutes academic dishonesty; for more information please refer to the Academic Integrity Policy at <http://www.mcmaster.ca/academicintegrity>.
 
@@ -139,7 +133,7 @@ Some common academic dishonesty issues:
 
 - *Plagiarism*: For example, the submission of work that is not one's own or for which other credit has been obtained.
 - *Improper collaboration*: In this course, you are encouraged to discuss the assigned problems with other students in your class. You may *discuss* the solutions to problem sets, but **you must write up your solutions yourself without copying phrasing from other students’ work. If you work with others, you must clearly indicate on your write-up who you worked with.**  When work is not explicitly assigned as a group project you must write the solutions in your own words without referring to any other students' work. The copying or even paraphrasing of anyone's solutions will be considered academic dishonesty. For group projects, you will be asked to report your own assessment of how you contributed to the group's work.
-- *Copying or using unauthorized aids in examinations*: In this course you are not allowed to talk to or communicate in any way (e.g. pass notes) with anyone but the instructor or the invigilators during an examination. In the case of a take-home exam, I will clearly indicate at the time what resources you may or may not use. You are on your honor to observe any specified time limits and to refrain from communicating with anyone other than the instructor/TA about the contents of the exam.
+- *Copying or using unauthorized aids in examinations*: In this course you are not allowed to talk to or communicate in any way (e.g. pass notes) with anyone but the instructor or the invigilators during an examination. In the case of a take-home exam, we will clearly indicate at the time what resources you may or may not use. You are on your honor to observe any specified time limits and to refrain from communicating with anyone other than the instructor/TA about the contents of the exam.
 - While it does not technically constitute academic dishonesty, *continuing to write once the announcement that the allotted time for a test or examination is over* without the express consent of the instructor or one of the invigilators will be penalized.
  
 ----------------------------------------
