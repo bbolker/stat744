@@ -11,4 +11,4 @@ week,start date,topic,reading/viewing
 ?,?,high-dimensional data,`ggobi`; `ggvis`
 ?,?,spatial data and mapping,`leaflet`; `ggmap`; @gelman_all_1999
 ?,?,aggregation and smoothing for graphical display
-?,?,alternative platforms for data visualization
+?,?,alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/)
