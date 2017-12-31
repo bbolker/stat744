@@ -41,6 +41,9 @@ target.mk
 
 *.wrapR.*
 
+.#*
+\#*
+
 local.mk
 
 dotdir/

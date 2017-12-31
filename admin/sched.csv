@@ -1,11 +1,14 @@
-date,number,topic,personnel
-"24, 28 Sep",1,KF,"Brar, Krishnaswamy"
-"1, 5 Oct",2,MCMC,"He, Wang"
-"8, 19 Oct",3,"synthetic likelihood","Ehsani,  Stacey"
-"22,26 Oct",4,sMC,"Tao (?), Qin"
-"29 Oct, 2 Nov",5,ABC,"Neelangol, Liu"
-"5, 9 Nov",6,INLA,"Kibrett, Kampo, Feng"
-"12, 16 Nov",7,"data cloning","La Rosa, Ghimire"
-"19, 23 Nov",8,spatiotemporal,"Barrows, Gonzalez"
-"26, 30 Nov",9,NIMBLE,"Li, Kain"
-"3, 7 Dec",,wrap-up,
+week,start date,topic,reading/viewing
+1,8 Jan,overview; tidyverse/ggplot basics,GitHub lessons ([Jenny Bryan](https://beta.rstudioconnect.com/jennybc/happy-git-with-r/); [GitHub with GitHub desktop](https://jcszamosi.github.io/mcmaster_swc_git_gui/); [GitHub on the command line](https://swcarpentry.github.io/git-novice/)); Software Carpentry lessons on [dplyr](http://swcarpentry.github.io/r-novice-gapminder/13-dplyr/) and [tidyr](http://swcarpentry.github.io/r-novice-gapminder/14-tidyr/); John Rauser on ["How Humans See Data"](https://www.youtube.com/watch?v=fSgEeI2Xpdc)
+2,15 Jan,"principles: Tukey, Cleveland, Tufte",@cleveland_graphical_1984; @cleveland_graphical_1987
+3,22 Jan,exploratory graphics,
+4,29 Jan,diagnostic graphics,@peltonen_visualizations_2009
+5,5 Feb,inferential graphics,@wickham_graphical_2010;@gelman_lets_2002;@gelman_why_2011
+6,12 Feb,infoviz vs data viz; ethics,@su_its_2008;@gelman_infovis_2013
+7,19 Feb,*winter break*,
+?,?,dynamic graphics
+?,?,perspective plotting
+?,?,high-dimensional data
+?,?,spatial data and mapping,@gelman_all_1999
+?,?,aggregation and smoothing for graphical display
+?,?,alternative platforms for data visualization
