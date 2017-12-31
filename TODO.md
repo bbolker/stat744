@@ -1,22 +1,23 @@
-* Clean up Makefile/bib/macros etc.
-* finish intro stuff!
-
+* Finish intro stuff!
 * Plan lectures
 * Find students
 	* Check mosaic (4 signed up so far)
 	* Get a room
 
-* Cleveland hierarchy youtube vid
-	* find related code
+* [Cleveland hierarchy youtube vid](https://www.youtube.com/watch?v=fSgEeI2Xpdc); code on [GitHub](https://github.com/jrauser/writing/tree/master/how_humans_see_data)
 
 * Put in a low-burden makestuff framework
-     * markup shortcut for R packages?
+     * markup shortcut for R packages? (e.g. <#Rpkg #1> -> https://cran.r-project.org/web/packages/#1
+	 * auto-generate bib files (bib2xhtml or similar)
 
-* Github infrastructure
+* Github infrastructure (collecting student repos)
 
 * Start HW early (more structured than 708)
-
-* dynamic graphics stuff: highcharter, google charts ...
+     * HW ideas:
+	       * reshape/modify some data
+	       * find a graph; recreate it, then fix/change it
+		   * convert a table of numbers to a graph
+		   * fit a model and diagnose it
 
 * Similar courses:
     * Andrew Heiss [data visualization](https://datavizf17.classes.andrewheiss.com) ([syllabus](https://datavizf17.classes.andrewheiss.com/syllabus/), [final projects](https://datavizf17.classes.andrewheiss.com/final-projects/)

@@ -9,6 +9,6 @@ week,start date,topic,reading/viewing
 ?,?,dynamic graphics,`ggvis`; `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/)
 ?,?,perspective plotting,`rgl`; `plotly`; `lattice`; `scatterplot3d`
 ?,?,high-dimensional data,`ggobi`; `ggvis`
-?,?,spatial data and mapping,@gelman_all_1999
+?,?,spatial data and mapping,`leaflet`; `ggmap`; @gelman_all_1999
 ?,?,aggregation and smoothing for graphical display
 ?,?,alternative platforms for data visualization
