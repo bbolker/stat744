@@ -24,3 +24,7 @@
     * Andrew Gelman: [statistical communication and graphics](http://andrewgelman.com/2015/10/02/syllabus-for-my-course-on-communicating-data-and-statistics/)
     * CSE 707, [Visualization and 3D Rendering](https://computational.mcmaster.ca/graduate-studies/courses.html):
           > This course will provide an introduction to the use of graphics to visualize research data (grids, meshes, particles) in two and three dimensions. It will cover algorithms (surface drawing, transparency), real time visualization, post processing (including large data sets) and generating animations and movies. It will introduce OpenGL as a low-level mechanism to access hardware graphic acceleration as well as other popular toolkits such as vtk and provide experience with visualization tools built on these foundations.
+
+* more topics:
+    * pedantry: pie charts, dual-axis charts, dynamite plots, 3d bar charts ... @drum_yet_2017, @drang_drum_2017
+	
