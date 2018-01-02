@@ -1,4 +1,4 @@
-%.html: %.rmd
+%.html: %.Rmd
 	Rscript -e "rmarkdown::render(\"$<\")"
 
 %.pdf: %.Rmd
