@@ -8,7 +8,7 @@
 
 * Put in a low-burden makestuff framework
      * markup shortcut for R packages? (e.g. <#Rpkg #1> -> https://cran.r-project.org/web/packages/#1
-	 * auto-generate bib files (bib2xhtml or similar)
+	 * auto-generate bib products (bib2xhtml or similar)
 
 * Github infrastructure (collecting student repos)
 
@@ -27,4 +27,3 @@
 
 * more topics:
     * pedantry: pie charts, dual-axis charts, dynamite plots, 3d bar charts ... @drum_yet_2017, @drang_drum_2017
-	

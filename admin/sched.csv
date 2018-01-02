@@ -4,11 +4,12 @@ week,start date,topic,reading/viewing
 3,22 Jan,exploratory graphics,
 4,29 Jan,diagnostic graphics,@peltonen_visualizations_2009
 5,5 Feb,inferential graphics,@wickham_graphical_2010; @gelman_lets_2002; @gelman_why_2011
-6,12 Feb,infoviz vs data viz; ethics,@su_its_2008; @gelman_infovis_2013
+6,12 Feb,infoviz vs data viz; ethics; expository graphics,@su_its_2008; @gelman_infovis_2013
 7,19 Feb,*winter break*,
 ?,?,dynamic graphics,`ggvis`; `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/)
 ?,?,perspective plotting,`rgl`; `plotly`; `lattice`; `scatterplot3d`
 ?,?,high-dimensional data,`ggobi`; `ggvis`
 ?,?,spatial data and mapping,`leaflet`; `ggmap`; @gelman_all_1999
+?,?,color; color maps and the colorically challenged,
 ?,?,aggregation and smoothing for graphical display
 ?,?,alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/)
