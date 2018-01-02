@@ -3,6 +3,7 @@
 * Find students
 	* Check mosaic (4 signed up so far)
 	* Get a room
+        * scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
 
 * [Cleveland hierarchy youtube vid](https://www.youtube.com/watch?v=fSgEeI2Xpdc); code on [GitHub](https://github.com/jrauser/writing/tree/master/how_humans_see_data)
 
