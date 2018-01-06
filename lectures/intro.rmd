@@ -44,6 +44,19 @@ library("knitr")
 opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4,out.width=400)
 ```
 
+# Course structure
+
+## Course goals
+
+General introduction to data viz principles and tools
+
+## Course structures
+
+- lectures from professors on basic ideas (first half)
+- in-class work
+- homework
+- lectures from students on topics/advanced ideas (second half)
+
 # Tools
 
 ## Version control
@@ -62,6 +75,9 @@ opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4,out.width=400)
 - copy repository to local machine
      - `git clone`
 	 - RStudio: `File` > `New Project` > `Version Control` > `Git` > fill in name from "Clone" button on GH
+	 
+- - -
+
 - repeat:
 	 - **pull** (fetch and integrate changes from GH) [`git pull`]
 		  - RStudio: Git panel > click blue down-arrow
@@ -69,7 +85,8 @@ opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4,out.width=400)
 	 - **stage**  [`git add`]
 		  - RStudio: Git panel > click "Staged" button
      - **commit** [`git commit`]
-		  - RStudio: Git panel > click "Commit" icon > enter commit message > click "Commit" button (*ignore "amend previous commit" button!)
+		  - RStudio: Git panel > click "Commit" icon >  
+enter commit message > click "Commit" button (*ignore "amend previous commit" button!*)
 	 - **push** [`git push`]
 		  - RStudio: Git panel > click green up-arrow
 
