@@ -12,18 +12,9 @@ include sub.mk
 
 ######################################################################
 
-## Processing rmd files
+## html
 
-%.rmd: %.rmd0 macros.gpp
-	gpp -H --include macros.gpp $*.rmd0  > $*.rmd
-
-%.pdf: %.rmd
-	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
-
-## https://github.com/aasgreen/NSERC-Application-Latex-Template
-
-%.html: %.rmd
-	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
+Sources += $(wildcard *.html)
 
 ######################################################################
 
