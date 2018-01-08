@@ -1,0 +1,10 @@
+<#ifdef PDF>
+	<#define fixme|{\\color{red} \\emph{#1} \\color{black}}>
+	<#define Rpkg|\\href{https://cran.r-project.org/web/packages/#1/index.html}{#1}>
+        <#define Rforgepkg|\\href{https://cran.r-project.org/web/packages/#1/index.html}{#1}>
+<#endif>
+<#ifdef HTML>
+	<#define fixme|#1>
+	<#define Rpkg|[#1](https://cran.r-project.org/web/packages/#1/index.html)>
+        <#define Rforgepkg|[#1](https://cran.r-project.org/web/packages/#1/index.html)>
+<#endif>

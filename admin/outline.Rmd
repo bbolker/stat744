@@ -1,0 +1,147 @@
+---
+title: "STAT 744: Data visualization (Winter 2018)"
+date: "`r as.character(Sys.time())`"
+---
+
+## Personnel
+
+- When e-mailing the instructors about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
+- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff (`dushoff@mcmaster.ca`). 
+
+## Class meetings
+
+Hamilton Hall 207:
+- Mon 10:30-11:20
+- Tue 1:30-3:20
+
+## General info
+
+- [**Schedule:** ](./sched.html)
+- **Textbook:** Tufte, Cleveland?
+- **Prerequisites:** intermediate proficiency in R
+
+## Assignments and assessment
+
+- There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project. Final grades will be based on the following components: class participation (15%, see below); homework (30%); class presentations (25%); project (30%).
+
+## Course objective and content
+
+The objective of this course is for students to gain both a theoretical
+and practical grounding in the issues surrounding data visualization in
+statistics and data science, including both the foundational work of
+Cleveland, Tufte, and Wilkinson and recent developments and controversies
+in the area of data visualization. For practical applications the course
+will focus on the `ggplot` package for R, but other more specialized
+platforms (e.g. ggobi, leaflet, D3.js) will also be discussed.
+
+The first half of the course will consist of lectures and demonstrations
+presented by the instructors. The second half of the course will shift
+to a student-led model, where students give presentations focusing on
+various advanced topics and work on a group project.
+
+### part 1: core topics
+
+- data manipulation basics for data visualization
+- graphical principles
+     - Cleveland: perception and hierarchy
+	 - Tufte: minimalism in data presentation
+	 - Wilkinson and Wickham: the grammar of graphics
+- graphics for quality assurance and exploratory data analysis
+- graphics for model diagnostics
+- graphics for inference (coefficient plots etc.)
+- ethical issues in data visualization
+- approaches to big data
+- colour theory
+
+### part 2: specialized/student-led topics
+
+(which of these topics are covered and in what order will depend on student feedback)
+
+- info viz vs. data viz: chartjunk and graphics purists
+- perspective plotting (`rgl`, `plotly`)
+- high-dimensional data (`ggobi`, `ggvis` etc.)
+- dynamic graphics (`ggvis`, `plotly`, google charts, D3.js (?))
+- spatial data and mapping
+- smoothing for graphical display
+- alternative platforms
+
+## Legal stuff
+
+### Policies
+
+1.  **Policy on missed work or lectures:** You should be aware of the
+    [Policy For Absence from School Due to Illness or Compassionate Reasons](http://academiccalendars.romcmaster.ca/content.php?catoid=7&navoid=559#Requests_for_Relief_for_Missed_Academic_Term_Work)
+    It is important to know your rights and your responsibilities. If
+    you must miss a presentation or cannot submit assigned work on
+    time for a valid reason (e.g., medical reasons, etc.) you may be
+    able to obtain an excused absence by taking appropriate
+    documentation (e.g.  note from physician) to the Faculty/Program
+    office and then discussing this with your instructor. If the
+    Faculty/Program gives its approval, the final examination will
+    then be given the appropriate extra weighting. Otherwise, a grade
+    of zero will be entered for the missed work.
+
+    If you must miss a lecture or lab, it is your responsibility to find out
+    what was covered. The best way to do this is to borrow a classmate's
+    notes, read them over, and then ask your instructor if there is
+    something that you do not understand.
+
+3.  No calculators or other aids will be allowed during examinations
+    unless explicitly indicated.
+     
+4.  You will be required to bring your official McMaster University
+    photo identification card to the final examination.
+     
+5.  Students' grades will be returned on Avenue.
+
+### Accommodations
+
+Students who require academic accommodation must contact Student Accessibility Services (SAS) to make arrangements with a Program Coordinator. Academic accommodations must be arranged for each term of study. Student Accessibility Services can be contacted by phone 905-525-9140 ext. 28652 or e-mail `sas@mcmaster.ca`. For further information, consult McMaster University’s [Policy for Academic Accommodation of Students with Disabilities](http://www.mcmaster.ca/policy/Students-AcademicStudies/AcademicAccommodation-StudentsWithDisabilities.pdf)
+
+### Grading scheme
+
+We reserve the right to change the weightings in the grading scheme. If changes are made, your grade will be calculated using the original weightings and the new weightings, and you will be given the higher of the two grades. At the end of the course the grades may be adjusted but this can only increase your grade and will be done uniformly. We will use the following grade chart to convert between letter grades, grade points and percentages:
+
+A+     A     A-     B+    B 	B- 	  C+    C 	  C-    D+ 	  D     D-    F
+---    ---   ---    ---   ---   ---   ---   ---   ---   ---   ---   ---   ---
+12     11 	 10 	9 	  8 	7 	  6     5     4 	3 	  2 	1 	  0
+90-100 85-89 80-84  77-79 73-76 70-72 67-69 63-66 60-62 57-59 53-56 50-52 0-49
+
+(from p. 29 of the current Undergraduate calendar)
+
+### Dates subject to change
+
+The instructor and university reserve the right to modify elements of the course during the term. The university may change the dates and deadlines for any or all courses in extreme circumstances. If either type of modification becomes necessary, reasonable notice and communication with the students will be given with explanation and the opportunity to comment on changes. It is the responsibility of the student to check their McMaster email and course websites weekly during the term and to note any changes.
+
+### Missing tests or work
+
+In most cases, missed work or tests will be addressed by reweighting the remaining work or tests. If you must miss a lecture, it is your responsibility to find out what was covered. The best way to do this is to borrow a classmate's notes, read them over, and then ask your instructor if there is something that you do not understand.
+
+### Late work
+
+All assignments are due, either on Avenue to Learn or as commits to a GitHub repository, prior to class, unless otherwise stated. We will penalize late work by 10% per day.
+
+### Online component
+
+We may be using the learning software Avenue to Learn.  Students should be aware that private information such as first and last names, user names for the McMaster e-mail accounts, and program affiliation may be visible to other students in the course. By taking this course you consent to this disclosure. If you have any questions or concerns about this, please discuss them with the course instructor. Grades will be posted on AtL.
+
+### Academic Integrity
+
+The expectations for this class are fairly simple: however, if you have any questions or concerns **please ask**. See the McMaster Office of Academic Integrity’s web page for general information.
+
+You are expected to exhibit honesty and use ethical behavior in all aspects of the learning process.  Academic credentials you earn are rooted in principles of honesty and academic integrity.  Academic dishonesty can result in serious consequences, including a notation on the transcript, or suspension or expulsion from the university.  It is your responsibility to understand what constitutes academic dishonesty; for more information please refer to the Academic Integrity Policy at <http://www.mcmaster.ca/academicintegrity>.
+
+Some common academic dishonesty issues:
+
+- *Plagiarism*: For example, the submission of work that is not one's own or for which other credit has been obtained.
+- *Improper collaboration*: In this course, you are encouraged to discuss the assigned problems with other students in your class. You may *discuss* the solutions to problem sets, but **you must write up your solutions yourself without copying phrasing from other students’ work. If you work with others, you must clearly indicate on your write-up who you worked with.**  When work is not explicitly assigned as a group project you must write the solutions in your own words without referring to any other students' work. The copying or even paraphrasing of anyone's solutions will be considered academic dishonesty. For group projects, you will be asked to report your own assessment of how you contributed to the group's work.
+- *Copying or using unauthorized aids in examinations*: In this course you are not allowed to talk to or communicate in any way (e.g. pass notes) with anyone but the instructor or the invigilators during an examination. In the case of a take-home exam, we will clearly indicate at the time what resources you may or may not use. You are on your honor to observe any specified time limits and to refrain from communicating with anyone other than the instructor/TA about the contents of the exam.
+- While it does not technically constitute academic dishonesty, *continuing to write once the announcement that the allotted time for a test or examination is over* without the express consent of the instructor or one of the invigilators will be penalized.
+ 
+----------------------------------------
+
+This outline will be linked from the course home page. However, it is your responsibility to check the course home page and syllabus regularly for further announcements, course handouts, assigned work and its due dates, information about test dates and locations when this information becomes available, downloadable course related material, etc.. Recorded marks for tests and assignments will be posted on Avenue. You should check these once they become available and bring any discrepancies to the attention of the instructor or the TA as soon as possible.
+
+
+
+

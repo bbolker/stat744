@@ -1,0 +1,30 @@
+---
+title: "course schedule"
+date:  "`r format(Sys.time(), '%d %B %Y')`"
+output: rmarkdown::html_document
+bibliography: ../vis.bib
+---
+
+*Notes*:
+
+- everything here is provisional, especially the readings
+
+```{r echo=FALSE,results="asis",message=FALSE,warning=FALSE}
+library("knitr")
+library("pander")
+library("dplyr")
+dd <- read.csv("sched.csv",check.names=FALSE)
+## dd <- dd[,1:4]
+## topics <- read.csv("topics.csv")
+## dd2 <- arrange(merge(dd,topics,by.x="topic",by.y="title",all.x=TRUE),number)
+panderOptions('table.split.cells', 15)
+panderOptions('table.split.table',Inf)
+panderOptions('table.style','multiline')
+panderOptions('table.alignment.default','left')
+pander(dd)
+## kable(dd)
+```
+
+After break, the course will be student-driven (choice of topics, presentations)
+
+## References

@@ -1,0 +1,219 @@
+---
+title: intro material
+author: Ben Bolker
+bibliography: ../vis.bib
+csl: reflist2.csl
+output:
+  ioslides_presentation
+---
+<!-- 
+apa.csl is a slightly hacked version of APA 
+  (modified for "et al" after 2 authors in text)
+-->
+<!-- .refs is style for reference page (small text) -->
+<style>
+.refs {
+   font-size: 16px;
+}
+h2 { 
+ color: #3399ff;		
+}
+h3 { 
+ color: #3399ff;		
+}
+.title-slide {
+   background-color: #55bbff;
+}
+</style>
+<!--    content: url(https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+>
+<!-- Limit image width and height -->
+<style type="text/css">
+img {     
+  max-height: 560px;     
+  max-width: 800px; 
+}
+</style>
+
+```{r setup,echo=FALSE,message=FALSE}
+library("ggplot2"); theme_set(theme_classic())
+library("reshape2")
+library("ggExtra")
+library("MASS")
+library("knitr")
+opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4,out.width=400)
+```
+
+# Course structure
+
+## Course goals
+
+General introduction to data viz principles and tools
+
+## Course structures
+
+- lectures from professors on basic ideas (first half)
+- in-class work
+- homework
+- lectures from students on topics/advanced ideas (second half)
+
+# Tools
+
+## Version control
+
+- Git: distributed version control system
+- GitHub: centralized version control server
+    - alternatives: BitBucket, GitLab, ...
+- Git *clients*: software for working with Git on your computer
+    - command-line (e.g. `git add foo.rmd`)
+	- RStudio
+	- others (GitHub desktop etc.)
+
+## Basic Git workflow with RStudio
+
+- create **repository** on Github
+- copy repository to local machine
+     - `git clone`
+	 - RStudio: `File` > `New Project` > `Version Control` > `Git` > fill in name from "Clone" button on GH
+	 
+- - -
+
+- repeat:
+	 - **pull** (fetch and integrate changes from GH) [`git pull`]
+		  - RStudio: Git panel > click blue down-arrow
+     - do stuff (create, edit files, etc.)
+	 - **stage**  [`git add`]
+		  - RStudio: Git panel > click "Staged" button
+     - **commit** [`git commit`]
+		  - RStudio: Git panel > click "Commit" icon >  
+enter commit message > click "Commit" button (*ignore "amend previous commit" button!*)
+	 - **push** [`git push`]
+		  - RStudio: Git panel > click green up-arrow
+
+## tidyverse 
+
+- set of R packages: https://www.tidyverse.org/
+- advantages
+    - expressiveness
+    - speed
+	- new hotness
+- disadvantages
+    - minor incompatibilities with base R
+	- rapid evolution
+	- non-standard evaluation
+
+## tidyverse: big ideas
+
+- new verbs
+- piping
+- tibbles
+
+## tidyverse: new verbs
+
+- `filter(x,condition)`: choose rows
+equivalent to `subset(x,condition)` or
+`x[condition,]` (with non-standard evaluation)
+- `select(x,condition)`: choose columns
+     - equivalent to `subset(x,select=condition)` or `x[,condition]`
+     - helper functions such as `starts_with()`, `matches()`
+- `mutate(x,var=...)`: change or add variables
+(equivalent to `x$var = ...` or `transform(x,var=...)`
+
+## tidyverse: split-apply-combine
+
+- `group_by()`: adds grouping information
+- `summarise()`: collapses variables to a single value
+- e.g. `group_by(course,mean_score=mean(score),sd_score=sd(score)`
+- equivalent to `plyr::ddply()` or
+
+```{r split_apply_combine,eval=FALSE}
+d_split <- split(d,d$var)       ## split
+d_proc <- lapply(d_split, ...)  ## apply
+d_res <- do.call(rbind,d_proc)  ## combine
+```
+
+## tidyverse: piping
+
+- new `%>%` operator (orig. from `magrittr` package)
+- directs result of previous operation to next function, as first argument
+- e.g.
+
+```{r pipe_ex,eval=FALSE}
+(d_input
+    %>% select(row1,row2)
+    %>% filter(cond1,cond2)
+    %>% mutate(...)
+) -> d_output
+```
+
+## tidyverse: tibbles
+
+- extension of data frames (sort of)
+- differences
+    - printing
+	     - only prints first few rows/columns
+		 - labels columns by type
+	- no rownames
+	- never drops dimensions (`tib[,"column1"]` is still a tibble)
+
+## tidyverse: reshaping (`tidyr` package)
+
+- `gather(data,key,value,<include/exclude>)`
+    - wide to long
+	- `reshape2::melt()`
+- `spread(data,key,value)`
+    - long to wide
+	- `reshape2::cast()`
+
+# types of data visualization
+
+## exploratory
+
+- find patterns in data, explore hypotheses
+- emphasize **robust** approaches
+- minimize (parametric) assumptions
+- Tukey, Cleveland
+
+## diagnostic
+
+- evaluate assumptions of a model
+    - normality
+	- homoscedasticity
+	- lack of bias/goodness of fit
+- easily spot deviations
+- identify outliers and influential points
+
+## inferential
+
+- coefficient plots
+- replacement for tables
+- also: tests of inference @wickham_graphical_2010
+- Gelman
+
+## expository: data-viz
+
+- tell an accurate story
+- high information density
+- Tufte, Cleveland
+
+## presentation: info-viz
+
+- grab attention/engage/sell/entertain
+- "puzzle" graphics
+
+## dashboards
+
+- present a quick overview of a data set
+- user control
+
+## dynamic
+
+- engage
+- allow reader to drill down
+- Cook
+
+<!-- http://stackoverflow.com/questions/30990262/applying-css-to-make-code-smaller-in-ioslides-style -->
+
+## References {.refs}
+
+
