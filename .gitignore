@@ -9,3 +9,9 @@
 *.blg
 *.tex
 *.nav
+
+commit.time
+commit.default
+
+target.mk
+.*.sw*
