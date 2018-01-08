@@ -16,6 +16,14 @@ include sub.mk
 
 Sources += admin/outline.Rmd TODO.md
 
+nonsense:
+	cd admin  && make outline.html
+	/bin/cp -f admin/outline.html pages
+
+######################################################################
+
+
+
 ######################################################################
 
 sched.html: sched.rmd0 macros.gpp sched.csv topics.csv

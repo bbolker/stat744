@@ -1,13 +1,25 @@
-* Finish intro stuff!
-* Plan lectures
-* Find students
-	* Check mosaic (4 signed up so far)
-	* Get a room
-        * scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
-     Alex B.: Monday 2:30-3:30 and Wednesdays 8:30-10:30.
-     Mu He: Tues 1:30
 
-* [Cleveland hierarchy youtube vid](https://www.youtube.com/watch?v=fSgEeI2Xpdc); code on [GitHub](https://github.com/jrauser/writing/tree/master/how_humans_see_data)
+For 9 Jan:
+
+* JD will create and push repos (find a dongle and a laptop, practice on rstudio)
+
+* BB will present examples prepared for Monday
+
+* Promulgate an assignment, and let them start working on it:
+	* Make a repo and share it with us
+	* Find some data (consult with us, maybe provide some hints in advance)
+		* Data should have _at least_ four variables, with at least one categorical and one continuous variable
+	* make 3 ggplots, with good, tidy code and say something about them (use what you've learned from Rauser)
+
+----------------------------------------------------------------------
+
+* Plan lectures
+
+* scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
+  * Alex B.: Monday 2:30-3:30 and Wednesdays 8:30-10:30.
+  * Mu He: Tues 1:30
+
+* code on [GitHub](https://github.com/jrauser/writing/tree/master/how_humans_see_data)
 
 * Put in a low-burden makestuff framework
      * markup shortcut for R packages? (e.g. <#Rpkg #1> -> https://cran.r-project.org/web/packages/#1
