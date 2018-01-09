@@ -1,0 +1,160 @@
+---
+title: "tidyverse/ggplot example"
+---
+
+```{r pkgs,message=FALSE}
+library(ggplot2)
+## I have a strong preference for the "black & white" theme
+##   (white background, gray gridlines)
+theme_set(theme_bw())
+library(readr)   ## tidyverse file-I/O
+library(dplyr)   ## filter/select/mutate/etc.
+library(tidyr)   ## reshaping
+library(GGally)  ## pairs plots
+```
+
+```{r get_cdat}
+cdat <- read_csv("../data/Carbohydrate_diet.csv")
+## tibble does magic: <= 20 rows, prints all by default;
+##    > 20 rows, prints first 10 by default
+print(cdat,n=8)
+```
+
+Univariate plot:
+```{r univ1}
+gg0 <- (ggplot(cdat,aes(weight,carbohydrate))
+    + geom_point()
+)
+```
+
+Add two different types of smooth line:
+```{r univ_multismooth}
+print(gg0
+      + geom_smooth() ## default:loess
+      + geom_smooth(method="lm",col="red",fill="red") ## linear model
+      )
+```
+
+This data set has no categorical variable, so we'll make an
+age-category variable:
+```{r mkcat}
+cdat <- mutate(cdat,f_age=cut_number(age,3))
+```
+
+```{r grp_regression}
+gg1 <- (ggplot(cdat,aes(weight,carbohydrate,colour=f_age))
+    + geom_point(aes(shape=f_age),size=4)
+)
+gg2 <- (gg1
+    + geom_smooth(method="lm",
+                  aes(color=f_age,fill=f_age))
+)
+print(gg2)
+```
+
+Categorical variable on x axis:
+
+```{r boxplot}
+ggplot(cdat,aes(f_age,carbohydrate)) + geom_boxplot()+
+    geom_point(size=4,alpha=0.2)
+```
+(also see `geom_jitter()`)
+
+Faceting:
+```{r facet1}
+gg3 <- (gg2
+    + facet_wrap(~f_age,labeller=label_both)
+)
+print(gg3)
+```
+
+Squash panels together:
+```{r facet2}
+z_margin <- theme(panel.spacing=grid::unit(0,"lines"))
+print(gg3 + z_margin)
+```
+
+## Univariate analyses
+
+Collapse data by variable:
+```{r gather}
+(cdat %>%
+ select(-f_age) %>%
+ gather(key=pvar,value=value,
+        -carbohydrate ## don't include carbohydrate
+        ) 
+) -> cdat_m
+```
+
+Plot univariate regressions:
+
+```{r univ_reg,fig.width=8}
+ggplot(cdat_m,aes(x=value,y=carbohydrate))+
+    geom_point()+facet_wrap(~pvar,scale="free")+
+    geom_smooth()+
+    geom_smooth(method="lm",colour="red",fill="red")
+```
+
+Finally, a fancy pairs plot:
+
+```{r pairs,message=FALSE}
+ggpairs(cdat)
+```
+
+## contraception data
+
+Binary response data: challenging!
+
+```{r contr1}
+data("Contraception",package="mlmRev")
+gg0 <- ggplot(Contraception,aes(age,use))+geom_point()
+print(gg0)
+```
+
+Collapse data:
+```{r contr_sum}
+(Contraception
+    ## collapse age by year
+    %>% mutate(f_age=cut(age,breaks=(-14):20,labels=seq(-13.5,19.5)),
+         ## then turn it back into a number
+               f_age=as.numeric(as.character(f_age)))
+    ## means by age group/urban vs rural/number of live children
+    %>% group_by(f_age,urban,livch)
+    ## compute proportion, n, standard error
+    %>% summarise(prop=mean(as.numeric(use)-1),
+                  n=n(),
+                  se=sqrt(prop*(1-prop)/n))
+) -> contr_sum
+```
+
+```{r contr_sum_plot}
+gg1 <- ggplot(contr_sum,aes(f_age,prop,colour=urban)) +
+    geom_point(aes(size=n))+
+    geom_linerange(aes(ymin=prop-1*se,ymax=prop+1*se))+
+    facet_wrap(~livch,labeller=label_both)+
+    scale_colour_brewer(palette="Dark2")
+print(gg1)
+```
+
+add quadratic logistic regression curves ...
+
+```{r contr_sum_reg_plot}
+gg1 + geom_smooth(data=Contraception,
+                  inherit.aes=FALSE, ## not sure why we need this?
+                  aes(x=age,y=as.numeric(use)-1,colour=urban),
+                  method="glm",
+                  method.args=list(family=binomial),
+                  formula=y~poly(x,2))
+```
+
+```{r}
+ggplot(Contraception,aes(age,as.numeric(use)-1))+
+    geom_point()+geom_smooth(method="glm",aes(group=1),
+                             method.args=list(family=binomial),
+                             formula=y~poly(x,2))
+
+ggplot(Contraception,aes(age,as.numeric(use)-1))+
+    geom_point()+geom_smooth(method="gam",aes(group=1),
+                             method.args=list(family=binomial),
+                             formula=y~s(x,k=40))
+```
