@@ -123,10 +123,15 @@ equivalent to `subset(x,condition)` or
 
 - `group_by()`: adds grouping information
 - `summarise()`: collapses variables to a single value
-- e.g. `group_by(course,mean_score=mean(score),sd_score=sd(score)`
+- e.g.
+```{r, eval=FALSE,echo=TRUE}
+x <- group_by(x,course)
+summarise(x,mean_score=mean(score),sd_score=sd(score))
+```
+          
 - equivalent to `plyr::ddply()` or
 
-```{r split_apply_combine,eval=FALSE}
+```{r split_apply_combine,eval=FALSE,echo=TRUE}
 d_split <- split(d,d$var)       ## split
 d_proc <- lapply(d_split, ...)  ## apply
 d_res <- do.call(rbind,d_proc)  ## combine
@@ -138,7 +143,7 @@ d_res <- do.call(rbind,d_proc)  ## combine
 - directs result of previous operation to next function, as first argument
 - e.g.
 
-```{r pipe_ex,eval=FALSE}
+```{r pipe_ex,eval=FALSE,echo=TRUE}
 (d_input
     %>% select(row1,row2)
     %>% filter(cond1,cond2)
