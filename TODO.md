@@ -42,3 +42,4 @@ For 9 Jan:
 
 * more topics:
     * pedantry: pie charts, dual-axis charts, dynamite plots, 3d bar charts ... @drum_yet_2017, @drang_drum_2017
+    * what is Bill Cleveland doing now? http://deltarho.org/; `datadr`, `trelliscope` packages

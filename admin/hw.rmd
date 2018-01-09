@@ -1,0 +1,30 @@
+---
+title: "homework"
+date:  "`r format(Sys.time(), '%d %B %Y')`"
+output: rmarkdown::html_document
+bibliography: ../vis.bib
+---
+
+## general rules
+
+* homework will be due one week from when it is assigned.
+* you should submit your homework by pushing it to your individual GitHub repository and sending us an e-mail telling us it's done (please put "stat744 HW 1" [for example] in the title of your e-mail)
+* **appropriate collaboration**: it's fine to discuss ideas with your colleagues and get help overcoming technical difficulties, but please write your code/prepare your assignments separately.
+* code rules:
+     * never put `setwd()` at the head of your script (unless commented out); always use relative rather than absolute paths (`read_csv("data/myfile.csv")` is OK, `read_csv("myfile.csv")` is OK, but `read_csv("C:/Joe's Files/stat744/myfile.csv")` is **never OK**
+     * code must run correctly in a fresh R session; load all packages, make sur all data is accessible ...
+	 * do not include `install.packages()` in your code
+	 
+## HW 1
+
+* create a GitHub repository called `stat744`
+* add Jonathan Dushoff (`@dushoff`) and Ben Bolker (`@bbolker`) as collaborators (`Settings` > `Collaborators` (left margin) > `Add collaborator`)
+* find some data.
+    * a small handful of data sources:
+	     * `library(help="datasets")` within R for built-in data sets
+		 * `data(package = .packages(all.available = TRUE))` gives **all** datasets available in **any** package on CRAN (!)
+		 * the [UCI machine learning repository](http://archive.ics.uci.edu/ml/)
+		 * the [Journal of Statistics Education repository](http://ww2.amstat.org/publications/jse/jse_data_archive.htm)
+		 * [Data Dryad](http://datadryad.org/)
+	*your data set should have at least 100 observations and four variables, with at least one categorical and one continuous variable
+	* make 3 ggplots, with good, tidy code and say something about them (use what you've learned from Rauser). Put the code and the output graphs in a `HW1` directory.
