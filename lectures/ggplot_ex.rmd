@@ -111,6 +111,10 @@ gg0 <- ggplot(Contraception,aes(age,use))+geom_point()
 print(gg0)
 ```
 
+```{r contr2}
+print(gg0 + stat_sum())
+```
+
 Collapse data:
 ```{r contr_sum}
 (Contraception
