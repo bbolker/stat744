@@ -1,6 +1,6 @@
 # Stats 744
-# https://github.com/bbolker/stat744
 # https://bbolker.github.io/stat744
+# https://github.com/bbolker/stat744
 
 target = Makefile
 -include target.mk
