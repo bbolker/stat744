@@ -18,15 +18,3 @@ dotdir/
 clonedir/
 pages
 *.oldfile
-admin/outline.html
-admin/hw.html
-admin/sched.html
-lectures/ggplot_ex.html
-lectures/intro.html
-up.time
-commit.time
-commit.default
-dotdir/
-clonedir/
-pages
-*.oldfile
