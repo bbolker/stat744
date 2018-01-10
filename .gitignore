@@ -1,7 +1,9 @@
 ## Content from .ignore
+.gitignore
 local.mk
 target.mk
 .*.sw*
+make.log
 
 ## content from makestuff
 up.time
@@ -9,12 +11,12 @@ commit.time
 commit.default
 dotdir/
 clonedir/
-.gitignore
 pages
+*.oldfile
 up.time
 commit.time
 commit.default
 dotdir/
 clonedir/
-.gitignore
 pages
+*.oldfile
