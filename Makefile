@@ -28,6 +28,9 @@ Sources += $(wildcard */*.rmd)
 %.html: %.rmd
 	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
 
+%.html: admin/%.html
+	$(copy)
+
 ######################################################################
 
 -include $(ms)/git.mk
