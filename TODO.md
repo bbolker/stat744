@@ -1,10 +1,6 @@
 
 ## ASAP
 
-* student reminders:
-    * Rauser video
-    * clarify issues about HW subdirectory (project? repo?)
-
 ## For Monday 15 Jan
 
 * BMB absent!
