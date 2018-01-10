@@ -7,7 +7,7 @@ target = Makefile
 
 ##################################################################
 
-Sources += Makefile .gitignore README.md sub.mk LICENSE.md
+Sources += Makefile .ignore .gitignore README.md sub.mk LICENSE.md
 include sub.mk
 
 ######################################################################
@@ -20,7 +20,9 @@ Sources += TODO.md
 
 clonedirs += pages
 
-Sources += $(wildcard */*.rmd)
+rmd += $(wildcard */*.rmd)
+Sources += $(rmd)
+Ignore += $(rmd:rmd=html)
 
 %.pdf: %.rmd
 	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
