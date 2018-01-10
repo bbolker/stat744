@@ -10,8 +10,11 @@
 ----
 
 
--------
+* material for Monday
+* next homework??
+* remove one of the two homework links on the GH-pages index.html
 
+-------
 
 * scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
   * Alex B.: Monday 2:30-3:30 and Wednesdays 8:30-10:30.
