@@ -104,9 +104,71 @@ enter commit message > click "Commit" button (*ignore "amend previous commit" bu
 
 ## tidyverse: big ideas
 
-- piping
 - new verbs
+- piping
 - tibbles
+
+## tidyverse: new verbs
+
+- `filter(x,condition)`: choose rows
+equivalent to `subset(x,condition)` or
+`x[condition,]` (with non-standard evaluation)
+- `select(x,condition)`: choose columns
+     - equivalent to `subset(x,select=condition)` or `x[,condition]`
+     - helper functions such as `starts_with()`, `matches()`
+- `mutate(x,var=...)`: change or add variables
+(equivalent to `x$var = ...` or `transform(x,var=...)`
+
+## tidyverse: split-apply-combine
+
+- `group_by()`: adds grouping information
+- `summarise()`: collapses variables to a single value
+- e.g.
+```{r, eval=FALSE,echo=TRUE}
+x <- group_by(x,course)
+summarise(x,mean_score=mean(score),sd_score=sd(score))
+```
+          
+- equivalent to `plyr::ddply()` or
+
+```{r split_apply_combine,eval=FALSE,echo=TRUE}
+d_split <- split(d,d$var)       ## split
+d_proc <- lapply(d_split, ...)  ## apply
+d_res <- do.call(rbind,d_proc)  ## combine
+```
+
+## tidyverse: piping
+
+- new `%>%` operator (orig. from `magrittr` package)
+- directs result of previous operation to next function, as first argument
+- e.g.
+
+```{r pipe_ex,eval=FALSE,echo=TRUE}
+(d_input
+    %>% select(row1,row2)
+    %>% filter(cond1,cond2)
+    %>% mutate(...)
+) -> d_output
+```
+
+## tidyverse: tibbles
+
+- extension of data frames (sort of)
+- differences
+    - printing
+	     - only prints first few rows/columns
+		 - labels columns by type
+	- no rownames
+	- never drops dimensions (`tib[,"column1"]` is still a tibble)
+
+## tidyverse: reshaping (`tidyr` package)
+
+- `gather(data,key,value,<include/exclude>)`
+    - wide to long
+	- `reshape2::melt()`
+- `spread(data,key,value)`
+    - long to wide
+	- `reshape2::cast()`
 
 # types of data visualization
 
@@ -115,6 +177,7 @@ enter commit message > click "Commit" button (*ignore "amend previous commit" bu
 - find patterns in data, explore hypotheses
 - emphasize **robust** approaches
 - minimize (parametric) assumptions
+- Tukey, Cleveland
 
 ## diagnostic
 
@@ -130,11 +193,13 @@ enter commit message > click "Commit" button (*ignore "amend previous commit" bu
 - coefficient plots
 - replacement for tables
 - also: tests of inference @wickham_graphical_2010
+- Gelman
 
 ## expository: data-viz
 
 - tell an accurate story
 - high information density
+- Tufte, Cleveland
 
 ## presentation: info-viz
 
@@ -150,10 +215,8 @@ enter commit message > click "Commit" button (*ignore "amend previous commit" bu
 
 - engage
 - allow reader to drill down
+- Cook
 
-## questions
-
-- should 
 <!-- http://stackoverflow.com/questions/30990262/applying-css-to-make-code-smaller-in-ioslides-style -->
 
 ## References {.refs}

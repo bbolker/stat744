@@ -2,9 +2,9 @@ Materials for a course in data visualization.  Winter 2018.
 
 Everything below is tentative/subject to modification.
 
-**Schedule**: TBA
+Go to [GitHub pages](https://bbolker.github.io/stat744) for a user-friendly view.
 
-**Registration**: if you are having trouble registering, please contact me (`bolker@mcmaster.ca`) and Cc: `graduate@math.mcmaster.ca`.
+**Schedule**: Mon 10:30-11:20, Tues 1:30-3:20, HH 207
 
 **Course goal/plan**: A broad, practically oriented survey of data visualization in statistics.
 
@@ -26,9 +26,3 @@ Some but not all of ...
 - leaflet
 - D3.js 
 
-Sources
-===========
-
-- Tufte
-- Chambers
-- ggplot book

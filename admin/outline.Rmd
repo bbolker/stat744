@@ -5,16 +5,18 @@ date: "`r as.character(Sys.time())`"
 
 ## Personnel
 
-- When e-mailing either the instructor or the TA about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
-- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff. Office hours TBA; meetings during office hours are preferred but other times may be available by appointment. For more information, see [my web page](http://www.math.mcmaster.ca/bolker). 
+- When e-mailing the instructors about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
+- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff (`dushoff@mcmaster.ca`). 
 
 ## Class meetings
 
-TBA
+Hamilton Hall 207:
+- Mon 10:30-11:20
+- Tue 1:30-3:20
 
 ## General info
 
-- **Schedule:** TBA
+- [**Schedule:** ](./sched.html)
 - **Textbook:** Tufte, Cleveland?
 - **Prerequisites:** intermediate proficiency in R
 
