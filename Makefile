@@ -18,6 +18,8 @@ Sources += TODO.md
 
 ######################################################################
 
+clonedirs += pages
+
 Sources += $(wildcard */*.rmd)
 
 %.pdf: %.rmd
