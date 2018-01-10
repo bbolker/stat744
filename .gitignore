@@ -4,38 +4,17 @@ target.mk
 .*.sw*
 
 ## content from makestuff
-org
-visual
-<<<<<<< HEAD
-3SS
-=======
->>>>>>> 1a07df8213de0effce869f9c7d856c029b1986dc
 up.time
 commit.time
 commit.default
 dotdir/
 clonedir/
 .gitignore
-org
-visual
-<<<<<<< HEAD
-3SS
-=======
->>>>>>> 1a07df8213de0effce869f9c7d856c029b1986dc
-private
-course
+pages
 up.time
 commit.time
 commit.default
 dotdir/
 clonedir/
 .gitignore
-private
-course
-up.time
-commit.time
-commit.default
-dotdir/
-clonedir/
-.gitignore
-
+pages
