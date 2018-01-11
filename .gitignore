@@ -18,3 +18,4 @@ dotdir/
 clonedir/
 pages
 *.oldfile
+*.olddiff
