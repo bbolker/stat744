@@ -9,27 +9,12 @@
 
 ----
 
-### Data presentation scales with data size
 
-* **small** show all points, possibly dodged/jittered, with some summary statistics: dotplot, beeswarm. Simple trends (linear/GLM)
-* **medium** boxplots, loess, histograms, GAM (or linear regression)
-* **large** modern nonparametrics: violin plots, hexbin plots, kernel densities: computational burden, and display overlapping problems, relevant
-* combinations or overlays where appropriate (beanplot; rugs+scatterplot)
-
-### Rules of thumb
-
-* (Continuous) response on the $y$-axis, most salient (continuous) predictor on the $x$-axis
-* Put most salient comparisons within the same subplot (distinguished by color/shape), and nearby within the subplot when grouping bars/points
-* Facet rows > facet columns
-* Use transparency to include important but potentially distracting detail
-* Do category levels need to be *identified* or just *distinguished*? (Direct labeling)
-* Order categorical variables meaningfully
-* Think about whether to display *population variation* (standard deviations, boxplots) or *estimation uncertainty* (standard errors, mean $\pm$ 2 SE, boxplot notches)
-* Try to match graphics to statistical analysis, but not at all costs
-* Choose colors carefully (`RColorBrewer`/[ColorBrewer](colorbrewer2.org/), [IWantHue](http://tools.medialab.sciences-po.fr/iwanthue/): respect dichromats and B&W printouts
+* material for Monday
+* next homework??
+* remove one of the two homework links on the GH-pages index.html
 
 -------
-
 
 * scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
   * Alex B.: Monday 2:30-3:30 and Wednesdays 8:30-10:30.
@@ -60,3 +45,4 @@
 * more topics:
     * pedantry: pie charts, dual-axis charts, dynamite plots, 3d bar charts ... @drum_yet_2017, @drang_drum_2017
     * what is Bill Cleveland doing now? http://deltarho.org/; `datadr`, `trelliscope` packages
+    * chart redesign: https://medium.com/tdebeus/redesign-of-a-truly-bananas-chart-1617f930808d, data at https://github.com/thomasdebeus/colourful-facts (these are in the bib file too)
