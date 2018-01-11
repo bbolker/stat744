@@ -45,3 +45,4 @@
 * more topics:
     * pedantry: pie charts, dual-axis charts, dynamite plots, 3d bar charts ... @drum_yet_2017, @drang_drum_2017
     * what is Bill Cleveland doing now? http://deltarho.org/; `datadr`, `trelliscope` packages
+    * chart redesign: https://medium.com/tdebeus/redesign-of-a-truly-bananas-chart-1617f930808d, data at https://github.com/thomasdebeus/colourful-facts (these are in the bib file too)
