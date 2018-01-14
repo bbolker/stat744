@@ -98,6 +98,8 @@ scales.draft.pdf: scales.txt
 ## Should be in webpix
 Sources += ClevelandHierarchyR.png steel_production.png
 
+Ignore += local.txt.format
+
 ######################################################################
 
 -include $(ms)/visual.mk
