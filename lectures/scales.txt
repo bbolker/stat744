@@ -1,0 +1,129 @@
+
+Cleveland's hierarchy
+
+FIG ClevelandHierarchyR.png
+
+HLINK http://sfew.websitetoolbox.com/post/clevelands-graphical-features-hierarchy-4598555
+
+----------------------------------------------------------------------
+
+TSEC Scales
+
+	The top of the hierarchy involves putting things on scales
+
+	But what scale do we use?
+
+		Are our data anchored to zero?
+
+			If so, are we interested in differences or ratios?
+
+		Are they anchored somewhere else?
+
+----------------------------------------------------------------------
+
+SS Anchors
+
+----------------------------------------------------------------------
+
+Golem bait call
+
+FIG temppix.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Global climate
+
+FIG temppix.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+
+Global climate
+
+FIG temppix.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+
+Global climate
+
+FIG temppix.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Global climate
+
+FIG temppix.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Climate lessons
+
+	Choosing an anchor is a scientific decision
+
+	Remember: graphic design is communication
+
+----------------------------------------------------------------------
+
+Magazine circulation (advertisement)
+
+FIG circulation.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Magazine circulation (absolute amount)
+
+FIG circulation.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Magazine circulation (trend)
+
+FIG circulation.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Area and volume
+
+WFIG 0.9 steel_production.png
+
+CREDIT How to Lie with Statistics
+
+----------------------------------------------------------------------
+
+Advertisement lessons
+
+	Use area to indicate fair comparisons
+
+		On a physical scale
+
+	Areas that can be compared linearly should be preferred 
+
+		Depends on importance of feature
+
+	Avoid using (or hinting at) volume
+
+----------------------------------------------------------------------
+
+SS Scales
+
+----------------------------------------------------------------------
+
+Physical quantities
+
+	1 is to 10 as 10 is to what?
+
+		ANS If you said 19, you are thinking on a linear scale
+
+		ANS If you said 100, you are thinking on a log scale
+
+	The log scale is often good for physical quantities:
+
+		When zero means zero
+
+----------------------------------------------------------------------
+
+Log vs.~linear
+
+DOUBLEPDF orchard.Rout
+

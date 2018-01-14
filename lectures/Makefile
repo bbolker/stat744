@@ -93,6 +93,7 @@ orchard.Rout: orchard.R
 ## makestuff/newtalk.md
 ## makestuff/newtalk.mk
 
+Sources += scales.txt
 scales.draft.pdf: scales.txt
 
 ## Should be in webpix
