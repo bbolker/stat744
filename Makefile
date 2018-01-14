@@ -33,6 +33,11 @@ Ignore += $(rmd:rmd=html)
 %.html: admin/%.html
 	$(copy)
 
+## Chaining to pages not working. Don't panic
+%.final.pdf: lectures
+	cd lectures && $(MAKE) $@
+	-$(link)
+
 ######################################################################
 
 -include $(ms)/git.mk
