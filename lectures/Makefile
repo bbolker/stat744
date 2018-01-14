@@ -42,6 +42,11 @@ mdirs = $(specdirs)
 
 ######################################################################
 
+# List
+Sources += jd.txt
+
+######################################################################
+
 ## Content
 
 rmd = $(wildcard *.rmd)
@@ -59,6 +64,20 @@ principles_1.html: principles_1.rmd
 
 ######################################################################
 
+## Data
+
+## Temporarily doing this here for a lecture tomorrow
+## 2018 Jan 14 (Sun)
+
+Ignore += temps.csv
+temps.csv:
+	wget -O $@ https://datahub.io/core/global-temp/r/annual.csv
+
+temps.Rout: temps.csv temps.R
+temppix.Rout: temps.Rout temppix.R
+
+######################################################################
+
 -include $(ms)/visual.mk
 -include $(ms)/git.mk
 
@@ -68,5 +87,5 @@ principles_1.html: principles_1.rmd
 # -include $(ms)/modules.mk
 
 # -include $(ms)/webpix.mk
-# -include $(ms)/wrapR.mk
+-include $(ms)/wrapR.mk
 

@@ -1,0 +1,7 @@
+* Slidify the lecture
+* Look through the schedule to see if I can talk a bit about scales
+* Go through the video-related code
+* Learn something about color
+* Learn more about orchard spray data
+* Make a resource page
+* refactor everything
