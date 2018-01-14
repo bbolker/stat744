@@ -6,8 +6,8 @@ target.mk
 make.log
 
 ## content from makestuff
-admin/outline.html
 admin/hw.html
+admin/outline.html
 admin/sched.html
 lectures/principles_1.html
 lectures/ggplot_ex.html
@@ -18,5 +18,6 @@ commit.default
 dotdir/
 clonedir/
 pages
+*.hup
 *.oldfile
 *.olddiff
