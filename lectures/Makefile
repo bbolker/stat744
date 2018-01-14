@@ -69,6 +69,7 @@ principles_1.html: principles_1.rmd
 ## Temporarily doing this here for a lecture tomorrow
 ## 2018 Jan 14 (Sun)
 
+Sources += $(wildcard *.R)
 Ignore += temps.csv
 temps.csv:
 	wget -O $@ https://datahub.io/core/global-temp/r/annual.csv
