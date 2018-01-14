@@ -7,7 +7,7 @@ HLINK http://sfew.websitetoolbox.com/post/clevelands-graphical-features-hierarch
 
 ----------------------------------------------------------------------
 
-TSEC Scales
+Scales
 
 	The top of the hierarchy involves putting things on scales
 
@@ -21,7 +21,7 @@ TSEC Scales
 
 ----------------------------------------------------------------------
 
-SS Anchors
+SEC Anchors
 
 ----------------------------------------------------------------------
 
@@ -105,7 +105,7 @@ Advertisement lessons
 
 ----------------------------------------------------------------------
 
-SS Scales
+SEC Transformations
 
 ----------------------------------------------------------------------
 
@@ -201,6 +201,12 @@ Probabilities
 
 	The natural distance to use on a probability scale is log odds
 
+		ANS 1% is to 2% as 50% is to 67%
+
+		ANS \ldots as 2% is to 4%
+
+		ANS \ldots as 98% is to 99%
+
 ----------------------------------------------------------------------
 
 Odds
@@ -226,3 +232,4 @@ Extreme values
 		Should often be \emph{avoided} for analysis
 
 		Usually \emph{OK} for visualization
+
