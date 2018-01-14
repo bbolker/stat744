@@ -5,6 +5,7 @@ library(Hmisc)
 
 data("OrchardSprays")
 base <- ggplot(OrchardSprays,aes(x=treatment,y=decrease))
+lbase <- base +  scale_y_log10()
 
 print(bar <- base
     +  stat_summary(fun.data=mean_cl_normal,geom="bar",colour="gray")
@@ -12,3 +13,13 @@ print(bar <- base
 )
 
 print(bar +  scale_y_log10())
+
+
+print(lrange <- lbase 
+	+ stat_summary(fun.data=mean_cl_normal,geom="pointrange")
+)
+
+print(lbase + geom_point())
+print(lrange + geom_point(color="blue", alpha=0.3))
+print(lbase + geom_boxplot())
+print(lbase + geom_violin())

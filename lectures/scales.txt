@@ -127,3 +127,102 @@ Log vs.~linear
 
 DOUBLEPDF orchard.Rout
 
+----------------------------------------------------------------------
+
+Making room
+
+DOUBLEFIG orchard.Rout-1.pdf orchard.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+	There are a lot of different ways to show data shape
+
+	Choices will depend on your data set:
+
+		Overall size
+
+		Number of replicates
+
+		Number of levels, predictor variables, etc.
+
+----------------------------------------------------------------------
+
+Showing points
+
+FIG orchard.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Combination
+
+FIG orchard.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Boxplot
+
+FIG orchard.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Violin plot
+
+FIG orchard.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Orchard lessons
+
+	Choices about log vs.~linear scale are scientific choices
+
+		Neither is more valid, or closer to the data
+
+	You can also make choices about
+
+		sending a simple message
+
+		providing more information about shape
+
+	Log scales are almost never physical
+
+		Don't mislead with area information on a log scale
+
+----------------------------------------------------------------------
+
+Probabilities
+
+	1% is to 2% as 50% is to what?
+
+		ANS 51% is way too small
+
+		ANS 100% is way too large
+
+	The natural distance to use on a probability scale is log odds
+
+----------------------------------------------------------------------
+
+Odds
+
+	Odds are a ratio between the probability of something and the probability of its opposite:
+
+		$o = p/(1-p)$
+
+	Log odds give a natural distance on probability space
+
+----------------------------------------------------------------------
+
+Extreme values
+
+	Our transformations take extreme values to infinity.
+
+	Use link functions: this is like using estimated values instead of observed; they are rarely infinite
+
+	Extend the scale (e.g., use $\log(1+x)$ instead of $\log(x)$)
+
+		This usually involves arbitrary choices
+
+		Should often be \emph{avoided} for analysis
+
+		Usually \emph{OK} for visualization
