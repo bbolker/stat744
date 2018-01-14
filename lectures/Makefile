@@ -17,8 +17,8 @@ Sources += Makefile .ignore README.md upstuff.mk LICENSE.md
 Drop = ~/Dropbox
 
 -include upstuff.mk
-# -include $(ms)/perl.def
-# -include $(ms)/newtalk.def
+-include $(ms)/perl.def
+-include $(ms)/newtalk.def
 # -include $(ms)/repos.def
 
 ######################################################################
@@ -69,6 +69,7 @@ principles_1.html: principles_1.rmd
 ## Temporarily doing this here for a lecture tomorrow
 ## 2018 Jan 14 (Sun)
 
+## Global temperature
 Sources += $(wildcard *.R)
 Ignore += temps.csv
 temps.csv:
@@ -77,13 +78,33 @@ temps.csv:
 temps.Rout: temps.csv temps.R
 temppix.Rout: temps.Rout temppix.R
 
+Sources += circulation.csv
+circulation.Rout: circulation.csv circulation.R
+
+## Orchard
+orchard.Rout: orchard.R
+
+######################################################################
+
+## Dushoff talk
+
+## Too scared to try to make a slick .html talk 2018 Jan 14 (Sun), so I'm going to see if I can make a slick pdf talk using old technology
+
+## makestuff/newtalk.md
+## makestuff/newtalk.mk
+
+scales.draft.pdf: scales.txt
+
+## Should be in webpix
+Sources += ClevelandHierarchyR.png steel_production.png
+
 ######################################################################
 
 -include $(ms)/visual.mk
 -include $(ms)/git.mk
 
-# -include $(ms)/texdeps.mk
-# -include $(ms)/newtalk.mk
+-include $(ms)/texdeps.mk
+-include $(ms)/newtalk.mk
 
 # -include $(ms)/modules.mk
 
