@@ -15,6 +15,7 @@ include sub.mk
 ## html
 
 Sources += $(wildcard *.html)
+Sources += $(wildcard *.final.pdf)
 
 ######################################################################
 
