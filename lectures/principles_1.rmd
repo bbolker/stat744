@@ -16,8 +16,11 @@ Some examples (from a [screed on "dynamite plots"](http://emdbolker.wikidot.com/
 library(ggplot2)
 theme_set(theme_bw())
 theme_update(panel.spacing=grid::unit(0,"lines"))
+
 library(cowplot) ## for arranging multiple plots, labeling, etc.
-## label in upper left corner
+library(Hmisc)
+
+## A labeling function (upper left)
 dpl <- function(label, y =100) draw_plot_label(label, x = 0, y = y)
 
 data("OrchardSprays")
