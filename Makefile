@@ -1,13 +1,13 @@
 # Stats 744
-# https://github.com/bbolker/stat744
 # https://bbolker.github.io/stat744
+# https://github.com/bbolker/stat744
 
 target = Makefile
 -include target.mk
 
 ##################################################################
 
-Sources += Makefile .gitignore README.md sub.mk LICENSE.md
+Sources += Makefile .ignore README.md sub.mk LICENSE.md
 include sub.mk
 
 ######################################################################
@@ -15,6 +15,7 @@ include sub.mk
 ## html
 
 Sources += $(wildcard *.html)
+Sources += $(wildcard *.final.pdf)
 
 ######################################################################
 
