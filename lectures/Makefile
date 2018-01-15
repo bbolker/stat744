@@ -95,6 +95,10 @@ orchard.Rout: orchard.R
 
 Sources += scales.txt
 scales.draft.pdf: scales.txt
+scales.final.pdf: scales.txt
+scales.handouts.pdf: scales.txt
+
+Sources += copy.tex
 
 ## Should be in webpix
 Sources += ClevelandHierarchyR.png steel_production.png
