@@ -34,9 +34,10 @@ Ignore += $(rmd:rmd=html)
 	$(copy)
 
 ## Chaining to pages not working. Don't panic
-%.final.pdf: lectures
-	cd lectures && $(MAKE) $@
-	-$(link)
+pages/%.final.pdf: lectures/%.final.pdf
+	$(copy)
+pages/%.handouts.pdf: lectures/%.handouts.pdf
+	$(copy)
 
 ######################################################################
 
