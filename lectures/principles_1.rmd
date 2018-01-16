@@ -232,32 +232,41 @@ print(plot_grid(g_dyn,g_errbar,g_errbar2,g_point,g_boxplot,g_violin,
 ## Notes
 
 a\. the dreaded "dynamite plot". Problems:
-    * bar plot on logarithmic axis is inappropriate (anchors graph to arbitrary zero point)
-	* assumes distribution is symmetric (although this applies to b,c as well)
-	* some forms of this plot show only top whisker (makes comparison even harder)
+
+* bar plot on logarithmic axis is inappropriate (anchors graph to arbitrary zero point)
+* assumes distribution is symmetric (although this applies to b,c as well)
+* some forms of this plot show only top whisker (makes comparison even harder)
+
 b\. inferential (point $\pm$ 2 SE) plot
-    * same assumptions as dynamite plot
-	* less strongly anchored to zero
+
+* same assumptions as dynamite plot
+* less strongly anchored to zero
+
 c\. points $\pm$ 1 and 2 SE
-    * de-emphasizes approximate 95% CI
-	* equivalent for Bayesian posterior intervals would typically show both 50% and 95% credible intervals (based on quantiles or highest posterior density)
+
+* de-emphasizes approximate 95% CI
+* equivalent for Bayesian posterior intervals would typically show both 50% and 95% credible intervals (based on quantiles or highest posterior density)
 
 ## Notes (continued)
 
 d\. points alone
-    * true to the data
-	* description only; provides no inferential help
-	* can confound sample size and range (larger samples have more extreme values so look more variable)
-e\. boxplots
-    * well-established
-	* "outliers" can be misleading [@dawson_how_2011]
-	* can add notches to indicate approximate 95% CI on medians [@mcgill_variations_1978]
-f\. violin plots
-    * mirror-image density plots
-	* best for large data sets
-    * may be funky for small/medium data sets
-	* can be combined with jittered data, segments indicating median/quantiles, etc.
 
+* true to the data
+* description only; provides no inferential help
+* can confound sample size and range (larger samples have more extreme values so look more variable)
+	
+e\. boxplots
+
+* well-established
+* "outliers" can be misleading [@dawson_how_2011]
+* can add notches to indicate approximate 95% CI on medians [@mcgill_variations_1978]
+
+f\. violin plots
+
+* mirror-image density plots
+* best for large data sets
+* may be funky for small/medium data sets
+* can be combined with jittered data, segments indicating median/quantiles, etc.
 
 ## Example
 
