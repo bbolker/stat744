@@ -14,7 +14,7 @@ include sub.mk
 
 ## Notes
 
-Sources += TODO.md
+Sources += admin/outline.rmd TODO.md
 
 ######################################################################
 
@@ -34,6 +34,8 @@ Ignore += $(rmd:rmd=html)
 	$(copy)
 
 ## Chaining to pages not working. Don't panic
+
+# Seems OK for distribution pdfs now
 pages/%.final.pdf: lectures/%.final.pdf
 	$(copy)
 pages/%.handouts.pdf: lectures/%.handouts.pdf
