@@ -41,6 +41,10 @@ pages/%.final.pdf: lectures/%.final.pdf
 pages/%.handouts.pdf: lectures/%.handouts.pdf
 	$(copy)
 
+pages/%.html: lectures/%.rmd
+	cd lectures && $(MAKE) $*.html
+	cp lectures/$*.html $@
+
 ######################################################################
 
 -include $(ms)/git.mk
