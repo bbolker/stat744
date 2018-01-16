@@ -177,7 +177,7 @@ print(plot_grid(g1,direct.label(g1)))
 * Order categorical variables meaningfully ("Alabama/Alberta" problem)
 * Think about whether to display *population variation* (standard deviations, boxplots) or *estimation uncertainty* (standard errors, mean $\pm$ 2 SE, boxplot notches)
 * Try to match graphics to statistical analysis, but not at all costs
-* Choose colors carefully (`RColorBrewer`/[ColorBrewer](http://colorbrewer2.org/), [IWantHue](http://tools.medialab.sciences-po.fr/iwanthue/): respect dichromats and B&W printouts (see `dichromat` [colorblindr](https://github.com/clauswilke/colorblindr) packages
+* Choose colors carefully (`RColorBrewer`/[ColorBrewer](http://colorbrewer2.org/), [IWantHue](http://tools.medialab.sciences-po.fr/iwanthue/): respect dichromats and B&W printouts (see `dichromat` & [colorblindr](https://github.com/clauswilke/colorblindr) & [cividis](https://github.com/marcosci/cividis) packages @sciani_cividis_2018
 
 ## Data presentation scales with data size
 
