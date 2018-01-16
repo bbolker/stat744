@@ -6,8 +6,21 @@ target.mk
 make.log
 
 ## content from makestuff
-admin/hw.html
+makestuff
+private
+course
+up.time
+commit.time
+commit.default
+dotdir/
+clonedir/
+private
+course
+*.hup
+*.oldfile
+*.olddiff
 admin/outline.html
+admin/hw.html
 admin/sched.html
 lectures/principles_1.html
 lectures/ggplot_ex.html
