@@ -1,7 +1,105 @@
 ---
 title: stuff
+output:
+  ioslides_presentation
 bibliography: ../vis.bib
 ---
+
+<!-- 
+apa.csl is a slightly hacked version of APA 
+  (modified for "et al" after 2 authors in text)
+-->
+<!-- .refs is style for reference page (small text) -->
+<style>
+.refs {
+   font-size: 16px;
+}
+h2 { 
+ color: #3399ff;		
+}
+h3 { 
+ color: #3399ff;		
+}
+.title-slide {
+   background-color: #55bbff;
+}
+</style>
+<!--    content: url(https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+>
+<!-- Limit image width and height -->
+<style type="text/css">
+img {     
+  max-height: 560px;     
+  max-width: 800px; 
+}
+</style>
+
+## Packages
+
+```{r pkgs, message=FALSE}
+library(rainbow)
+library(ggplot2); theme_set(theme_bw())
+```
+
+# Tukey and exploratory data analysis
+
+## Tukey: principles
+
+- simplicity
+- speed
+- flexibility
+- robustness
+- parsimony
+
+## stem-and-leaf plot
+
+```{r}
+stem(mtcars$hp)
+```
+
+## boxplot
+
+```{r }
+ggplot(mtcars,aes(cyl,hp,group=cyl))+geom_boxplot()
+```
+
+
+## bag plot (2D boxplot)
+
+```{r}
+rainbow::fboxplot(data = ElNino,
+                  plot.type = "bivariate",
+                  type = "bag", projmethod="PCAproj")
+```
+
+## is Tukey still relevant?
+
+- yes (principles)
+- simultaneous increase in data size/complexity and computing power
+
+# Cleveland
+
+## principles
+
+- accuracy of quantitative representation
+- visual estimation of *differences*
+
+## perceptual experiments
+
+![](pix/ClevelandMcGill_fig3.png)
+
+## perceptual experiments: results
+
+![](pix/ClevelandMcGill_fig16.png)
+
+## is Cleveland still relevant?
+
+- yes!
+- @elliott_39_2016, "39 studies about human perception in 30 minutes"
+    - healthy tradition of scientific experiments on graphical perception
+	     - accuracy
+		 - memory
+		 - preference
 
 ### Data presentation scales with data size
 
@@ -83,6 +181,13 @@ f. violin plots
 	* best for large data sets
     * may be funky for small/medium data sets
 	* can be combined with jittered data, segments indicating median/quantiles, etc.
+
+## Tukey
+
+- exploratory data analysis, much of it graphical (Brillinger)
+    - box and whisker plot
+	- smoothing
+
 
 ### Rules of thumb
 
