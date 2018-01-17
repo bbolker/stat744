@@ -6,6 +6,7 @@ target.mk
 make.log
 
 ## content from makestuff
+<<<<<<< HEAD
 admin/outline.html
 admin/hw.html
 admin/sched.html
@@ -22,7 +23,10 @@ pages
 *.oldfile
 *.olddiff
 admin/outline.html
+=======
+>>>>>>> 462f6b720a39d563bdc846f49aadadf08d7b1bc1
 admin/hw.html
+admin/outline.html
 admin/sched.html
 lectures/principles_1.html
 lectures/ggplot_ex.html

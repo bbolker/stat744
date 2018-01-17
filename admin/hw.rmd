@@ -12,8 +12,9 @@ bibliography: ../vis.bib
 * **appropriate collaboration**: it's fine to discuss ideas with your colleagues and get help overcoming technical difficulties, but please write your code/prepare your assignments separately.
 * code rules:
      * never put `setwd()` at the head of your script (unless commented out); always use relative rather than absolute paths (`read_csv("data/myfile.csv")` is OK, `read_csv("myfile.csv")` is OK, but `read_csv("C:/Joe's Files/stat744/myfile.csv")` is **never OK**
-     * code must run correctly in a fresh R session; load all packages, make sur all data is accessible ...
+     * code must run correctly in a fresh R session; load all packages, make sure all data is accessible ...
 	 * do not include `install.packages()` in your code
+	 * use `library` instead of `require` (unless you have a specific reason to use `require`
 	 
 ## HW 1
 
@@ -32,3 +33,14 @@ bibliography: ../vis.bib
 		* use either `hw1.R` (with comments as comments or in `hw1.txt`) or else `hw1.rmd`
 		* This file can use data or code from other directories in the repo (with relative pathnames) if you like
 		* put the output graphs (or rmarkdown output) in a directory called `HW1` 
+
+## HW 2
+
+* take a look at Jia You's online graphic about vaccine [here](http://www.sciencemag.org/news/2017/04/here-s-visual-proof-why-vaccines-do-more-good-harm)
+* download the data from [here](http://sciencestatic.aws.aaas.org.s3.amazonaws.com/article-resources/vaccine-war/vaccine_data_online.csv) and save them in your main repository directory as `vaccine_data.csv`
+* based on these data, create 2 ggplots that display the data in a different way from the original; use the 2 plots to illustrate tradeoffs between different graphical principles. (If you're feeling truly uncreative, one of your plots can replicate the original graphical design.) You do **not** need to worry about the dynamic-graphics aspect or the historical events show in the original display
+* Put the code in the main repository directory
+	* use either `hw2.R` (with comments as comments or in `hw2.txt`) or else `hw2.rmd`
+	* put the output graphs (or rmarkdown output) in a directory called `HW2` 
+* *extra credit*: see if you can find information about vaccine coverage over time (i.e., estimates of fraction vaccinated in the US per year) - not just the date of licensing - and incorporate it in your results (we have no idea if this is possible)
+

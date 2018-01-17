@@ -4,7 +4,7 @@ week,start date,topic,reading/viewing,notes
 3,22 Jan,exploratory graphics,
 4,29 Jan,diagnostic graphics,@peltonen_visualizations_2009
 5,5 Feb,inferential graphics,@wickham_graphical_2010; @gelman_lets_2002; @gelman_why_2011
-6,12 Feb,infoviz vs data viz; ethics; expository graphics,@su_its_2008; @gelman_infovis_2013,**class moved to MDCL 1115** (12 Feb)/**TSH B106** (13 Feb)
+6,12 Feb,infoviz vs data viz; ethics; expository graphics,@su_its_2008; @gelman_infovis_2013,**class moved to MDCL 1115** (12 Feb)/**TSH B126** (13 Feb)
 7,19 Feb,*winter break*,
 ?,?,dynamic graphics,`ggvis`; `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/)
 ?,?,perspective plotting,`rgl`; `plotly`; `lattice`; `scatterplot3d`
