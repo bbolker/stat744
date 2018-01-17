@@ -32,6 +32,9 @@ git_cache/data.csv: Makefile
 	wget -O $@ "http://sciencestatic.aws.aaas.org.s3.amazonaws.com/article-resources/vaccine-war/vaccine_data_online.csv"
 	perl -pi -e"s//\\n/g" $@
 
+git_cache/four.txt:
+	echo 4 > $@
+
 ######################################################################
 
 -include $(ms)/visual.mk
