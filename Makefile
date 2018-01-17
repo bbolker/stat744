@@ -2,6 +2,9 @@
 # https://bbolker.github.io/stat744
 # https://github.com/bbolker/stat744
 
+## pages
+BRANCH = gh-pages
+
 target = Makefile
 -include target.mk
 
