@@ -12,8 +12,9 @@ bibliography: ../vis.bib
 * **appropriate collaboration**: it's fine to discuss ideas with your colleagues and get help overcoming technical difficulties, but please write your code/prepare your assignments separately.
 * code rules:
      * never put `setwd()` at the head of your script (unless commented out); always use relative rather than absolute paths (`read_csv("data/myfile.csv")` is OK, `read_csv("myfile.csv")` is OK, but `read_csv("C:/Joe's Files/stat744/myfile.csv")` is **never OK**
-     * code must run correctly in a fresh R session; load all packages, make sur all data is accessible ...
+     * code must run correctly in a fresh R session; load all packages, make sure all data is accessible ...
 	 * do not include `install.packages()` in your code
+	 * use `library` instead of `require` (unless you have a specific reason to use `require`
 	 
 ## HW 1
 

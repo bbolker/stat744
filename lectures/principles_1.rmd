@@ -1,25 +1,196 @@
 ---
 title: stuff
+output:
+  ioslides_presentation
 bibliography: ../vis.bib
 ---
 
-### Data presentation scales with data size
+<!-- 
+apa.csl is a slightly hacked version of APA 
+  (modified for "et al" after 2 authors in text)
+-->
+<!-- .refs is style for reference page (small text) -->
+<style>
+.refs {
+   font-size: 16px;
+}
+h2 { 
+ color: #3399ff;		
+}
+h3 { 
+ color: #3399ff;		
+}
+.title-slide {
+   background-color: #55bbff;
+}
+</style>
+<!--    content: url(https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+>
+<!-- Limit image width and height -->
+<style type="text/css">
+img {     
+  max-height: 530px;     
+  max-width: 800px; 
+}
+</style>
+
+## Packages
+
+```{r pkgs, message=FALSE}
+library(rainbow)
+library(ggplot2); theme_set(theme_bw())
+library(ggthemes)
+library(directlabels)
+theme_update(panel.spacing=grid::unit(0,"lines"))
+library(cowplot) ## for arranging multiple plots, labeling, etc.
+library(Hmisc)
+```
+
+# Tukey and exploratory data analysis
+
+## Tukey: principles
+
+- simplicity
+- speed
+- flexibility
+- robustness
+- parsimony
+
+## stem-and-leaf plot
+
+```{r stem}
+stem(mtcars$hp)
+```
+
+## boxplot
+
+```{r box1}
+ggplot(mtcars,aes(cyl,hp,group=cyl))+geom_boxplot()
+```
+
+
+## bag plot (2D boxplot)
+
+```{r bag1}
+rainbow::fboxplot(data = ElNino,
+                  plot.type = "bivariate",
+                  type = "bag", projmethod="PCAproj")
+```
+
+## is Tukey still relevant?
+
+- yes (principles)
+- simultaneous increase in data size/complexity and computing power
+
+# Cleveland
+
+## principles
+
+- accuracy of quantitative representation
+- visual estimation of *differences*
+
+## perceptual experiments
+
+- show participants the same data in different formats
+- ask them questions about relative magnitudes
+
+![](pix/ClevelandMcGill_fig3.png)
+
+## perceptual experiments: results
+
+![](pix/ClevelandMcGill_fig16.png)
+
+## is Cleveland still relevant?
+
+<div class="columns-2">
+- yes!
+- @elliott_39_2016, "39 studies about human perception in 30 minutes"
+    - healthy tradition of scientific experiments on graphical perception
+	     - accuracy
+		 - memory
+		 - preference
+
+![](pix/cm_bh.jpeg)
+
+@heer_crowdsourcing_2010
+</div>
+
+
+# Tufte
+
+## Tufte principles
+
+- functional, minimal graphics
+- maximize data-ink / minimize non-data-ink
+- don't lie (**lie factor**)
+- small multiples
+- "If a picture isn't worth 1000 words, the hell with it" - Ad Reinhardt
+- information at the point of need (legends etc.)
+- Powerpoint sucks
+
+## data ink
+
+- maximize data ink (within reason)
+
+```{r tufteboxplot}
+g0 <- ggplot(OrchardSprays,aes(treatment,decrease))+scale_y_log10()
+print(plot_grid(g0 + geom_boxplot(),  g0 + geom_tufteboxplot()))
+```
+
+ `ggthemes::geom_tufteboxplot()`
+ 
+## information at the point of need
+
+- less eye movement is better
+- direct labels > legends > info in caption > info in text
+
+```{r directlabels,fig.width=10}
+g1 <- ggplot(iris,aes(Sepal.Length,Petal.Length,colour=Species,
+                shape=Species))+geom_point()
+print(plot_grid(g1,direct.label(g1)))
+```
+
+## `directlabels` package
+
+- [directlabels documentation](http://directlabels.r-forge.r-project.org/docs/index.html)
+
+# other
+
+## Rules of thumb
+
+* (Continuous) response on the $y$-axis
+     * assumes we have a single, quantitative/ordered (continuous or discrete) response variable; multivariate responses more challenging
+* put most salient predictor on the $x$-axis
+     * highest value in Cleveland hierarchy
+	 * if most important predictor is categorical, use most important *continous* predictor on $x$-axis
+	 * if most important predictor has few categories, use next most important predictor with many categories
+
+## Rules of thumb (continued)
+
+* Put most salient comparisons within the same subplot (distinguished by color/shape), and nearby within the subplot when grouping bars/points
+* Facet rows > facet columns
+
+## Rules of thumb (3)
+
+* Use transparency to include important but potentially distracting detail
+* Do category levels need to be *identified* or just *distinguished*? (Direct labeling, e.g. via `directlabels` package)
+* Order categorical variables meaningfully ("Alabama/Alberta" problem)
+* Think about whether to display *population variation* (standard deviations, boxplots) or *estimation uncertainty* (standard errors, mean $\pm$ 2 SE, boxplot notches)
+* Try to match graphics to statistical analysis, but not at all costs
+* Choose colors carefully (`RColorBrewer`/[ColorBrewer](http://colorbrewer2.org/), [IWantHue](http://tools.medialab.sciences-po.fr/iwanthue/): respect dichromats and B&W printouts (see `dichromat` & [colorblindr](https://github.com/clauswilke/colorblindr) & [cividis](https://github.com/marcosci/cividis) packages [@sciani_cividis_2018]
+
+## Data presentation scales with data size
 
 * **small** show all points, possibly dodged/jittered, with some summary statistics: dotplot, beeswarm. Simple trends (linear/GLM/loess)
 * **medium** boxplots, loess, histograms, GAM (or linear regression)
 * **large** modern nonparametrics: violin plots, hexbin plots, kernel densities: computational burden, and display overlapping problems, relevant
 * combinations or overlays where appropriate (beanplot; rugs+scatterplot)
 
+## examples
+
 Some examples (from a [screed on "dynamite plots"](http://emdbolker.wikidot.com/blog:dynamite)):
 
 ```{r panels,echo=FALSE,fig.width=10}
-library(ggplot2)
-theme_set(theme_bw())
-theme_update(panel.spacing=grid::unit(0,"lines"))
-
-library(cowplot) ## for arranging multiple plots, labeling, etc.
-library(Hmisc)
-
 ## A labeling function (upper left)
 dpl <- function(label, y =100) draw_plot_label(label, x = 0, y = y)
 
@@ -58,47 +229,52 @@ print(plot_grid(g_dyn,g_errbar,g_errbar2,g_point,g_boxplot,g_violin,
              nrow=2))
 ```
 
-Notes:
+## Notes
 
-a. the dreaded "dynamite plot". Problems:
-    * bar plot on logarithmic axis is inappropriate (anchors graph to arbitrary zero point)
-	* assumes distribution is symmetric (although this applies to b,c as well)
-	* some forms of this plot show only top whisker (makes comparison even harder)
-b. inferential (point $\pm$ 2 SE) plot
-    * same assumptions as dynamite plot
-	* less strongly anchored to zero
-c. points $\pm$ 1 and 2 SE
-    * de-emphasizes approximate 95% CI
-	* equivalent for Bayesian posterior intervals would typically show both 50% and 95% credible intervals (based on quantiles or highest posterior density)
-d. points alone
-    * true to the data
-	* description only; provides no inferential help
-	* can confound sample size and range (larger samples have more extreme values so look more variable)
-e. boxplots
-    * well-established
-	* "outliers" can be misleading [@dawson_how_2011]
-	* can add notches to indicate approximate 95% CI on medians [@mcgill_variations_1978]
-f. violin plots
-    * mirror-image density plots
-	* best for large data sets
-    * may be funky for small/medium data sets
-	* can be combined with jittered data, segments indicating median/quantiles, etc.
+a\. the dreaded "dynamite plot". Problems:
 
-### Rules of thumb
+* bar plot on logarithmic axis is inappropriate (anchors graph to arbitrary zero point)
+* assumes distribution is symmetric (although this applies to b,c as well)
+* some forms of this plot show only top whisker (makes comparison even harder)
 
-* (Continuous) response on the $y$-axis
-     * assumes we have a single, quantitative/ordered (continuous or discrete) response variable; multivariate responses more challenging
-* put most salient predictor on the $x$-axis
-     * highest value in Cleveland hierarchy
-	 * if most important predictor is categorical, use most important *continous* predictor on $x$-axis
-	 * if most important predictor has few categories, use next most important predictor with many categories
-* Put most salient comparisons within the same subplot (distinguished by color/shape), and nearby within the subplot when grouping bars/points
-* Facet rows > facet columns
-* Use transparency to include important but potentially distracting detail
-* Do category levels need to be *identified* or just *distinguished*? (Direct labeling, e.g. via `directlabels` package)
-* Order categorical variables meaningfully ("Alabama/Alberta" problem)
-* Think about whether to display *population variation* (standard deviations, boxplots) or *estimation uncertainty* (standard errors, mean $\pm$ 2 SE, boxplot notches)
-* Try to match graphics to statistical analysis, but not at all costs
-* Choose colors carefully (`RColorBrewer`/[ColorBrewer](http://colorbrewer2.org/), [IWantHue](http://tools.medialab.sciences-po.fr/iwanthue/): respect dichromats and B&W printouts (see `dichromat` [colorblindr](https://github.com/clauswilke/colorblindr) packages
+b\. inferential (point $\pm$ 2 SE) plot
+
+* same assumptions as dynamite plot
+* less strongly anchored to zero
+
+## Notes (continued)
+
+c\. points $\pm$ 1 and 2 SE
+
+* de-emphasizes approximate 95% CI
+* equivalent for Bayesian posterior intervals would typically show both 50% and 95% credible intervals (based on quantiles or highest posterior density)
+
+d\. points alone
+
+* true to the data
+* description only; provides no inferential help
+* can confound sample size and range (larger samples have more extreme values so look more variable)
+
+## Notes (continued)
+
+e\. boxplots
+
+* well-established
+* "outliers" can be misleading [@dawson_how_2011]
+* can add notches to indicate approximate 95% CI on medians [@mcgill_variations_1978]
+
+f\. violin plots
+
+* mirror-image density plots
+* best for large data sets
+* may be funky for small/medium data sets
+* can be combined with jittered data, segments indicating median/quantiles, etc.
+
+## Example
+
+- [story](@beus_redesign_2018) ([link](https://medium.com/tdebeus/redesign-of-a-truly-bananas-chart-1617f930808d))
+- [github repo](@debeus_contribute_2017 [link](https://github.com/thomasdebeus/colourful-facts))
+- [direct link to data](https://github.com/thomasdebeus/colourful-facts/blob/develop/projects/Redesign-of-worst-chart-ever/FAOSTAT_data_1-7-2018.csv)
 
 ## References
+
