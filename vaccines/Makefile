@@ -28,12 +28,17 @@ Drop = ~/Dropbox
 
 ## Content
 
-git_cache/data.csv: Makefile
+git_cache/data.csv: 
 	wget -O $@ "http://sciencestatic.aws.aaas.org.s3.amazonaws.com/article-resources/vaccine-war/vaccine_data_online.csv"
 	perl -pi -e"s//\\n/g" $@
 
 git_cache/four.txt:
 	echo 4 > $@
+
+Sources += $(wildcard *.R)
+
+read.Rout: slow/data.csv read.R
+plot.Rout: read.Rout plot.R
 
 ######################################################################
 
@@ -47,5 +52,5 @@ git_cache/four.txt:
 # -include $(ms)/modules.mk
 
 # -include $(ms)/webpix.mk
-# -include $(ms)/wrapR.mk
+-include $(ms)/wrapR.mk
 
