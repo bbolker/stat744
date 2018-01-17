@@ -39,9 +39,6 @@ plot.Rout: read.Rout plot.R
 
 ######################################################################
 
--include $(ms)/visual.mk
--include $(ms)/git.mk
-
 -include $(ms)/cache.mk
 # -include $(ms)/texdeps.mk
 # -include $(ms)/newtalk.mk
@@ -51,3 +48,5 @@ plot.Rout: read.Rout plot.R
 # -include $(ms)/webpix.mk
 -include $(ms)/wrapR.mk
 
+-include $(ms)/visual.mk
+-include $(ms)/git.mk
