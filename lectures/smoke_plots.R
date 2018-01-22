@@ -27,5 +27,8 @@ library(MASS)
 afr <- af + geom_smooth(method=rlm, formula=y~ns(x,3))
 print(afrp <- afr + geom_count(alpha=point_alpha) + scale_size_area())
 
-print(afrs <- afrp + aes(color=smoke))
-print(afrs + facet_wrap(~sex) + theme(legend.position="none"))
+afrs <- afrp + aes(color=smoke)
+
+## Replot so we can put side-by-side
+print(afls + theme(legend.position="none") + ggtitle("loess"))
+print(afrs + theme(legend.position="none") + ggtitle("rlm plus ns(3)"))

@@ -24,6 +24,8 @@ print (afl <- afl + scale_fill_gradient(low="#F0F0FF", high="#131393"))
 
 print(afl + geom_density_2d(color="black"))
 
+print(af + aes(color=sex) + geom_density_2d())
+
 ## If we could get a decent color ramp…
 # , alpha=colorA
 # + geom_density_2d(color="black")

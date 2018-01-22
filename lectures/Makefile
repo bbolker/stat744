@@ -68,38 +68,8 @@ principles_1.html: principles_1.rmd
 
 ## Temporarily doing this here for a lecture tomorrow
 ## 2018 Jan 14 (Sun)
-
-## Global temperature
-Sources += $(wildcard *.R)
-Ignore += temps.csv
-temps.csv:
-	wget -O $@ https://datahub.io/core/global-temp/r/annual.csv
-
-temps.Rout: temps.csv temps.R
-temppix.Rout: temps.Rout temppix.R
-
-Sources += circulation.csv
-circulation.Rout: circulation.csv circulation.R
-
-## Orchard
-orchard.Rout: orchard.R
-
 ## Does not run (data not here)
 bananas.Rout: bananas.R
-
-## Smoking data from http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
-git_cache/fev.csv: 
-	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
-
-smoke.Rout: slow/fev.csv smoke.R
-
-## Show the confounding
-smoke_ques.Rout: smoke.Rout smoke_ques.R
-
-## fev vs. age fits
-smoke_plots.Rout: smoke.Rout smoke_plots.R
-
-smoke_levels.Rout: smoke.Rout smoke_levels.R
 
 ######################################################################
 
@@ -116,6 +86,22 @@ Sources += scales.txt
 scales.draft.pdf: scales.txt
 scales.final.pdf: scales.txt
 scales.handouts.pdf: scales.txt
+
+## Orchard
+orchard.Rout: orchard.R
+
+## Global temperature
+Sources += $(wildcard *.R)
+Ignore += temps.csv
+temps.csv:
+	wget -O $@ https://datahub.io/core/global-temp/r/annual.csv
+
+temps.Rout: temps.csv temps.R
+temppix.Rout: temps.Rout temppix.R
+
+Sources += circulation.csv
+circulation.Rout: circulation.csv circulation.R
+
 
 ## Still not ahead, so I am going to do the same thing again
 
@@ -137,6 +123,26 @@ Sources += bike_weather.csv
 
 bike_plots.Rout: bikes.Rout bike_plots.R
 
+## Smoking data from http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+git_cache/fev.csv: 
+	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
+
+smoke.Rout: slow/fev.csv smoke.R
+
+## Show the confounding
+smoke_ques.Rout: smoke.Rout smoke_ques.R
+
+## fev vs. age fits
+smoke_plots.Rout: smoke.Rout smoke_plots.R
+
+## Level plots (a mess)
+smoke_levels.Rout: smoke.Rout smoke_levels.R
+
+## sunspots (banking)
+sunspots.Rout: sunspots.R
+
+## irises (multivariate, ggpairs?)
+iris.Rout: iris.R
 
 ######################################################################
 

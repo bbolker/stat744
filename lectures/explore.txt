@@ -171,12 +171,28 @@ Banking
 
 		Even though many examples are bogus
 
-		See sunspot example
-
 	Since the point is make patterns visually clear, trial-and-error is usually
 	as good as algorithm
 
 		But it is worth considering
+
+----------------------------------------------------------------------
+
+Sunspots
+
+DOUBLEPDF sunspots.Rout
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-2.pdf
 
 ----------------------------------------------------------------------
 
@@ -191,4 +207,161 @@ Scatter plots
 		true-false)
 
 ----------------------------------------------------------------------
+
+Scatter plot
+
+FIG smoke_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density better
+
+FIG smoke_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density worse
+
+FIG smoke_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Maybe fixed
+
+FIG smoke_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+A loess trend line
+
+FIG smoke_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Two loess trend lines
+
+FIG smoke_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Many loess trend lines
+
+FIG smoke_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Theory of loess
+
+	Local smoother (locally flat, linear or \textbf{quadratic})
+
+	Neighborhood size given by alpha
+
+		Points in neighborhood are weighted by distance
+
+	Check help function for loess
+
+----------------------------------------------------------------------
+
+Robust methods
+
+	Loess is local, but not robust
+
+		Uses least squares, can respond strongly to outliers
+
+	R is has a very flexible function called rlm to do robust fitting
+
+		\emph{Not local}
+
+		But can be combined with splines
+
+----------------------------------------------------------------------
+
+Fitting comparison
+
+DOUBLEFIG smoke_plots.Rout-8.pdf smoke_plots.Rout-9.pdf
+
+----------------------------------------------------------------------
+
+Density plots
+
+	Contours
+
+		use \url{_density_2d()} to fit a two-dimensional kernel to the density
+
+	hexes
+
+		use \url{geom_hex} to plot densities using hexes
+
+		this can also be done using rectangles for data with more discrete values
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Color principles
+
+	Use clear gradients
+
+	If zero has a physical meaning (like density), go in just one direction
+
+		e.g., white to blue, white to red
+
+		If the map contrasts with a background, zero should match the background
+
+	If there's a natural \emph{middle}, you can use blue to white to red, or
+	something similar
+
+----------------------------------------------------------------------
+
+TSEC Multiple dimensions
+
+	Three dimensional data is a lot like two-d with densities: contour plots are
+	good
+
+	Pairs plots: \url{pairs}, \url{ggpairs}
+
+----------------------------------------------------------------------
+
+Pairs example
+
+FIG iris.Rout.pdf
+
+----------------------------------------------------------------------
+
+TSEC Multiple factors
+
+	Use boxplots and violin plots
+
+	Make use of facet_wrap and facet grid
+
+	Use different combinations (e.g., try plots with the same info, but
+	different factors on the axes vs.~in the colors or the facets)
 
