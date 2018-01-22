@@ -33,3 +33,21 @@ bibliography: ../vis.bib
 		* use either `hw1.R` (with comments as comments or in `hw1.txt`) or else `hw1.rmd`
 		* This file can use data or code from other directories in the repo (with relative pathnames) if you like
 		* put the output graphs (or rmarkdown output) in a directory called `HW1` 
+
+## HW 2
+
+* take a look at Jia You's online graphic about vaccine [here](http://www.sciencemag.org/news/2017/04/here-s-visual-proof-why-vaccines-do-more-good-harm)
+* to get the data, you can use
+```{r eval=FALSE}
+readr::read_csv("https://bbolker.github.io/stat744/data/vaccine_data_online.csv")
+```
+or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.amazonaws.com/article-resources/vaccine-war/vaccine_data_online.csv)
+
+* write a short statement (a few sentences) that explains what question you think the graphic is trying to answer, or what pattern it's trying to display
+* based on these data, create 2 ggplots that display the data in a different way from the original; use the 2 plots to illustrate tradeoffs between different graphical principles. (If you're feeling truly uncreative, one of your plots can replicate the original graphical design.) You do **not** need to worry about the dynamic-graphics aspect or the historical events shown in the original display
+* explain (in a few sentences) why your graph or graphs answer the question better than the original graph
+* Put the code in the main repository directory
+	* use either `hw2.R` (with comments as comments or in `hw2.txt`) or else `hw2.rmd` for the code
+	* put the output graphs (or rmarkdown output) in a directory called `HW2` 
+* *extra credit*: see if you can find information about vaccine coverage over time (i.e., estimates of fraction vaccinated in the US per year) - not just the date of licensing - and incorporate it in your results (we have no idea if this is possible)
+
