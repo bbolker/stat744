@@ -84,6 +84,23 @@ circulation.Rout: circulation.csv circulation.R
 ## Orchard
 orchard.Rout: orchard.R
 
+## Does not run (data not here)
+bananas.Rout: bananas.R
+
+## Smoking data from http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+git_cache/fev.csv: 
+	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
+
+smoke.Rout: slow/fev.csv smoke.R
+
+## Show the confounding
+smoke_ques.Rout: smoke.Rout smoke_ques.R
+
+## fev vs. age fits
+smoke_plots.Rout: smoke.Rout smoke_plots.R
+
+smoke_levels.Rout: smoke.Rout smoke_levels.R
+
 ######################################################################
 
 ## Dushoff talk
@@ -97,6 +114,28 @@ Sources += scales.txt
 scales.draft.pdf: scales.txt
 scales.final.pdf: scales.txt
 scales.handouts.pdf: scales.txt
+
+## Still not ahead, so I am going to do the same thing again
+
+explore.html: explore.step
+explore.draft.pdf: explore.txt
+explore.final.pdf: explore.txt
+explore.handouts.pdf: explore.txt
+
+git_cache/bikes.zip:
+	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
+
+Ignore += day.csv
+hour.csv: slow/bikes.zip
+	unzip $< $@
+
+bikes.Rout: hour.csv bike_weather.csv bikes.R
+Sources += bike_weather.csv
+
+bike_plots.Rout: bikes.Rout bike_plots.R
+
+
+######################################################################
 
 Sources += copy.tex
 
@@ -112,9 +151,10 @@ Ignore += local.txt.format
 
 -include $(ms)/texdeps.mk
 -include $(ms)/newtalk.mk
+-include $(ms)/cache.mk
 
 # -include $(ms)/modules.mk
 
-# -include $(ms)/webpix.mk
+-include $(ms)/webpix.mk
 -include $(ms)/wrapR.mk
 
