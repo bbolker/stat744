@@ -1,0 +1,194 @@
+
+Exploring data
+
+SUBH Rote analysis vs. snooping 
+
+BCC
+
+CFIG webpix/atlas.jpg
+
+NCC
+
+CFIG webpix/detective.jpg
+
+EC
+
+----------------------------------------------------------------------
+
+Spurious correlations
+
+HREF http://www.tylervigen.com/spurious-correlations There's a whole website about this
+
+----------------------------------------------------------------------
+
+What can you do?
+
+SUBH The best you can
+
+	Identify scientific questions
+
+	Distinguish between exploratory and confirmatory analysis
+
+	Pre-register studies when possible
+
+	Keep an exploration and analysis journal
+
+	Explore predictors and responses separately at first
+
+----------------------------------------------------------------------
+
+TSEC Individual variables
+
+	Look at location and shape
+
+	Maybe with different sets of grouping variables
+
+	Contrasts
+
+		Parametric vs. non-parametric
+
+		Exploratory vs. diagnostic
+
+		Data vs.~inference
+
+----------------------------------------------------------------------
+
+Means and standard errors
+
+FIG orchard.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Means and standard deviations
+
+FIG orchard.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Means and standard deviations
+
+FIG orchard.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Means and standard deviations
+
+SUBH Next steps?
+
+FIG orchard.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Non-parametric
+
+FIG orchard.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Non-parametric
+
+FIG orchard.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Bike example
+
+FIG bike_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Standard deviations
+
+FIG bike_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-7.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-8.pdf
+
+----------------------------------------------------------------------
+
+Data shape and weight
+
+FIG bike_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Log scales
+
+	In general:
+
+		If your logged data span $<3$ decades, use human-readable numbers (e.g., 10-5000 kilotons per hectare)
+
+		If not, just embrace ``logs'' (log10 particles per ul is from 3--8)
+
+			But remember these are not physical values
+
+	I love natural logs, but not as axis values
+
+		Except to represent proportional difference!
+
+----------------------------------------------------------------------
+
+SEC Bivariate data
+
+----------------------------------------------------------------------
+
+Banking
+
+	Banking is a real thing
+
+		Even though many examples are bogus
+
+		See sunspot example
+
+	Since the point is make patterns visually clear, trial-and-error is usually
+	as good as algorithm
+
+		But it is worth considering
+
+----------------------------------------------------------------------
+
+Scatter plots
+
+	Depending on how many data points you have, scatter plots may indicate
+	relationships clearly
+
+	They can often be improved with trend interpolations
+
+		Interpolations may be particularly good for discrete responses (count or
+		true-false)
+
+----------------------------------------------------------------------
+

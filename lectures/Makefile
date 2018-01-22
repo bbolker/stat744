@@ -110,6 +110,8 @@ smoke_levels.Rout: smoke.Rout smoke_levels.R
 ## makestuff/newtalk.md
 ## makestuff/newtalk.mk
 
+Sources += $(wildcard *.step)
+
 Sources += scales.txt
 scales.draft.pdf: scales.txt
 scales.final.pdf: scales.txt
@@ -117,6 +119,7 @@ scales.handouts.pdf: scales.txt
 
 ## Still not ahead, so I am going to do the same thing again
 
+Sources += explore.txt
 explore.html: explore.step
 explore.draft.pdf: explore.txt
 explore.final.pdf: explore.txt
@@ -125,7 +128,7 @@ explore.handouts.pdf: explore.txt
 git_cache/bikes.zip:
 	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
 
-Ignore += day.csv
+Ignore += day.csv hour.csv
 hour.csv: slow/bikes.zip
 	unzip $< $@
 
