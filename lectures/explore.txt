@@ -360,7 +360,7 @@ TSEC Multiple factors
 
 	Use boxplots and violin plots
 
-	Make use of facet_wrap and facet grid
+	Make use of \url{facet_wrap} and \url{facet grid}
 
 	Use different combinations (e.g., try plots with the same info, but
 	different factors on the axes vs.~in the colors or the facets)
