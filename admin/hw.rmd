@@ -7,7 +7,7 @@ bibliography: ../vis.bib
 
 ## general rules
 
-* homework will be due one week from when it is assigned.
+* homework is due Wed at noon (the week after it is assigned).
 * you should submit your homework by pushing it to your individual GitHub repository and sending us an e-mail telling us it's done (please put "stat744 HW 1" [for example] in the title of your e-mail)
 * **appropriate collaboration**: it's fine to discuss ideas with your colleagues and get help overcoming technical difficulties, but please write your code/prepare your assignments separately.
 * code rules:
@@ -51,3 +51,6 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 	* put the output graphs (or rmarkdown output) in a directory called `HW2` 
 * *extra credit*: see if you can find information about vaccine coverage over time (i.e., estimates of fraction vaccinated in the US per year) - not just the date of licensing - and incorporate it in your results (we have no idea if this is possible)
 
+## HW 3
+
+* The second half of the course will be primarily about student presentations. Read the suggested topics on [the schedule page](/sched.html), _think about topics you might want to add_, and send us both an email (no need to push to the repository this time), listing two or three topics you would be willing to work on with a partner, and say a little bit about what aspects you feel you might want to address (or you can say more than a little if you like, particularly if you are suggesting a new topic). Questions about new or existing topics are welcome by email, or if there is time in class.
