@@ -2,6 +2,9 @@
 # https://bbolker.github.io/stat744
 # https://github.com/bbolker/stat744
 
+## pages
+BRANCH = gh-pages
+
 target = Makefile
 -include target.mk
 
@@ -15,6 +18,8 @@ include sub.mk
 ## html
 
 Sources += $(wildcard *.html)
+Sources += $(wildcard *.handouts.pdf)
+Sources += $(wildcard *.final.pdf)
 
 ######################################################################
 
