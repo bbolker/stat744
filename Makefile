@@ -45,6 +45,10 @@ pages/%.html: lectures/%.rmd
 	cd lectures && $(MAKE) $*.html
 	cp lectures/$*.html $@
 
+pages/%.html: admin/%.rmd
+	cd admin && $(MAKE) $*.html
+	cp admin/$*.html $@
+
 ######################################################################
 
 -include $(ms)/git.mk
