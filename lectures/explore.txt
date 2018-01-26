@@ -1,0 +1,367 @@
+
+Exploring data
+
+SUBH Rote analysis vs. snooping 
+
+BCC
+
+CFIG webpix/atlas.jpg
+
+NCC
+
+CFIG webpix/detective.jpg
+
+EC
+
+----------------------------------------------------------------------
+
+Spurious correlations
+
+HREF http://www.tylervigen.com/spurious-correlations There's a whole website about this
+
+----------------------------------------------------------------------
+
+What can you do?
+
+SUBH The best you can
+
+	Identify scientific questions
+
+	Distinguish between exploratory and confirmatory analysis
+
+	Pre-register studies when possible
+
+	Keep an exploration and analysis journal
+
+	Explore predictors and responses separately at first
+
+----------------------------------------------------------------------
+
+TSEC Individual variables
+
+	Look at location and shape
+
+	Maybe with different sets of grouping variables
+
+	Contrasts
+
+		Parametric vs. non-parametric
+
+		Exploratory vs. diagnostic
+
+		Data vs.~inference
+
+----------------------------------------------------------------------
+
+Means and standard errors
+
+FIG orchard.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Means and standard deviations
+
+FIG orchard.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Means and standard deviations
+
+FIG orchard.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Means and standard deviations
+
+SUBH Next steps?
+
+FIG orchard.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Non-parametric
+
+FIG orchard.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+RSLIDE Non-parametric
+
+FIG orchard.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Bike example
+
+FIG bike_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Standard deviations
+
+FIG bike_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-7.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-8.pdf
+
+----------------------------------------------------------------------
+
+Data shape and weight
+
+FIG bike_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Log scales
+
+	In general:
+
+		If your logged data span $<3$ decades, use human-readable numbers (e.g., 10-5000 kilotons per hectare)
+
+		If not, just embrace ``logs'' (log10 particles per ul is from 3--8)
+
+			But remember these are not physical values
+
+	I love natural logs, but not as axis values
+
+		Except to represent proportional difference!
+
+----------------------------------------------------------------------
+
+SEC Bivariate data
+
+----------------------------------------------------------------------
+
+Banking
+
+	Banking is a real thing
+
+		Even though many examples are bogus
+
+	Since the point is make patterns visually clear, trial-and-error is usually
+	as good as algorithm
+
+		But it is worth considering
+
+----------------------------------------------------------------------
+
+Sunspots
+
+DOUBLEPDF sunspots.Rout
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Scatter plots
+
+	Depending on how many data points you have, scatter plots may indicate
+	relationships clearly
+
+	They can often be improved with trend interpolations
+
+		Interpolations may be particularly good for discrete responses (count or
+		true-false)
+
+----------------------------------------------------------------------
+
+Scatter plot
+
+FIG smoke_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density better
+
+FIG smoke_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density worse
+
+FIG smoke_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Maybe fixed
+
+FIG smoke_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+A loess trend line
+
+FIG smoke_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Two loess trend lines
+
+FIG smoke_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Many loess trend lines
+
+FIG smoke_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Theory of loess
+
+	Local smoother (locally flat, linear or \textbf{quadratic})
+
+	Neighborhood size given by alpha
+
+		Points in neighborhood are weighted by distance
+
+	Check help function for loess
+
+----------------------------------------------------------------------
+
+Robust methods
+
+	Loess is local, but not robust
+
+		Uses least squares, can respond strongly to outliers
+
+	R is has a very flexible function called rlm to do robust fitting
+
+		\emph{Not local}
+
+		But can be combined with splines
+
+----------------------------------------------------------------------
+
+Fitting comparison
+
+DOUBLEFIG smoke_plots.Rout-8.pdf smoke_plots.Rout-9.pdf
+
+----------------------------------------------------------------------
+
+Density plots
+
+	Contours
+
+		use \url{_density_2d()} to fit a two-dimensional kernel to the density
+
+	hexes
+
+		use \url{geom_hex} to plot densities using hexes
+
+		this can also be done using rectangles for data with more discrete values
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Color principles
+
+	Use clear gradients
+
+	If zero has a physical meaning (like density), go in just one direction
+
+		e.g., white to blue, white to red
+
+		If the map contrasts with a background, zero should match the background
+
+	If there's a natural \emph{middle}, you can use blue to white to red, or
+	something similar
+
+----------------------------------------------------------------------
+
+TSEC Multiple dimensions
+
+	Three dimensional data is a lot like two-d with densities: contour plots are
+	good
+
+	Pairs plots: \url{pairs}, \url{ggpairs}
+
+----------------------------------------------------------------------
+
+Pairs example
+
+FIG iris.Rout.pdf
+
+----------------------------------------------------------------------
+
+TSEC Multiple factors
+
+	Use boxplots and violin plots
+
+	Make use of \url{facet_wrap} and \url{facet grid}
+
+	Use different combinations (e.g., try plots with the same info, but
+	different factors on the axes vs.~in the colors or the facets)
+

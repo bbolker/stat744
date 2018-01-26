@@ -68,6 +68,27 @@ principles_1.html: principles_1.rmd
 
 ## Temporarily doing this here for a lecture tomorrow
 ## 2018 Jan 14 (Sun)
+## Does not run (data not here)
+bananas.Rout: bananas.R
+
+######################################################################
+
+## Dushoff talk
+
+## Too scared to try to make a slick .html talk 2018 Jan 14 (Sun), so I'm going to see if I can make a slick pdf talk using old technology
+
+## makestuff/newtalk.md
+## makestuff/newtalk.mk
+
+Sources += $(wildcard *.step)
+
+Sources += scales.txt
+scales.draft.pdf: scales.txt
+scales.final.pdf: scales.txt
+scales.handouts.pdf: scales.txt
+
+## Orchard
+orchard.Rout: orchard.R
 
 ## Global temperature
 Sources += $(wildcard *.R)
@@ -81,22 +102,49 @@ temppix.Rout: temps.Rout temppix.R
 Sources += circulation.csv
 circulation.Rout: circulation.csv circulation.R
 
-## Orchard
-orchard.Rout: orchard.R
+
+## Still not ahead, so I am going to do the same thing again
+
+Sources += explore.txt
+explore.html: explore.step
+explore.draft.pdf: explore.txt
+explore.final.pdf: explore.txt
+explore.handouts.pdf: explore.txt
+
+git_cache/bikes.zip:
+	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
+
+Ignore += day.csv hour.csv
+hour.csv: slow/bikes.zip
+	unzip $< $@
+
+bikes.Rout: hour.csv bike_weather.csv bikes.R
+Sources += bike_weather.csv
+
+bike_plots.Rout: bikes.Rout bike_plots.R
+
+## Smoking data from http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+git_cache/fev.csv: 
+	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
+
+smoke.Rout: slow/fev.csv smoke.R
+
+## Show the confounding
+smoke_ques.Rout: smoke.Rout smoke_ques.R
+
+## fev vs. age fits
+smoke_plots.Rout: smoke.Rout smoke_plots.R
+
+## Level plots (a mess)
+smoke_levels.Rout: smoke.Rout smoke_levels.R
+
+## sunspots (banking)
+sunspots.Rout: sunspots.R
+
+## irises (multivariate, ggpairs?)
+iris.Rout: iris.R
 
 ######################################################################
-
-## Dushoff talk
-
-## Too scared to try to make a slick .html talk 2018 Jan 14 (Sun), so I'm going to see if I can make a slick pdf talk using old technology
-
-## makestuff/newtalk.md
-## makestuff/newtalk.mk
-
-Sources += scales.txt
-scales.draft.pdf: scales.txt
-scales.final.pdf: scales.txt
-scales.handouts.pdf: scales.txt
 
 Sources += copy.tex
 
@@ -112,9 +160,10 @@ Ignore += local.txt.format
 
 -include $(ms)/texdeps.mk
 -include $(ms)/newtalk.mk
+-include $(ms)/cache.mk
 
 # -include $(ms)/modules.mk
 
-# -include $(ms)/webpix.mk
+-include $(ms)/webpix.mk
 -include $(ms)/wrapR.mk
 

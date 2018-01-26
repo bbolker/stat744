@@ -123,6 +123,11 @@ Physical quantities
 
 ----------------------------------------------------------------------
 
+EXTRA These plot refs will be messed up by subsequent orchard work, and should be revisited
+
+----------------------------------------------------------------------
+
+
 Log vs.~linear
 
 DOUBLEPDF orchard.Rout
