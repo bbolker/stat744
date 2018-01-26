@@ -1,40 +1,19 @@
 
 ## ASAP
 
-## For Monday 15 Jan
+* HW assignment
+	* Look at the list of presentation topics (including the ones in your head) and send us your top 3, with thoughts (optional) and conflicts (if hard)
 
-* BMB absent!
-* lecture on principles
-* BMB rules for complex data: some possibly useful stuff from a previous data viz presentation
+* HW ideas:
+	* convert a table of numbers to a graph
+	* fit a model and diagnose it
 
-----
-
-
-* material for Monday
-* next homework??
-* remove one of the two homework links on the GH-pages index.html
-
--------
-
-* scheduling: Alex J. busy Thurs 1 PM, Fri 9 AM
-  * Alex B.: Monday 2:30-3:30 and Wednesdays 8:30-10:30.
-  * Mu He: Tues 1:30
-  * 6A03/time series: 10:30 Monday?
+## Long term
 
 * code on [GitHub](https://github.com/jrauser/writing/tree/master/how_humans_see_data)
 
-* Put in a low-burden makestuff framework
-     * markup shortcut for R packages? (e.g. <#Rpkg #1> -> https://cran.r-project.org/web/packages/#1
-	 * auto-generate bib products (bib2xhtml or similar)
-
-* Github infrastructure (collecting student repos)
-
-* Start HW early (more structured than 708)
-     * HW ideas:
-	       * reshape/modify some data
-	       * find a graph; recreate it, then fix/change it
-		   * convert a table of numbers to a graph
-		   * fit a model and diagnose it
+* markup shortcut for R packages? (e.g. <#Rpkg #1> -> https://cran.r-project.org/web/packages/#1
+* auto-generate bib products (bib2xhtml or similar)
 
 * Similar courses:
     * Andrew Heiss [data visualization](https://datavizf17.classes.andrewheiss.com) ([syllabus](https://datavizf17.classes.andrewheiss.com/syllabus/), [final projects](https://datavizf17.classes.andrewheiss.com/final-projects/)
