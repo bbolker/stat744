@@ -1,0 +1,246 @@
+---
+title: stuff
+output:
+  ioslides_presentation
+bibliography: ../vis.bib
+---
+
+<!-- 
+apa.csl is a slightly hacked version of APA 
+  (modified for "et al" after 2 authors in text)
+-->
+<!-- .refs is style for reference page (small text) -->
+<style>
+.refs {
+   font-size: 16px;
+}
+h2 { 
+ color: #3399ff;		
+}
+h3 { 
+ color: #3399ff;		
+}
+.title-slide {
+   background-color: #55bbff;
+}
+</style>
+<!--    content: url(https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+>
+<!-- Limit image width and height -->
+<style type="text/css">
+img {     
+  max-height: 530px;     
+  max-width: 800px; 
+}
+</style>
+
+## Packages
+
+```{r pkgs, message=FALSE}
+library(ggplot2); theme_set(theme_bw())
+library(car)
+library(broom)
+library(dplyr)
+```
+
+## Diagnostics: principles
+
+- detect model failure
+- display badness of fit
+- fast/convenient
+- residuals emphasize deviation, hide fitted pattern
+
+## Diagnostics: principles (2)
+
+- diagnosis is exploration
+- avoid making decisions based on p-values
+- judge by eye (?¿?¿?¿?¿)
+- **not** "are my data (linear|normal|heteroscedastic)?";  
+rather, "how much do the violations change my conclusions?"
+
+## diagnostics *after* fitting model {.build}
+
+- What does this mean?
+
+```{r marginal1,echo=FALSE}
+set.seed(101)
+x <- rt(1000,df=4)
+y <- rnorm(1000,mean=1+2*x,sd=0.1)
+qqnorm(y)
+```
+
+```{r marginal2}
+set.seed(101)
+x <- rt(1000,df=4)
+y <- rnorm(1000,mean=1+2*x,sd=0.1)
+qqnorm(x)
+```
+
+## order of diagnosis for linear models etc.
+
+look for misspecification (in order!)
+
+- mean model (bias)
+- variance model (heteroscedasticity)
+- distributional model (e.g. non-normality)
+
+influential points/groups (leverage/outliers/etc.)
+
+upstream problems affect downstream diagnostics
+
+## bias
+
+```{r fitres1,cache=TRUE}
+m1 <- lm(price~carat,diamonds)
+a1 <- augment(m1,data=diamonds) ## include original data
+ggplot(a1,aes(.fitted,.resid)) +
+    geom_point()+geom_smooth()
+```
+
+## bias 2
+
+facet/colour by other known values:
+
+```{r fitres2,cache=TRUE}
+ggplot(a1,aes(.fitted,.resid,colour=clarity)) +
+    facet_wrap(~cut) +
+    geom_point()+geom_smooth()
+```
+
+useful to use dynamic graphics
+`ggmap::gglocator` (may need `devtools::install_github("dkahle/ggmap")`)
+
+## solutions to bias {.build}
+
+- fix the model
+- add covariates and interactions
+- transform predictors and/or responses (`acepack::avas`, @tibshirani_estimating_1987)
+- nonlinear terms
+     - polynomials
+  	 - splines
+	 - 'real' nonlinearity
+	 
+## heteroscedasticity
+
+- linear models
+    - loss of efficiency (linear fit is still MVUE)
+	- inferential problems (@QuinnKeough2002 p. 193)
+- nonlinear models
+   - bias
+
+## heteroscedasticity diagnostics
+
+- scale-location plot
+- $\sqrt(|r_i|)$
+    - absolute value shows trend
+	- square root decreases skewness
+- use standardized residuals  
+(adjust variance for position)	
+
+```{r heterosced}
+m2 <- lm(dist ~ speed, data=cars)
+ggplot(augment(m2),aes(.fitted,sqrt(abs(.std.resid))))+
+    geom_point()+geom_smooth()
+```
+
+## heteroscedasticity solutions
+
+- transformation [@tibshirani_estimating_1987]
+- explicitly model heteroscedasticity  
+e.g. generalized least squares, GLMs
+- robust variance-covariance estimation (`sandwich` package: @zeileis_object_2006)
+
+## distributional assumptions
+
+- least important
+- quantile-quantile plots
+
+```{r hist,echo=FALSE}
+set.seed(101)
+skew <- data.frame(x=rlnorm(200))
+tails <- data.frame(x=rt(200,df=5))
+bimodal <- data.frame(x=rnorm(200,mean=rep(c(-2,2),each=100)))
+outliers <- data.frame(x=c(rnorm(200),7,-7))
+dd <- dplyr::bind_rows(lme4:::namedList(skew,tails,bimodal,outliers),.id="type")
+ggplot(dd,aes(x))+facet_wrap(~type)+geom_histogram()+
+    scale_x_continuous(breaks=NULL)+
+    scale_y_continuous(breaks=NULL)+
+    theme(panel.spacing=grid::unit(0,"lines"))
+```
+
+## quantile plots
+
+- ggplot: `stat_qq()`, `stat_qq_line()`
+- base R: `plot.lm(.,which=3)`; `qqnorm()`
+- `car::qqPlot` (adds confidence envelope)
+
+```{r qq}
+ggplot(dd,aes(sample=x))+facet_wrap(~type)+stat_qq()+stat_qq_line(colour="red")+
+    scale_x_continuous(breaks=NULL)+
+    scale_y_continuous(breaks=NULL)+
+    theme(panel.spacing=grid::unit(0,"lines"))
+```
+
+## distributional solutions
+
+- transformation (`avas`, Box-Cox (`MASS:boxcox`), Yeo-Johnson etc. [`?car::bcPower`])
+
+## correlation
+
+rarely tested! can't detect without some kind of structure in data
+
+- autocorrelation plots from residuals
+- grouped autocorrelation: use `gls()` on residuals
+- spatial autocorrelation: semivariance plot
+- or look at maps of residuals with `size=abs(.resid)`, `colour=sign(.resid)` (or colour ramp)
+
+## binary data
+
+challenging
+
+- add smooths or group 
+
+```{r smooth}
+library(lme4)
+data(Contraception,package="mlmRev")
+Contraception <- Contraception %>%
+    mutate(ch=factor(livch != 0, labels = c("N", "Y")))
+m3 <- glmer(use ~ age * ch + I(age^2) + urban + (1 | urban:district),
+            data=Contraception, family=binomial)
+a3 <- augment(m3,data=Contraception)
+ggplot(a3,
+       aes(.fitted,.resid))+
+    geom_smooth(method="gam",method.args=list(family=binomial))
+```
+
+## coverage
+
+## coverage plots
+
+## likelihood profiles
+
+- use $\sqrt(-2 \log (L-L_0))$ ($\sf V$)
+- or signed square root (straight line/symmetry)
+
+## MCMC
+
+- trace plots
+
+## complex models
+
+@wickham_graphical_2010; @gelman_exploratory_2004
+
+## posterior predictive plots
+
+- `simulate()` methods
+- zero-inflation example
+
+## To do
+
+- temporal/spatial correlation
+- binary data
+- likelihood profiles
+- MCMC diagnostics
+- complex models (posterior pred sims: `simulate()` method)
+
+## references
