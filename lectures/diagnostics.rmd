@@ -36,16 +36,17 @@ img {
 
 ## Packages
 
-```{r pkgs, message=FALSE}
-library(ggplot2); theme_set(theme_bw())
+```{r pkgs, message=FALSE,results="hide"}
+library(tidyverse)
+theme_set(theme_bw())
 library(car)
 library(broom)
 library(magrittr)
-library(dplyr)
-library(lme4); library(MCMCglmm) ## for models
-library(coda) ## for 
+library(lme4); library(MCMCglmm); library(glmmTMB) ## for models
+library(coda) ## for trace plots
 library(lattice) ## built-in
 library(cowplot)
+library(nullabor)
 ```
 
 
@@ -76,11 +77,13 @@ y <- rnorm(500,mean=1+x,sd=1)
 qqnorm(y)
 ```
 
-##
+## marginal distributions
 
-```{r marginal_hist,message=FALSE,echo=FALSE}
+```{r marginal_hist,message=FALSE,echo=FALSE,warning=FALSE}
+## http://www.lreding.com/nonstandard_deviations/2017/08/19/cowmarg/
 dd <- data.frame(x,y)
-gg1 <- ggplot(dd,aes(x,y))+geom_point()
+gg1 <- ggplot(dd,aes(x,y))+geom_point()+
+    geom_smooth(method="lm",se=FALSE,colour="red")
 xhist <- axis_canvas(gg1, axis = "x") +
   geom_histogram(data = dd, aes(x = x))
 gg1C <- insert_xaxis_grob(gg1, xhist, position = "bottom")
@@ -91,9 +94,20 @@ gg1C %<>% insert_yaxis_grob(., yhist, position = "right")
 ggdraw(gg1C)
 ```
 
-## order of diagnosis for linear models etc.
+## quantile plots
+```{r q2, fig.width=10}
+m0 <- lm(y~x,dd)
+augment(m0) %>% select(x,y,.resid) %>%
+    gather(type,value) %>%
+    mutate(type=factor(type,levels=c("x","y",".resid"))) -> a0
+ggplot(a0,aes(sample=value))+
+    stat_qq()+facet_wrap(~type)+
+    stat_qq_line(colour="red")
+```
 
-look for misspecification (in order!)
+## model diagnosis
+
+look for *mis-specification* (in order!):
 
 - mean model (bias)
 - variance model (heteroscedasticity)
@@ -105,21 +119,21 @@ upstream problems affect downstream diagnostics
 
 ## bias
 
-```{r fitres1,cache=TRUE}
+<p style="font-size:16px">
+```{r fitres1,cache=TRUE,message=FALSE}
 m1 <- lm(price~carat,diamonds)
 a1 <- augment(m1,data=diamonds) ## include original data
 ggplot(a1,aes(.fitted,.resid)) +
-    geom_point()+geom_smooth()
+    geom_point(alpha=0.1)+geom_smooth()
 ```
+</p>
 
-## bias 2
+## bias 2: faceting/colouring {.smaller}
 
-facet/colour by other known values:
-
-```{r fitres2,cache=TRUE}
-ggplot(a1,aes(.fitted,.resid,colour=clarity)) +
-    facet_wrap(~cut) +
-    geom_point()+geom_smooth()
+```{r fitres2,cache=TRUE,warning=FALSE,message=FALSE}
+ggplot(a1,aes(.fitted,.resid,colour=cut)) +
+    facet_wrap(~clarity) +
+    geom_point(alpha=0.4)+geom_smooth()
 ```
 
 useful to use dynamic graphics
@@ -132,7 +146,7 @@ useful to use dynamic graphics
 - transform predictors and/or responses (`acepack::avas`, @tibshirani_estimating_1987)
 - nonlinear terms
      - polynomials
-  	 - splines
+  	 - splines (regular or penalized)
 	 - 'real' nonlinearity
 	 
 ## heteroscedasticity
@@ -141,18 +155,20 @@ useful to use dynamic graphics
     - loss of efficiency (linear fit is still MVUE)
 	- inferential problems (@QuinnKeough2002 p. 193)
 - nonlinear models
-   - bias
+    - bias
 
 ## heteroscedasticity diagnostics
 
 - scale-location plot
-- $\sqrt(|r_i|)$
+- use $\sqrt{|r_i|}$:
     - absolute value shows trend
 	- square root decreases skewness
 - use standardized residuals  
 (adjust variance for position)	
 
-```{r heterosced}
+##
+
+```{r heterosced,message=FALSE}
 m2 <- lm(dist ~ speed, data=cars)
 ggplot(augment(m2),aes(.fitted,sqrt(abs(.std.resid))))+
     geom_point()+geom_smooth()
@@ -163,14 +179,17 @@ ggplot(augment(m2),aes(.fitted,sqrt(abs(.std.resid))))+
 - transformation [@tibshirani_estimating_1987]
 - explicitly model heteroscedasticity  
 e.g. generalized least squares, GLMs
-- robust variance-covariance estimation (`sandwich` package: @zeileis_object_2006)
+- robust variance-covariance estimation  
+(e.g. `sandwich` package: @zeileis_object_2006)
 
 ## distributional assumptions
 
 - least important
 - quantile-quantile plots
 
-```{r hist,echo=FALSE}
+## histograms
+
+```{r hist,echo=FALSE,message=FALSE}
 set.seed(101)
 skew <- data.frame(x=rlnorm(200))
 tails <- data.frame(x=rt(200,df=5))
@@ -183,13 +202,13 @@ ggplot(dd,aes(x))+facet_wrap(~type)+geom_histogram()+
     theme(panel.spacing=grid::unit(0,"lines"))
 ```
 
-## quantile plots
+## quantile plots {.smaller}
 
 - ggplot: `stat_qq()`, `stat_qq_line()`
 - base R: `plot.lm(.,which=3)`; `qqnorm()`
 - `car::qqPlot` (adds confidence envelope)
 
-```{r qq}
+```{r qq,echo=FALSE}
 ggplot(dd,aes(sample=x))+facet_wrap(~type)+stat_qq()+stat_qq_line(colour="red")+
     scale_x_continuous(breaks=NULL)+
     scale_y_continuous(breaks=NULL)+
@@ -199,6 +218,8 @@ ggplot(dd,aes(sample=x))+facet_wrap(~type)+stat_qq()+stat_qq_line(colour="red")+
 ## distributional solutions
 
 - transformation (`avas`, Box-Cox (`MASS:boxcox`), Yeo-Johnson etc. [`?car::bcPower`])
+- GLMs
+- maximum likelihood estimation
 
 ## correlation
 
@@ -209,13 +230,12 @@ rarely tested! can't detect without some kind of structure in data
 - spatial autocorrelation: semivariance plot
 - or look at maps of residuals with `size=abs(.resid)`, `colour=sign(.resid)` (or colour ramp)
 
-## binary data
+## binary data {.smaller}
 
-challenging
-
+- residuals for count data only $\approx$ Normal for large counts
 - add smooths or average of grouped data
 
-```{r binary_smooth,cache=TRUE,warning=FALSE,echo=FALSE}
+```{r binary_smooth,cache=TRUE,warning=FALSE,echo=FALSE,message=FALSE}
 library(lme4)
 data(Contraception,package="mlmRev")
 Contraception <- Contraception %>%
@@ -223,7 +243,6 @@ Contraception <- Contraception %>%
 m3 <- glmer(use ~ age * ch + I(age^2) + urban + (1 | urban:district),
             data=Contraception, family=binomial)
 ```
-
 
 ```{r binary_smooth_calc,echo=FALSE}
 a3 <- augment(m3,data=Contraception,type.residuals="response")
@@ -242,41 +261,103 @@ get_mid <- function(x) {
 ) -> a3_sum
 ```
 
-```{r binary_smooth_plot}
-ggplot(a3,
-       aes(.fitted,.resid))+
-    geom_point()+ geom_smooth()+
-    geom_point(data=a3_sum,colour="blue")
+```{r binary_smooth_plot,message=FALSE}
+ggplot(a3,aes(.fitted,.resid))+
+  geom_point()+ geom_smooth()+geom_point(data=a3_sum,colour="blue")
 ```
 
 ## coverage
 
-## coverage plots
+![](glycera_pvals.png)
 
-## likelihood profiles
+## likelihood profiles {.smaller}
 
-- use $\sqrt(-2 \log (L-L_0))$ ($\sf V$)
-- or signed square root (straight line/symmetry)
+use $\sqrt{-2 \log (L-L_0)}$ ($\sf V$-shaped), signed square root (straight line/symmetry)
 
-## MCMC
+```{r profile_calc,echo=FALSE,cache=TRUE}
+pp <- profile(m3,which=1:2,parallel="multicore",ncpus=2,signames=FALSE)
+```
+
+```{r profile_plot,echo=FALSE}
+p_dd <- as.data.frame(pp)
+ggp1 <- ggplot(p_dd,aes(.focal,.zeta^2))+
+    facet_wrap(~.par,scale="free_x")+
+    geom_point()+ geom_line()
+ggp2 <- ggplot(p_dd,aes(.focal,.zeta))+
+    facet_wrap(~.par,scale="free_x")+
+    geom_point()+ geom_line() +
+    geom_smooth(method="lm",col=adjustcolor("red",alpha.f=0.5),
+                se=FALSE)
+print(plot_grid(ggp1,ggp2,nrow=2))
+```
+
+## MCMC {.smaller}
+
+- trace plots - should look like white noise, with no trend ...
+
+```{r mcmc1,echo=FALSE,cache=TRUE}
+Contraception <- transform(Contraception,urbdist=interaction(urban,district),
+                           agesq=age^2)
+m4 <- MCMCglmm(use ~ age * ch + agesq + urban,
+               random = ~ urbdist,
+               data=Contraception,
+               family="categorical",
+               verbose=FALSE)
+```
+```{r trace}
+lattice::xyplot(m4$Sol,aspect="fill",layout=c(2,3))
+```
 
 - trace plots
 
-## complex models
-
-@wickham_graphical_2010; @gelman_exploratory_2004
-
 ## posterior predictive plots
 
-- `simulate()` methods
-- zero-inflation example
+```{r owls,cache=TRUE,echo=FALSE}
+owls_nb1 <- glmmTMB(SiblingNegotiation ~ FoodTreatment*SexParent +
+                                         (1|Nest)+offset(log(BroodSize)),
+                   family = list(family="nbinom1",link="log"),
+                   data=Owls)
+```
 
-## To do
+```{r simfun,cache=TRUE}
+set.seed(101); nsim <- 1e4
+owls_sim <- simulate(owls_nb1,nsim)
+sumfun <- function(x)sum(x==0)
+zero_vals <- apply(owls_sim,2,sumfun)
+dz <- as.data.frame(table(zero_vals)/nsim) %>%
+    mutate(zero_vals=as.numeric(zero_vals))
+obsval <- sumfun(Owls$SiblingNegotiation)
+gsim <- ggplot(dz,aes(zero_vals,Freq))+geom_point()+
+    geom_segment(aes(xend=zero_vals,yend=0))+
+    geom_vline(xintercept=obsval,col="red")+
+    annotate(geom="text",x=obsval,y=0.03,label="observed",
+             col="red",hjust=1.1)
+```
 
-- temporal/spatial correlation
-- binary data
-- likelihood profiles
-- MCMC diagnostics
-- complex models (posterior pred sims: `simulate()` method)
+##
 
-## references
+```{r gsimplot,echo=FALSE}
+print(gsim)
+```
+
+## complex models [@wickham_graphical_2010; @gelman_exploratory_2004; @buja_statistical_2009]
+
+```{r}
+simdat <- (simulate(m2,8)
+    %>% data.frame(speed=cars$speed)
+    %>% gather(sample,dist,-speed))
+ddsim <- (cars
+    %>% select(dist,speed)
+    %>% mutate(sample="true")
+    %>% bind_rows(simdat))
+ddsimplot <- ggplot(ddsim,aes(speed,dist))+geom_point()+
+    facet_wrap(~sample)
+```
+
+##
+
+```{r echo=FALSE}
+print(ddsimplot)
+```
+
+## references {.refs}
