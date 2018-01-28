@@ -15,6 +15,8 @@ target = Makefile
 
 Sources += Makefile .ignore README.md upstuff.mk LICENSE.md
 
+Sources += $(wildcard *.rmd)
+
 ## Change Drop with untracked local.mk (called automatically from upstuff.mk)
 Drop = ~/Dropbox
 
