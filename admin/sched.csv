@@ -15,4 +15,4 @@ week,start date,topic,reading/viewing,notes
 ?,?,alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...)
 
 ?,?,compositional data,ternary plots etc. [e.g. `ggtern`]
-?,?,network/tree data,`igraph`/`ggdendro` packages etc.
+?,?,network/tree data,`igraph`/`ggdendro` packages etc.; @swayne_exploratory_2004
