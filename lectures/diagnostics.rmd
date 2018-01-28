@@ -1,5 +1,5 @@
 ---
-title: stuff
+title: diagnostic graphs
 output:
   ioslides_presentation
 bibliography: ../vis.bib
@@ -40,40 +40,55 @@ img {
 library(ggplot2); theme_set(theme_bw())
 library(car)
 library(broom)
+library(magrittr)
 library(dplyr)
+library(lme4); library(MCMCglmm) ## for models
+library(coda) ## for 
+library(lattice) ## built-in
+library(cowplot)
 ```
 
-## Diagnostics: principles
+
+## Diagnostics: goals and ideas
 
 - detect model failure
 - display badness of fit
 - fast/convenient
 - residuals emphasize deviation, hide fitted pattern
 
-## Diagnostics: principles (2)
+## Diagnostics: principles
 
 - diagnosis is exploration
 - avoid making decisions based on p-values
 - judge by eye (?¿?¿?¿?¿)
 - **not** "are my data (linear|normal|heteroscedastic)?";  
-rather, "how much do the violations change my conclusions?"
+rather, *"how much do the violations change my conclusions?"*
 
 ## diagnostics *after* fitting model {.build}
 
+- Interested in *conditional*, not *marginal* values
 - What does this mean?
 
 ```{r marginal1,echo=FALSE}
 set.seed(101)
-x <- rt(1000,df=4)
-y <- rnorm(1000,mean=1+2*x,sd=0.1)
+x <- rt(500,df=4)
+y <- rnorm(500,mean=1+x,sd=1)
 qqnorm(y)
 ```
 
-```{r marginal2}
-set.seed(101)
-x <- rt(1000,df=4)
-y <- rnorm(1000,mean=1+2*x,sd=0.1)
-qqnorm(x)
+##
+
+```{r marginal_hist,message=FALSE,echo=FALSE}
+dd <- data.frame(x,y)
+gg1 <- ggplot(dd,aes(x,y))+geom_point()
+xhist <- axis_canvas(gg1, axis = "x") +
+  geom_histogram(data = dd, aes(x = x))
+gg1C <- insert_xaxis_grob(gg1, xhist, position = "bottom")
+yhist <- axis_canvas(gg1, axis = "y", coord_flip=TRUE) +
+  geom_histogram(data = dd, aes(x = y)) +
+    coord_flip()
+gg1C %<>% insert_yaxis_grob(., yhist, position = "right")
+ggdraw(gg1C)
 ```
 
 ## order of diagnosis for linear models etc.
@@ -198,19 +213,40 @@ rarely tested! can't detect without some kind of structure in data
 
 challenging
 
-- add smooths or group 
+- add smooths or average of grouped data
 
-```{r smooth}
+```{r binary_smooth,cache=TRUE,warning=FALSE,echo=FALSE}
 library(lme4)
 data(Contraception,package="mlmRev")
 Contraception <- Contraception %>%
     mutate(ch=factor(livch != 0, labels = c("N", "Y")))
 m3 <- glmer(use ~ age * ch + I(age^2) + urban + (1 | urban:district),
             data=Contraception, family=binomial)
-a3 <- augment(m3,data=Contraception)
+```
+
+
+```{r binary_smooth_calc,echo=FALSE}
+a3 <- augment(m3,data=Contraception,type.residuals="response")
+get_mid <- function(x) {
+    cc <- as.character(x)
+    lo <- as.numeric(gsub("[\\(\\[]([[:digit:].-]+).*","\\1",cc))
+    hi <- as.numeric(gsub(".*,([[:digit:].-]+)[])]","\\1",cc))
+    return((lo+hi)/2)
+}
+(a3
+    %>% mutate(.fit_cut=cut_number(.fitted,20))
+    %>% group_by(.fit_cut)
+    %>% summarise(.resid=mean(.resid))
+    %>% ungroup
+    %>% mutate(.fitted=get_mid(.fit_cut))
+) -> a3_sum
+```
+
+```{r binary_smooth_plot}
 ggplot(a3,
        aes(.fitted,.resid))+
-    geom_smooth(method="gam",method.args=list(family=binomial))
+    geom_point()+ geom_smooth()+
+    geom_point(data=a3_sum,colour="blue")
 ```
 
 ## coverage
