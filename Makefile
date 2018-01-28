@@ -41,6 +41,9 @@ pages/%.final.pdf: lectures/%.final.pdf
 pages/%.handouts.pdf: lectures/%.handouts.pdf
 	$(copy)
 
+lectures/%.handouts.pdf lectures/%.final.pdf:
+	cd lectures && $(MAKE) $(notdir $@)
+
 pages/%.html: lectures/%.rmd
 	cd lectures && $(MAKE) $*.html
 	cp lectures/$*.html $@
