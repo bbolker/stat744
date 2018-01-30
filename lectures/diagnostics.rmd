@@ -235,7 +235,9 @@ rarely tested! can't detect without some kind of structure in data
 - residuals for count data only $\approx$ Normal for large counts
 - add smooths or average of grouped data
 
-```{r binary_smooth,cache=TRUE,warning=FALSE,echo=FALSE,message=FALSE}
+Fit:
+
+```{r binary_smooth,cache=TRUE,warning=FALSE,echo=TRUE,message=FALSE}
 library(lme4)
 data(Contraception,package="mlmRev")
 Contraception <- Contraception %>%
@@ -244,8 +246,18 @@ m3 <- glmer(use ~ age * ch + I(age^2) + urban + (1 | urban:district),
             data=Contraception, family=binomial)
 ```
 
-```{r binary_smooth_calc,echo=FALSE}
+## plot
+
+```{r binary_smooth_plot1,message=FALSE}
 a3 <- augment(m3,data=Contraception,type.residuals="response")
+gg_bin1 <- (ggplot(a3,aes(.fitted,.resid))+
+            geom_point()+ geom_smooth())
+print(gg_bin1)
+```
+
+## grouping
+
+```{r get_mid}
 get_mid <- function(x) {
     cc <- as.character(x)
     lo <- as.numeric(gsub("[\\(\\[]([[:digit:].-]+).*","\\1",cc))
@@ -261,10 +273,59 @@ get_mid <- function(x) {
 ) -> a3_sum
 ```
 
+## plot with grouping
 ```{r binary_smooth_plot,message=FALSE}
-ggplot(a3,aes(.fitted,.resid))+
-  geom_point()+ geom_smooth()+geom_point(data=a3_sum,colour="blue")
+gg_bin1+geom_point(data=a3_sum,colour="blue")
 ```
+
+## keep trying ...
+
+```{r}
+ggplot(a3,aes(age,.resid,colour=urban))+
+    geom_point()+
+    geom_smooth(method="loess")+
+    facet_wrap(~livch)
+```
+
+- loess too bumpy?
+
+##
+
+```{r}
+ggplot(a3,aes(age,.resid,colour=urban))+
+    geom_point()+
+    geom_smooth(method="loess",
+                method.args=list(family="symmetric"),span=1)+
+    facet_wrap(~livch)
+```
+
+##
+
+- try `method="gam"` ?
+
+```{r}
+ggplot(a3,aes(age,.resid,colour=urban))+
+    geom_point()+
+    geom_smooth(method="gam",formula =y ~ s(x, k=25)) +
+    facet_wrap(~livch)
+```
+
+
+## 
+
+- note: `qq.gam()` [@augustin_quantile_2012]
+- improved QQ for GLMs (only for fits via `mgcv::gam()` ?)
+- binary data still problematic: from `?qq.gam`,
+
+> Note that plots for raw residuals from fits to binary data contain
+> almost no useful information about model fit. Whether the residual
+> is negative or positive is decided by whether the response is zero
+> or one. The magnitude of the residual, given its sign, is
+> determined entirely by the fitted values. In consequence only the
+> most gross violations of the model are detectable from QQ-plots of
+> residuals for binary data. To really check distributional
+> assumptions from residuals for binary data you have to be able to
+> group the data somehow.  Binomial models other than binary are ok.
 
 ## coverage
 
