@@ -278,6 +278,15 @@ get_mid <- function(x) {
 gg_bin1+geom_point(data=a3_sum,colour="blue")
 ```
 
+##
+
+```{r}
+ggplot(a3,aes(.fitted,.resid,colour=livch,shape=urban,linetype=urban))+
+            geom_point()+ geom_smooth(se=FALSE)+
+    scale_colour_brewer(palette="Dark2")
+```
+
+
 ## keep trying ...
 
 ```{r}
