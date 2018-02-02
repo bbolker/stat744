@@ -10,7 +10,7 @@ week,start date,topic,reading/viewing,notes
 ?,?,perspective plotting,`rgl`; `plotly`; `lattice`; `scatterplot3d`; @cleveland_graphical_1987
 ?,?,high-dimensional data,`ggobi` (articles on GGobi by Cook et al.)
 ?,?,spatial data and mapping,`leaflet` package; `ggmap` package; @gelman_all_1999
-?,?,color; color maps and the colorically challenged, [`colorblindr` package](https://github.com/clauswilke/colorblindr); [`cividis` package](https://github.com/marcosci/cividis); @nunez_optimizing_2017; [`dichromat` package](https://CRAN.R-project.org/package=dichromat); @meeks_color_2018
+?,?,color; color maps and the colorically challenged, [`colorblindr` package](https://github.com/clauswilke/colorblindr); [`cividis` package](https://github.com/marcosci/cividis); @nunez_optimizing_2017; [`dichromat` package](https://CRAN.R-project.org/package=dichromat); @meeks_color_2018; [colorgorical](http://vrl.cs.brown.edu/color)
 ?,?,aggregation and smoothing for graphical display, Cleveland? more on splines/loess/kernel densities/etc.
 ?,?,alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...)
 
