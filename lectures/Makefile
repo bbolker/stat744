@@ -128,6 +128,7 @@ Sources += bike_weather.csv
 bike_plots.Rout: bikes.Rout bike_plots.R
 
 ## Smoking data from http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+## fev is in L/s, apparently
 git_cache/fev.csv: 
 	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
 
@@ -156,6 +157,8 @@ Sources += infer.txt
 infer.draft.pdf: infer.txt
 infer.final.pdf: infer.txt
 infer.handouts.pdf: infer.txt
+
+smoke_inference.Rout: smoke.Rout smoke_inference.R
 
 ######################################################################
 
