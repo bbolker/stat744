@@ -9,10 +9,11 @@ make.log
 admin/hw.html
 admin/outline.html
 admin/sched.html
-lectures/principles_1.html
 lectures/ggplot_ex.html
-lectures/diagnostics.html
+lectures/infer_bmb.html
 lectures/intro.html
+lectures/principles_1.html
+lectures/diagnostics.html
 up.time
 commit.time
 commit.default

@@ -24,12 +24,6 @@ rmd += $(wildcard */*.rmd)
 Sources += $(rmd)
 Ignore += $(rmd:rmd=html)
 
-%.pdf: %.rmd
-	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
-
-%.html: %.rmd
-	echo "library(rmarkdown); render(\"$*.rmd\")" | R --slave
-
 %.html: admin/%.html
 	$(copy)
 
@@ -54,5 +48,7 @@ pages/%.html: admin/%.rmd
 
 ######################################################################
 
+Sources += rmd.mk
+-include rmd.mk
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
