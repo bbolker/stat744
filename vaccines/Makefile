@@ -37,6 +37,9 @@ Sources += $(wildcard *.R)
 read.Rout: slow/data.csv read.R
 plot.Rout: read.Rout plot.R
 
+# Try to figure out what HW kids are doing
+play.Rout: read.Rout play.R
+
 ######################################################################
 
 -include $(ms)/cache.mk

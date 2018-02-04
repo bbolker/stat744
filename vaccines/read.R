@@ -1,7 +1,13 @@
 library(dplyr)
 library(readr)
 
-dat <- read_csv(input_files[[1]])
+dat <- (read_csv(input_files[[1]])
+	%>% mutate(cases = ifelse(cases>0, cases, NA))
+)
 
-# rdsave(dat)
+vacc <- (dat
+	%>% filter (vaccine != "FALSE")
+)
+
+# rdsave(dat, vacc)
 
