@@ -12,13 +12,31 @@ Principles
 
 		Use graphs to illustrate comparisons
 
-		Be careful about _units_ 
+		Be careful about \emph{units}
 
 	Distinguish between (scientific) variables and (statistical) parameters
 
 	Keep P values in their place
 
 	What to do about raw data?
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-2.pdf
 
 ----------------------------------------------------------------------
 

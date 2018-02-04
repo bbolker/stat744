@@ -160,6 +160,8 @@ infer.handouts.pdf: infer.txt
 
 smoke_inference.Rout: smoke.Rout smoke_inference.R
 
+uni.Rout: smoke.Rout uni.R
+
 ######################################################################
 
 Sources += copy.tex

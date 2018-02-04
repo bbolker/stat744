@@ -13,7 +13,7 @@ print(afp <- af + geom_count(alpha=point_alpha) + scale_size_area())
 
 print(aflp <- afp + geom_smooth(method=loess))
 
-print(afls <- aflp + aes(color=smoke))
+print(afls <- aflp + aes(color=smoking))
 print(afls + facet_wrap(~sex) + theme(legend.position="none"))
 
 ## Is there a way to do this? Does it mess up the loess?
@@ -27,7 +27,7 @@ library(MASS)
 afr <- af + geom_smooth(method=rlm, formula=y~ns(x,3))
 print(afrp <- afr + geom_count(alpha=point_alpha) + scale_size_area())
 
-afrs <- afrp + aes(color=smoke)
+afrs <- afrp + aes(color=smoking)
 
 ## Replot so we can put side-by-side
 print(afls + theme(legend.position="none") + ggtitle("loess"))

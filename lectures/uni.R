@@ -1,3 +1,5 @@
+library(ggplot2)
+theme_set(theme_bw(base_size=18))
 
 uni <- lm(fev ~ height, data=smoke)
 pointPred <- as_data_frame(predict(uni, interval="confidence"))

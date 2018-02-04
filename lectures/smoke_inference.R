@@ -2,7 +2,6 @@
 library(coefplot2)
 library(dplyr)
 
-smoke <- smoke %>% rename(smoking=smoke)
 summary(smoke)
 full <- lm(fev ~ age + height + sex + smoking, data=smoke)
 
