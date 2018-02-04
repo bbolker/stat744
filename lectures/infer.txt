@@ -52,5 +52,36 @@ FIG smoke_inference.Rout-2.pdf
 
 ----------------------------------------------------------------------
 
-	
+Comparing effects on different response variables
 
+	Put response variables on same scale:
+
+		Standardize
+
+		Logs
+
+		Proportions
+
+----------------------------------------------------------------------
+
+Shape of response
+
+FIG uni.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Standard prediction plot
+
+FIG fake_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Marginal prediction plot
+
+FIG fake_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Marginal prediction plot
+
+FIG fake_plots.Rout-1.pdf
