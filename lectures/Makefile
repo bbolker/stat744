@@ -152,7 +152,10 @@ iris.Rout: iris.R
 
 ## And again
 
+Sources += infer.txt
 infer.draft.pdf: infer.txt
+infer.final.pdf: infer.txt
+infer.handouts.pdf: infer.txt
 
 ######################################################################
 

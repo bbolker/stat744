@@ -1,0 +1,24 @@
+Graphics for inference
+
+	What is my model telling me?
+
+	How can I tell other people?
+
+----------------------------------------------------------------------
+
+Principles
+
+	Graphs tell stories better than tables do
+
+		Use graphs to illustrate comparisons
+
+		Be careful about _units_ 
+
+	Distinguish between (scientific) variables and (statistical) parameters
+
+	Keep P values in their place
+
+	What to do about raw data?
+
+----------------------------------------------------------------------
+
