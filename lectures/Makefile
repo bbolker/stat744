@@ -154,7 +154,7 @@ iris.Rout: iris.R
 ## Bolker inference
 
 rmds = $(wildcard *.rmd)
-Ignore += $(rmds:%.rmd=%.html)
+Ignore += $(rmds:%.rmd=%.html) $(rmds:%.rmd=%_cache) $(rmds:%.rmd=%_files)
 infer_bmb.html: infer_bmb.rmd
 
 ## JD inference
