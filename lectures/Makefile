@@ -168,6 +168,10 @@ smoke_inference.Rout: smoke.Rout smoke_inference.R
 
 uni.Rout: smoke.Rout uni.R
 
+fake.Rout: fake.R
+
+fake_plots.Rout: fake.Rout fake_plots.R
+
 ######################################################################
 
 Sources += copy.tex

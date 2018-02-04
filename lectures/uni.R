@@ -1,11 +1,12 @@
 library(ggplot2)
 theme_set(theme_bw(base_size=18))
+library(dplyr)
 
-uni <- lm(fev ~ height, data=smoke)
+uni <- lm(fev ~ age, data=smoke)
 pointPred <- as_data_frame(predict(uni, interval="confidence"))
 termPred <- predict(uni, interval="confidence", type="terms")
 
-base <- ggplot(smoke, aes(height, fev))
+base <- ggplot(smoke, aes(age, fev))
 
 print(scatter <- base + geom_point(alpha=0.1))
 
