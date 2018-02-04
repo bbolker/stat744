@@ -1,11 +1,19 @@
-## par(ps=20)
-library(coefplot2)
+library(broom)
+library(dotwhisker)
+
+library(ggplot2)
+theme_set(theme_bw(base_size=18))
+
 library(dplyr)
 
 summary(smoke)
 full <- lm(fev ~ age + height + sex + smoking, data=smoke)
 
-coefplot2(full)
+print(
+	dwplot(full)
+	+ geom_vline(xintercept=0,lty=2)
+	+ ggtitle("Regression coefficients")
+)
 
 stdsmoke <- (smoke
 	%>% transmute(fev = fev/sd(fev)
@@ -18,11 +26,19 @@ stdsmoke <- (smoke
 	)
 )
 
-print(stdsmoke)
-
 std <- lm(smoke$fev ~ age + height + sex + smoking, data=stdsmoke)
-coefplot2(std, main="Standardized effect on fev (L/s)")
+
+print(
+	dwplot(std)
+	+ geom_vline(xintercept=0,lty=2)
+	+ ggtitle("Standardized effect on fev (L/s)")
+)
 
 partial <- lm(fev ~ age + height + sex + smoking, data=stdsmoke)
-coefplot2(partial, main="Partial correlations with fev")
+
+print(
+	dwplot(partial)
+	+ geom_vline(xintercept=0,lty=2)
+	+ ggtitle("Partial correlations with fev")
+)
 

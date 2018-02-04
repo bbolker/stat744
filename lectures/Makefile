@@ -151,7 +151,11 @@ iris.Rout: iris.R
 
 ######################################################################
 
-## And again
+## Bolker inference
+
+infer_bmb.html: infer_bmb.rmd
+
+## JD inference
 
 Sources += infer.txt
 infer.draft.pdf: infer.txt
@@ -173,6 +177,7 @@ Ignore += local.txt.format
 
 ######################################################################
 
+include ../rmd.mk
 -include $(ms)/visual.mk
 -include $(ms)/git.mk
 
