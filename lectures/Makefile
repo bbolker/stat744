@@ -1,4 +1,6 @@
 
+## Visual course Lectures directory (repo subdirectory)
+
 ######################################################################
 
 ## Hooks
@@ -103,6 +105,8 @@ Sources += circulation.csv
 circulation.Rout: circulation.csv circulation.R
 
 
+######################################################################
+
 ## Still not ahead, so I am going to do the same thing again
 
 Sources += explore.txt
@@ -143,6 +147,12 @@ sunspots.Rout: sunspots.R
 
 ## irises (multivariate, ggpairs?)
 iris.Rout: iris.R
+
+######################################################################
+
+## And again
+
+infer.draft.pdf: infer.txt
 
 ######################################################################
 
