@@ -18,7 +18,8 @@ Principles
 
 	Keep P values in their place
 
-	What to do about raw data?
+	Show data if it doesn't interfere
+
 
 ----------------------------------------------------------------------
 
@@ -49,6 +50,18 @@ FIG smoke_inference.Rout-1.pdf
 ----------------------------------------------------------------------
 
 FIG smoke_inference.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+BC
+
+CFIG smoke_inference.Rout-1.pdf
+
+NC
+
+	Would P values add anything here?
+
+EC
 
 ----------------------------------------------------------------------
 
@@ -123,4 +136,37 @@ No standard approach
 
 ----------------------------------------------------------------------
 
+FIG webpix/condom_predict.jpg
+
+----------------------------------------------------------------------
+
 P values
+
+	We use variable-level P values as a standard for whether the \emph{overall}
+	pattern associated with a given variable is significant
+	
+		This is not super-easy to interpret
+
+		But it is also not super-easy to think of a better alternative
+
+----------------------------------------------------------------------
+
+Interactions
+
+FIG webpix/condom_interact.jpg
+
+----------------------------------------------------------------------
+
+Scales and transformations
+
+	Your model will often involve an original scale (where the data are
+	collected) and a link scale (where the linear predictor lives)
+
+	Which scale should you use for:
+
+		Calculations?
+
+		Displaying numbers to users?
+
+		Graphing?
+
