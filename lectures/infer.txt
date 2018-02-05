@@ -82,6 +82,45 @@ FIG fake_plots.Rout-2.pdf
 
 ----------------------------------------------------------------------
 
-Marginal prediction plot
+Combined
 
-FIG fake_plots.Rout-1.pdf
+FIG fake_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Variables vs.~parameters
+
+	A coefficient plot is most useful when each \emph{variable} corresponds to a
+	single statistical \emph{parameter}
+
+		Binary predictor
+
+		Linear predictor
+
+	More detailed shape information should be preferred when there is more than
+	one parameter for a single logical variable
+
+		More than two categories
+
+		Splines and polynomials
+
+----------------------------------------------------------------------
+
+No standard approach
+
+	There are many different ways to try to capture marginal effects of a single
+	variable
+
+		Particularly if it's associated with more than one parameter
+
+	JD likes to calculate from the model ``center''
+
+		This is the average value from each predictor column of the model matrix
+
+		Relatively stable
+
+		A bit divorced from physical reality
+
+----------------------------------------------------------------------
+
+P values

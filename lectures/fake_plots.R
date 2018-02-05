@@ -26,4 +26,10 @@ print(tp <- scatter
 	+ geom_line(aes(y=termPred$upr+mean(y)), lty=2)
 )
 
+print(pp
+	+ geom_line(aes(y=termPred$fit+mean(y)))
+	+ geom_line(aes(y=termPred$lwr+mean(y)), lty=2)
+	+ geom_line(aes(y=termPred$upr+mean(y)), lty=2)
+)
+
 print(termPred)
