@@ -1,0 +1,222 @@
+---
+title: "xxx"
+---
+
+From Gavin Simpson's [gist](https://gist.github.com/gavinsimpson/bf11b821be44fc24e30ff8546ad8ca9d);
+analyzing full transect data of J.A. Shultz et al (2016) PeerJ 4:e1980; DOI 10.7717/peerj.1980, [here](https://doi.org/10.7717/peerj.1980)
+
+
+```{r}
+library('readr')
+library('dplyr')
+library('tidyr')
+## fitting stuff
+library('lme4')
+library('glmmTMB')
+library('broom.mixed') 
+## graphics stuff
+library('ggplot2')
+theme_set(theme_bw()) ## ggplot2 theme
+library("ggstance")
+```
+
+Read in the data
+```{r}
+transects <- read_csv("transectcounts.csv")
+(transects
+        ## convert to long form
+    %>% gather(species, count, -c(ssws,site,transect))
+        ## convert to factors
+    %>% mutate(ssws = factor(ssws, levels = c('before', 'after')),
+               site = factor(site),
+               transect = factor(transect))
+) -> lt
+nice_labels <- function(x) {
+    ## https://stackoverflow.com/questions/15776732/how-to-convert-a-vector-of-strings-to-title-case
+    re_from <- "\\b([[:lower:]])([[:lower:]]+)"
+    x1 <- gsub(re_from, "\\U\\1\\L\\2", x, perl=TRUE)
+    x2 <- gsub("\\."," ",x1)
+    return(x2)
+}
+## desired species, in preferred order
+spp_subset <- c("sunflower.star","green.urchin")
+## subset down to the two species of interest, nicer/human-readable names
+spp <- filter(lt, species %in% spp_subset) %>%
+    mutate(species = factor(species,
+                            levels = spp_subset,
+                            labels = nice_labels(spp_subset)))
+```
+
+## explore
+
+```{r dotplot}
+gg1 <- ggplot(spp,aes(ssws,count))+
+    geom_dotplot(binaxis="y",stackdir="center",dotsize=0.5,alpha=0.5)+
+    facet_wrap(~species,scale="free",nrow=2)+
+    stat_summary(fun.data=mean_cl_boot,colour="red",alpha=0.8)
+```
+
+```{r}
+gg1 + scale_y_continuous(trans="log1p")+
+```
+
+```{r}
+gg1 + scale_y_continuous(trans="sqrt")
+```
+
+But we need to account for transects. Each species/transect/ssws combination is measured once before and once after ...
+
+```{r}
+spp_tally <- spp %>% 
+    spread(ssws,count) %>%
+    group_by(species,before,after) %>%
+    tally() %>%
+    ungroup() %>%
+    mutate(group=1:length(before)) %>%
+    gather(ssws,count,-c(species,n,group)) %>%
+    mutate(ssws=factor(ssws,levels=c("before","after")))
+ggplot(spp_tally,aes(ssws,count))+
+    geom_line(aes(size=n,group=group),alpha=0.1)+
+    facet_wrap(~species,scale="free")+
+    scale_y_continuous(trans="log1p")
+```
+
+This gets the pairwise relationship, but not the grouping of
+transects within sites.
+
+(As far as modeling goes, should be able to do a permutation test
+(randomly swap before/after)? Do we need to account for grouping within
+sites when computing summary statistics ... ?
+
+## Model fitting - sunflower
+
+```{r fit,cache=TRUE}
+m.sun <- glmer(count ~ ssws + (ssws | site / transect),
+               data = spp, family = poisson,
+               subset = species == 'Sunflower Star')
+m0.sun <- update(m.sun, . ~ . - ssws)
+m.urchin <- update(m.sun, subset = species == 'Green Urchin')
+m0.urchin <- update(m.urchin, . ~ . - ssws)
+```
+
+```{r tmp}
+m.sun.pois <- glmmTMB(count ~ ssws + (ssws | site / transect),
+               data = subset(spp, species == 'Sunflower Star'),
+               family = poisson)
+m.sun.pois.noobs <- update(m.sun.pois,
+                           count ~ ssws + (1 | site / transect))
+m.sun.nb <- update(m.sun.pois,
+                   count ~ ssws + (1 | site / transect),
+                   family = nbinom2)
+
+m.sun.nb.ssws <- update(m.sun.nb,
+                   count ~ ssws + (ssws | site) + (1 | site:transect))
+
+
+m.sun.nb1 <- update(m.sun.nb, family = nbinom1)
+m.sun.list <- lme4:::namedList(m.sun.pois,m.sun.nb,m.sun.nb1,
+                               m.sun.nb.ssws,
+                               m.sun.pois.noobs)
+bbmle::AICtab(m.sun.list)
+```
+
+**Conclusions:** to my surprise, the Poisson (including an obs
+
+Check zero-inflation:
+```{r}
+dat.sun <- subset(spp, species == 'Sunflower Star')
+svals <- simulate(m.sun.pois,1000)
+sumfun <- function(x) sum(x==0)
+zdist <- apply(svals,2,sumfun)
+plot(table(zdist))
+zobs <- sumfun(dat.sun$count)
+mean(zdist>zobs)
+```
+
+```{r}
+fitted <- predict(m.sun,re.form=~1|site/transect,type="response")
+resids <- (dat.sun$count-fitted)/sqrt(fitted)
+plot(fitted,resids)
+plot(fitted,dat.sun$count)
+abline(a=0,b=1)
+which(fitted<2 & dat.sun$count>10) ## obs 146
+```
+
+```{r diagnostics}
+sum(residuals(m.sun,type="pearson")^2)/df.residual(m.sun)  ## underdispersed (?)
+deviance(m.sun)/df.residual(m.sun)  ## similar result
+
+library(broom.mixed)
+aa <- augment(m.sun)
+ggplot(aa,aes(.fitted,.resid))+geom_point() + geom_smooth()
+ggplot(aa,aes(.fitted,sqrt(abs(.resid)),colour=site))+
+          geom_point() + geom_smooth(aes(group=1))
+## what's up with this? *seriously* heteroscedastic ...
+
+spp_tmp <- (spp
+    %>% filter(species=="Sunflower Star")
+    %>% select(-species)
+)
+
+site_diff <- spp_tmp %>% spread(ssws,count) %>%
+    group_by(site,transect) %>% summarise(diff=mean(before-after)) %>%
+    arrange(diff)
+
+spp_tmp <- spp_tmp %>%
+    mutate(transect=factor(transect,levels=site_diff$transect))
+
+ggplot(spp_tmp,aes(count,transect,colour=site,shape=ssws))+geom_point()
+
+lattice::dotplot(ranef(m.sun,condVar=TRUE))$transect
+```
+
+Let's assume these are good models -
+  should really do a lot of diagnostics...
+```
+
+## Extract data from the model for plotting
+
+```{r}
+ilink <- family(m.sun)$linkinv
+effs.s <- tibble(species = 'Sunflower Star', ssws = c('before', 'after'), fitted = fixef(m.sun),
+                 se = diag(vcov(m.sun)))
+effs.g <- tibble(species = 'Green Urchin', ssws = c('before', 'after'), fitted = fixef(m.gur),
+                 se = diag(vcov(m.gur)))
+
+effs <- bind_rows(effs.s, effs.g)
+effs <- mutate(effs, est = ilink(fitted), upper = ilink(fitted + (2*se)),
+               lower = ilink(fitted - (2*se)),
+               species = factor(species, levels = c('Sunflower Star','Green Urchin')),
+               ssws = factor(ssws, levels = c('before', 'after')))
+
+## base plot
+base.plt <- ggplot() +
+    facet_wrap(~ species, scales = 'free_y') +
+    labs(x = 'Sea star mortality event')
+
+## plot of effects
+eff.plt <- base.plt +
+    geom_pointrange(aes(y = est, x = ssws, ymax = upper, ymin = lower), data = effs) +
+    labs(y = 'Expected count')
+eff.plt
+
+ggsave('model-effects.png', eff.plt, width = 7, height = 3.5)
+
+## plot of effects on data
+data.plt <- base.plt +
+    geom_point(aes(y = count, x = ssws), data = spp, alpha = 0.2,
+               position = position_jitter(width = 0.2)) +
+    geom_pointrange(aes(y = est, x = ssws, ymax = upper, ymin = lower, colour = ssws),
+                    data = effs) +
+    theme(legend.position = 'none') +
+    labs(y = 'Number of individuals')
+data.plt
+
+ggsave('data-plus-effects-original-scale.png', data.plt, width = 7, height = 3.5)
+
+## Data on sqrt scale
+data.plt + scale_y_sqrt(minor_breaks = NULL) +
+    expand_limits(y = 0)
+
+ggsave('data-plus-effects-sqrt-scale.png', width = 7, height = 3.5)
+```
