@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2018-02-08" />
+<meta name="date" content="2018-02-09" />
 
 <title>homework</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">homework</h1>
-<h4 class="date"><em>08 February 2018</em></h4>
+<h4 class="date"><em>09 February 2018</em></h4>
 
 </div>
 
@@ -193,8 +193,12 @@ $(document).ready(function () {
 <div id="hw-4" class="section level2">
 <h2>HW 4</h2>
 <ul>
-<li>Find a table (preferably a complicated one) and turn it into a graph. One option would be Table 3.3 of <span class="citation">McCallum et al. (2017)</span>; you can find most of (an earlier version of) the data for this graph <a href="https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv">here</a>.</li>
+<li>Find a table (preferably a complicated one) and turn it into a graph. One option would be Table 3 of <span class="citation">McCallum et al. (2017)</span>; you can find most of (an earlier version of) the data for this graph <a href="https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv">here</a> and a table that gives the correspondences between drug abbreviations and full names as well as drug categories <a href="https://github.com/bbolker/stat744/blob/master/data/drugnames.csv">here</a>.</li>
 </ul>
+<p>If you have read in the data as <code>dd</code> and the abbreviation table as <code>dn</code>, code like this will convert the data to long form and add the abbrevations …</p>
+<pre class="r"><code>library(tidyverse)
+gather(dd,species,conc,-(MetCode:Site))  %&gt;%
+    full_join(dn,by=c(species=&quot;abbr&quot;))</code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>references</h2>
