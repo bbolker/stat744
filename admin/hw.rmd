@@ -54,3 +54,21 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 ## HW 3
 
 * The second half of the course will be primarily about student presentations. Read the suggested topics on [the schedule page](./sched.html), _think about topics you might want to add_, and send us both an email (no need to push to the repository this time), listing two or three topics you would be willing to work on with a partner, and say a little bit about what aspects you feel you might want to address (or you can say more than a little if you like, particularly if you are suggesting a new topic). Questions about new or existing topics are welcome by email, or if there is time in class.
+
+## HW 4
+
+* Find a table (preferably a complicated one) and turn it into one, two or three graphs. Explain what features of the data you are trying to draw attention to, and what story you think your figures tell (or fail to tell).
+
+* Submit your homework as either an R Markdown file (`hw4.rmd`) or a text file (`hw4.txt`) and an R file (`hw4.R`). These should be in your main repo directory. You should put PDF files in a directory called `HW4`.
+
+* A possible table to use would be Table 3 of @mccallum_situ_2017, or a [simpler, earlier version of the same table](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv) (you should look at the paper for reference if you use this one). For your convenience, we have also posted a data file that gives the correspondences between drug abbreviations and full names as well as drug categories  [here](https://github.com/bbolker/stat744/blob/master/data/drugnames.csv).
+
+If you have read in the data file above as `dd` and the abbreviation table as `dn`, code like this will convert the data to long form and add the abbrevations ...
+
+```{r eval=FALSE}
+library(tidyverse)
+gather(dd,species,conc,-(MetCode:Site))  %>%
+    full_join(dn,by=c(species="abbr"))
+```
+
+## references
