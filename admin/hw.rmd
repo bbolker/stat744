@@ -57,6 +57,14 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 
 ## HW 4
 
-* Find a table (preferably a complicated one) and turn it into a graph. One option would be Table 3.3 of @mccallum_situ_2017; you can find most of (an earlier version of) the data for this graph [here](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv).
+* Find a table (preferably a complicated one) and turn it into a graph. One option would be Table 3 of @mccallum_situ_2017; you can find most of (an earlier version of) the data for this graph [here](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv) and a table that gives the correspondences between drug abbreviations and full names as well as drug categories  [here](https://github.com/bbolker/stat744/blob/master/data/drugnames.csv).
+
+If you have read in the data as `dd` and the abbreviation table as `dn`, code like this will convert the data to long form and add the abbrevations ...
+
+```{r eval=FALSE}
+library(tidyverse)
+gather(dd,species,conc,-(MetCode:Site))  %>%
+    full_join(dn,by=c(species="abbr"))
+```
 
 ## references

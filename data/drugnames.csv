@@ -1,0 +1,27 @@
+﻿abbr,drugname,drugcat
+CFN,Caffeine,food
+SUC,Sucralose,food
+TMP,Trimethoprim,antibiotic
+SMZ,Sulfamethoxazole,antibiotic
+CBZ,Carbamazepine,anti-seizure
+ACM,Acetaminophen,analgesic
+IBP,Ibuprofen,anti-inflammatory
+GEM,Gemfibrozil,lipid regulator
+NPX,Naproxen,anti-inflammatory
+TCS,Triclosan,antibacterial
+E1,Estrone (E1),hormone
+E2,Estradiol (E2),hormone
+ADS,Androstenedione,hormone
+TST,Testosterone,hormone
+VLF,Venlafaxine,antidepressant
+o.dm.VLF,O-dm-venlafaxine,metabolite
+n.dm.VLF,N-dm-venlafaxine,metabolite
+SRT,Sertraline,antidepressant
+dm.SRT,dm-sertraline,metabolite
+CIT,Citalopram,antidepressant
+FLX,Fluoxetine,antidepressant
+ATN,Atenolol,beta-blocker
+MTP,Metoprolol,beta-blocker
+PPN,Propanolol,beta-blocker
+
+
