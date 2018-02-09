@@ -54,3 +54,9 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 ## HW 3
 
 * The second half of the course will be primarily about student presentations. Read the suggested topics on [the schedule page](./sched.html), _think about topics you might want to add_, and send us both an email (no need to push to the repository this time), listing two or three topics you would be willing to work on with a partner, and say a little bit about what aspects you feel you might want to address (or you can say more than a little if you like, particularly if you are suggesting a new topic). Questions about new or existing topics are welcome by email, or if there is time in class.
+
+## HW 4
+
+* Find a table (preferably a complicated one) and turn it into a graph. One option would be Table 3.3 of @mccallum_situ_2017; you can find most of (an earlier version of) the data for this graph [here](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv).
+
+## references
