@@ -104,7 +104,6 @@ temppix.Rout: temps.Rout temppix.R
 Sources += circulation.csv
 circulation.Rout: circulation.csv circulation.R
 
-
 ######################################################################
 
 ## Still not ahead, so I am going to do the same thing again
@@ -171,6 +170,12 @@ uni.Rout: smoke.Rout uni.R
 fake.Rout: fake.R
 
 fake_plots.Rout: fake.Rout fake_plots.R
+
+######################################################################
+
+## Dushoff choices
+
+choices.pdf: choices.txt
 
 ######################################################################
 
