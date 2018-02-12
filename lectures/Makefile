@@ -175,6 +175,7 @@ fake_plots.Rout: fake.Rout fake_plots.R
 
 ## Dushoff choices
 
+Sources += choices.txt
 choices.pdf: choices.txt
 
 ######################################################################
