@@ -9,6 +9,7 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
+theme_set(theme_bw(base_size=20))
 library(directlabels)
 
 ## get data
@@ -43,7 +44,6 @@ gg1 <- (ggplot(dd,aes(x=Year,y=Value/1000,
 )
 
 direct.label(gg1
-             + theme_classic()  ## change background
              + expand_limits(x=2010), ## extra space on right side
              "last.bumpup"  ## specify label position
 )
