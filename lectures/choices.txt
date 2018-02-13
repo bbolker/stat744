@@ -21,11 +21,34 @@ Choices
 
 ----------------------------------------------------------------------
 
-Example
+Banana example
 
 FIG bananas.Rout.pdf
 
 ----------------------------------------------------------------------
+
+DEFHEAD \emph{Types} of choices
+
+	Choices based on
+	
+		Data types 
+
+		Questions
+
+		Hypotheses
+
+		Conclusions
+
+
+----------------------------------------------------------------------
+
+Climate example
+
+FIG bananas.Rout.pdf
+
+----------------------------------------------------------------------
+
+Anscombe example
 
 Avoiding choices
 
