@@ -9,20 +9,26 @@ Datavis, infovis, infographics
 
 ----------------------------------------------------------------------
 
-More v less info
+Choices
+
+	Aesthetics (axes, color, facets, areas)
+
+	Scales (area scaling, anchoring to zero or elsewhere)
+
+	Scale transformations (logs, logistics, what to do about limits)
+
+	Smoothing (linear, loess, spline)
 
 ----------------------------------------------------------------------
-
-One style v another style o
-
-	both?
-
-
-----------------------------------------------------------------------
-
 
 Simpson-Eastwood
 
 ----------------------------------------------------------------------
 
-Dworkin-Procrustes
+Avoiding choices
+
+----------------------------------------------------------------------
+
+Fly wing shapes
+
+\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}

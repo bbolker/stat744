@@ -5,7 +5,6 @@
 ##    text size
 ## superscripts in y-axis labels?
 
-
 ## load packages ...
 library(readr)
 library(dplyr)
@@ -13,7 +12,7 @@ library(ggplot2)
 library(directlabels)
 
 ## get data
-dd <- (read_csv("FAOSTAT_data_1-7-2018.csv")
+dd <- (read_csv(input_files[[1]])
     ## drop redundant variables
     %>% select(-c(Domain,Element,Item))
     ## modify variables
@@ -23,7 +22,6 @@ dd <- (read_csv("FAOSTAT_data_1-7-2018.csv")
        Country=reorder(Country,-Value)
     )
 )
-
 
 gg1 <- (ggplot(dd,aes(x=Year,y=Value/1000,
                colour=Country

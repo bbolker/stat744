@@ -71,7 +71,8 @@ principles_1.html: principles_1.rmd
 ## Temporarily doing this here for a lecture tomorrow
 ## 2018 Jan 14 (Sun)
 ## Does not run (data not here)
-bananas.Rout: bananas.R
+Sources += bananas.csv
+bananas.Rout: bananas.csv bananas.R
 
 ######################################################################
 
@@ -173,10 +174,15 @@ fake_plots.Rout: fake.Rout fake_plots.R
 
 ######################################################################
 
+## Bolker vis
+
+Sources += infovis.rmd
+
 ## Dushoff choices
 
 Sources += choices.txt
-choices.pdf: choices.txt
+choices.draft.pdf: choices.txt
+
 
 ######################################################################
 
