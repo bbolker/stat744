@@ -44,22 +44,59 @@ DEFHEAD \emph{Types} of choices
 
 Climate example
 
-FIG bananas.Rout.pdf
+FIG temppix.Rout-1.pdf
 
 ----------------------------------------------------------------------
 
-Anscombe example
+Climate example
 
-Avoiding choices
+FIG temppix.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Climate data
+
+\href{https://www.ngdc.noaa.gov/paleo/data.html}{Climate data from US government}
+
+----------------------------------------------------------------------
+
+FIG ansplot.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+FIG ansplot.Rout-1.pdf
 
 ----------------------------------------------------------------------
 
 Dog faces 
 
-http://circos.ca/presentations/talks/visualizing_data/img/datavisualization-09.jpg
+\href{http://circos.ca/presentations/talks/visualizing_data/img/datavisualization-09.jpg}{dog faces}
+
+----------------------------------------------------------------------
+
+Avoiding choices
 
 ----------------------------------------------------------------------
 
 Fly wing shapes
 
 \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}
+
+----------------------------------------------------------------------
+
+\href{http://www.tandfonline.com/na101/home/literatum/publisher/tandf/journals/content/ucgs20/2013/ucgs20.v022.i01/10618600.2012.761137/20160819/images/large/ucgs_a_761137_o_f0007g.jpeg}{Healthcare scatterplot}
+
+----------------------------------------------------------------------
+
+Conclusions
+
+	Give thought to your goals
+
+	Give thought to your decisions
+
+	Be conscious when you are withholding information
+
+		Be willing to use more than one picture
+
+		Use dynamic gimmicks when appropriate
+
