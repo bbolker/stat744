@@ -182,6 +182,7 @@ Sources += infovis.rmd
 
 Sources += choices.txt
 choices.draft.pdf: choices.txt
+choices.handouts.pdf: choices.txt
 
 anscombe.Rout: anscombe.R
 
