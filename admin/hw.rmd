@@ -7,7 +7,7 @@ bibliography: ../vis.bib
 
 ## general rules
 
-* homework is due Wed at noon (the week after it is assigned).
+* homework is due Mon at 5 PM (the week after it is assigned).
 * you should submit your homework by pushing it to your individual GitHub repository and sending us an e-mail telling us it's done (please put "stat744 HW 1" [for example] in the title of your e-mail)
 * **appropriate collaboration**: it's fine to discuss ideas with your colleagues and get help overcoming technical difficulties, but please write your code/prepare your assignments separately.
 * code rules:
@@ -62,6 +62,33 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 * Submit your homework as either an R Markdown file (`hw4.rmd`) or a text file (`hw4.txt`) and an R file (`hw4.R`). These should be in your main repo directory. You should put PDF files in a directory called `HW4`.
 
 * A possible table to use would be Table 3 of @mccallum_situ_2017, or a [simpler, earlier version of the same table](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv) (you should look at the paper for reference if you use this one). For your convenience, we have also posted a data file that gives the correspondences between drug abbreviations and full names as well as drug categories  [here](https://github.com/bbolker/stat744/blob/master/data/drugnames.csv).
+
+## Presentations
+
+* For your presentation week, you should plan a lecture on Monday, and an activity for Tuesday
+
+* If you have two group members, you should make a plan so that you're both involved in presenting
+
+* The first period on Tuesday should involve some amount of interaction: leaders can supervise individual work, or lead the class through a practical example. For the second period, people should be working alone, with help from the leaders and Bolker (also Dushoff, on the weeks when he's able to keep up). 
+
+* On Tuesday, leaders should outline a brief assignment that individuals can complete to practice with something that you've taught them. For this section of the course, assignments will be due the following _Monday_ afternoon. It is OK if people can complete (or mostly complete) the assignment on Tuesday, or the assignment could be a bit longer. 
+
+* Don't try to say or do too much in any of your three sections. 
+
+* Seek help from the profs and others when you feel you need to
+
+* The week before your presentation.
+	* Meet with the profs to discuss your plan
+	* Send instructions to the class about packages or software they need to install.
+		* This doesn't have to be everything you will show them, but should be everything they need for activity and assignment.
+		* Be aware that people may have different operating systems; do as much as you can to help them avoid headaches
+
+### Slides
+
+* Your slides should be posted in pdf to a github repo (either belonging to a team member, or a new one that you make and share with us)
+	* If you want to keep your slides private, you should post to a private repo.
+	* If you are willing for your slides to be public, you should avoid using copyrighted materials. In this case, we may copy your slides to the main repo for convenience.
+	* Let the profs know if you would like help making your slides in Rmarkdown
 
 <!--
 If you have read in the data file above as `dd` and the abbreviation table as `dn`, code like this will convert the data to long form and add the abbrevations ...

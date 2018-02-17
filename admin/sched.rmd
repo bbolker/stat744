@@ -13,7 +13,7 @@ bibliography: ../vis.bib
 library("knitr")
 library("pander")
 library("dplyr")
-dd <- read.csv("sched.csv",check.names=FALSE)
+dd <- read.csv("sched.csv",check.names=FALSE, comment="#")
 ## dd <- dd[,1:4]
 ## topics <- read.csv("topics.csv")
 ## dd2 <- arrange(merge(dd,topics,by.x="topic",by.y="title",all.x=TRUE),number)
