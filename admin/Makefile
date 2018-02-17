@@ -33,6 +33,7 @@ Drop = ~/Dropbox
 	Rscript -e "rmarkdown::render(\"$<\")"
 
 ## Simplified rule, not tested
+Sources += sched.csv
 sched.html: sched.csv
 
 %.pdf: %.rmd
