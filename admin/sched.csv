@@ -11,8 +11,8 @@ start date,topic,reading/viewing,notes
 12 Mar,high-dimensional data,`ggobi` (articles on GGobi by Cook et al.),Li;He
 19 Mar,spatial data and mapping,`leaflet` package; `ggmap` package; @gelman_all_1999,Bushby;Jovic
 26 Mar, alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...),Lopez;Kuzmin
-2 Apr,network/tree data,`igraph`/`ggdendro` packages etc.; @swayne_exploratory_2004, Chen
-9 Apr, maybe not
+2 Apr,network/tree data,`igraph`/`ggdendro` packages etc.; @swayne_exploratory_2004, Chen; Zhang
+9 Apr, meet if it seems like a good idea
 
 # perspective plotting,`rgl`; `plotly`; `lattice`; `scatterplot3d`; @cleveland_graphical_1987
 # color; color maps and the colorically challenged, [`colorblindr` package](https://github.com/clauswilke/colorblindr); [`cividis` package](https://github.com/marcosci/cividis); @nunez_optimizing_2017; [`dichromat` package](https://CRAN.R-project.org/package=dichromat); @meeks_color_2018; [colorgorical](http://vrl.cs.brown.edu/color)

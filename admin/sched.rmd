@@ -25,6 +25,7 @@ pander(dd)
 ## kable(dd)
 ```
 
+<!-- regular html comment
 After break, the course will be student-driven (choice of topics, presentations)
-
+--> 
 ## References

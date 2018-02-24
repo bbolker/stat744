@@ -7,15 +7,15 @@ make.log
 lectures/
 
 ## content from makestuff
-admin/outline.html
 admin/hw.html
+admin/outline.html
 admin/sched.html
 misc/schultz.html
+lectures/ggplot_ex.html
 lectures/infer_bmb.html
 lectures/principles_1.html
 lectures/infovis.html
 lectures/intro.html
-lectures/ggplot_ex.html
 lectures/diagnostics.html
 up.time
 commit.time
@@ -27,14 +27,14 @@ pages
 *.hup
 *.oldfile
 *.olddiff
-admin/outline.html
 admin/hw.html
+admin/outline.html
 admin/sched.html
 misc/schultz.html
 lectures/ggplot_ex.html
-lectures/infovis.html
 lectures/infer_bmb.html
 lectures/principles_1.html
+lectures/infovis.html
 lectures/intro.html
 lectures/diagnostics.html
 up.time
