@@ -56,37 +56,64 @@ FIG temppix.Rout-4.pdf
 
 Climate data
 
-\href{https://www.ngdc.noaa.gov/paleo/data.html}{Climate data from US government}
+	Could provide perspective with other data
+
+		A boxplot of a historical range
+
+		A comparative picture of an actively changing time
+
+	Need to be careful about comparing uncertainties from different time periods
+
+	HREF https://www.ngdc.noaa.gov/paleo/data.html Climate data from US government
+
+	HREF https://xkcd.com/1732/ A nice visualization (but very forum-specific)
 
 ----------------------------------------------------------------------
+
+PSLIDE Choosing what to show
 
 FIG ansplot.Rout-0.pdf
 
 ----------------------------------------------------------------------
 
+Choosing what to show
+
 FIG ansplot.Rout-1.pdf
 
 ----------------------------------------------------------------------
 
-Dog faces 
+Creative visual information
 
-\href{http://circos.ca/presentations/talks/visualizing_data/img/datavisualization-09.jpg}{dog faces}
+	Non-standard information can be useful
+
+		HREF http://circos.ca/presentations/talks/visualizing_data/img/datavisualization-09.jpg dog faces
+
+	But also hard to link to a bigger picture
 
 ----------------------------------------------------------------------
 
 Avoiding choices
 
+
 	Provide users with alternatives
+
+	Avoid choices by providing more information
+
+		Use more than one figure
+
+		Or dynamic features in figures
 
 ----------------------------------------------------------------------
 
 Fly wing shapes
 
-\href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/}
+HREF https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3786396/figure/F2/
 
 ----------------------------------------------------------------------
 
-\href{http://www.tandfonline.com/na101/home/literatum/publisher/tandf/journals/content/ucgs20/2013/ucgs20.v022.i01/10618600.2012.761137/20160819/images/large/ucgs_a_761137_o_f0007g.jpeg}{Healthcare scatterplot}
+Ideas?
+
+HREF http://www.tandfonline.com/na101/home/literatum/publisher/tandf/journals/content/ucgs20/2013/ucgs20.v022.i01/10618600.2012.761137/20160819/images/large/ucgs_a_761137_o_f0007g.jpeg Healthcare scatterplot
 
 ----------------------------------------------------------------------
 
@@ -100,5 +127,5 @@ Conclusions
 
 		Be willing to use more than one picture
 
-		Use dynamic gimmicks when appropriate
+		Use dynamic features to give access to detail
 

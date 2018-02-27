@@ -13,7 +13,7 @@ bibliography: ../vis.bib
 library("knitr")
 library("pander")
 library("dplyr")
-dd <- read.csv("sched.csv",check.names=FALSE)
+dd <- read.csv("sched.csv",check.names=FALSE, comment="#")
 ## dd <- dd[,1:4]
 ## topics <- read.csv("topics.csv")
 ## dd2 <- arrange(merge(dd,topics,by.x="topic",by.y="title",all.x=TRUE),number)
@@ -25,6 +25,7 @@ pander(dd)
 ## kable(dd)
 ```
 
+<!-- regular html comment
 After break, the course will be student-driven (choice of topics, presentations)
-
+--> 
 ## References
