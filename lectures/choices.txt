@@ -76,6 +76,8 @@ Dog faces
 
 Avoiding choices
 
+	Provide users with alternatives
+
 ----------------------------------------------------------------------
 
 Fly wing shapes
