@@ -94,6 +94,9 @@ Creative visual information
 
 Avoiding choices
 
+
+	Provide users with alternatives
+
 	Avoid choices by providing more information
 
 		Use more than one figure

@@ -9,6 +9,8 @@ library(dplyr)
 summary(smoke)
 full <- lm(fev ~ age + height + sex + smoking, data=smoke)
 
+print(summary(full))
+
 print(
 	dwplot(full)
 	+ geom_vline(xintercept=0,lty=2)
