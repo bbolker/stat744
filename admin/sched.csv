@@ -7,10 +7,11 @@ start date,topic,reading/viewing,notes
 12 Feb,infoviz vs data viz; ethics; expository graphics,@su_its_2008; @gelman_infovis_2013,**class moved to MDCL 1115** (12 Feb)/**TSH B126** (13 Feb)
 19 Feb,*winter break*,
 26 Feb,working week
-5 Mar,dynamic graphics, `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/); [HTML widget gallery](http://gallery.htmlwidgets.org/); [Hans Rosling's TED talks on Gapminder](https://www.gapminder.org/tag/ted);  [`ggvis`](http://ggvis.rstudio.com/), Cai;Wang
-12 Mar,high-dimensional data,`ggobi` (articles on GGobi by Cook et al.),Li;He
-19 Mar,spatial data and mapping,`leaflet` package; `ggmap` package; @gelman_all_1999,Bushby;Jovic
-26 Mar, alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...),Lopez;Kuzmin
+# 5 Mar,dynamic graphics, `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/); [HTML widget gallery](http://gallery.htmlwidgets.org/); [Hans Rosling's TED talks on Gapminder](https://www.gapminder.org/tag/ted);  [`ggvis`](http://ggvis.rstudio.com/), Cai; Wang
+5 Mar,dynamic graphics, [example data](data/stock_price.csv); [HTML widget gallery](http://gallery.htmlwidgets.org/); [Hans Rosling's TED talks on Gapminder](https://www.gapminder.org/tag/ted);  [`ggvis`](http://ggvis.rstudio.com/), Cai; Wang
+12 Mar,high-dimensional data,`ggobi` (articles on GGobi by Cook et al.),Li; He
+19 Mar,spatial data and mapping,`leaflet` package; `ggmap` package; @gelman_all_1999,Bushby; Jovic
+26 Mar, alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...),Lopez; Kuzmin
 2 Apr,network/tree data,`igraph`/`ggdendro` packages etc.; @swayne_exploratory_2004, Chen
 9 Apr, maybe not
 

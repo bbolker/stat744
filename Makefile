@@ -15,6 +15,7 @@ include sub.mk
 ## Notes
 
 Sources += admin/outline.rmd TODO.md
+Sources += admin/sched.csv
 
 ######################################################################
 
@@ -35,6 +36,8 @@ pages/%.final.pdf: lectures/%.final.pdf
 pages/%.handouts.pdf: lectures/%.handouts.pdf
 	$(copy)
 
+sched.html.pages:
+
 lectures/%.handouts.pdf lectures/%.final.pdf:
 	cd lectures && $(MAKE) $(notdir $@)
 
@@ -45,6 +48,8 @@ pages/%.html: lectures/%.rmd
 pages/%.html: admin/%.rmd
 	cd admin && $(MAKE) $*.html
 	cp admin/$*.html $@
+
+pages/sched.html: admin/sched.csv
 
 ######################################################################
 
