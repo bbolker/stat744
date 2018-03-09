@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stats 744 High-Dimensional Data Visualization</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Mu He, Ruoyuan Li" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Stats 744 High-Dimensional Data Visualization
+## Installation
+### Mu He, Ruoyuan Li
+### 2018/03/08
+
+---
+
+###Packages available for High Dimensional Data Visualization
+
+* tourr
+* RnavGraph
+* rggobi (only available in windows system)
+* Mondrian
+* qtlcharts (devtools::install_github("kbroman/qtlcharts"))
+
+There are also a few packages available, such as 
+* gWidgets
+* rpanel
+* rcharts
+* Acinonyx
+* gridSVG
+---
+###RnavGraph (Mac) 
+To install packages, when we put `install.packages('RnavGraph')` , there will be an error about `rjava`. To fix this, we have to open the command line:
+
+* `Sys.getenv("JAVA_HOME")`
+* `sudo R CMD javareconf`
+* `export JAVA_HOME=/Library/Java/JavaVirtualMachines/`
+* `cd /usr/local/lib`
+* `ln -s $JAVA_HOME/lib/server/libjvm.dylib`
+* `ls -lt | head`
+
+Then, if we run the `install.packages('RnavGraph')`, there is still an error with `graph`. Then, we will put the following the in the Rstudio:
+
+* `source("http://bioconductor.org/biocLite.R")`
+* `biocLite("graph")`
+
+Lastly, we install the package and put `library(RnavGraph)`
+If, still there is an error, we need to update X11 or XQuartz from http://xquartz.macosforge.org
+
+---
+
+###rggobi(Windows only)
+
+1. First of all, most easy way is try run this command in R studio: source(“http://www.ggobi.org/downloads/install.r”). Then install rggobi package, after that remember to library rggobi
+to check it is working or not. If not, you may need to install GTK+ and Ggobi manually, so
+keep following.
+2. Install GTK+, following this link carefully: GTK+ (https://www.gtk.org/download/macos.
+php)
+3. Install Ggobi, follow this : Ggobi (http://www.ggobi.org/downloads/)
+4. Try to library rggobi again, I think it should be working now.
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
