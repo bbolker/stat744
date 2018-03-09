@@ -21,6 +21,9 @@ Sources += $(wildcard *.html)
 Sources += $(wildcard *.handouts.pdf)
 Sources += $(wildcard *.final.pdf)
 
+Sources += $(wildcard *.R)
+Sources += $(wildcard *.Rmd)
+
 Sources += $(wildcard data/*)
 
 ######################################################################

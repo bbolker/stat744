@@ -1,0 +1,85 @@
+---
+title: "Interactive Graphics"
+author: "Angela Wang & Jing Cai"
+date: "3/1/2018"
+output:
+ slidy_presentation:
+ incremental: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(plotly)
+```
+
+# <br> Some amazing dynamic graphs...
+<br>
+<br>
+1,000 gold medals in the Summer Olympics of team USA:  
+ <https://www.washingtonpost.com/graphics/sports/olympics/the-1000-medals-of-the-united-states/>  
+Gapminder world poster:  
+ <https://www.gapminder.org/tools/#_chart-type=bubbles>  
+Visual proof of why vaccines do more good than harm:  
+ <http://www.sciencemag.org/news/2017/04/here-s-visual-proof-why-vaccines-do-more-good-harm>  
+
+# <br> Why interactive graphs?  
+<br>
+<br>
+* Allows users to search for information quickly without fully specified questions  
+* Engages the users, thus aids communication and enhances knowledge transfer  
+* "Any high-dimensional dataviz has to be summarized in some way, but interactivity allows us to get details" --- Dr. Karl Broman  
+  
+  
+  
+# <br> Different types of interactions  
+<br>
+<br>
+* Plot specific interaction  
+* Scaling: zoom in and out  
+* Identification: display a label with detailed information  
+* Brushing: highlight or hide selected variables  
+* Linking: connect elements selected in all plots  
+  
+  
+  
+# <br> Some interactive visualization packages in R
+<br>
+<br>
+
+Package     | Description
+----------- | -------------------------------------------------------------
+ggvis       | interactive plots from the maker of ggplot2  
+plotly      | convert ggplot2 figures to interactive plots easily   
+googleVis   | use Google Chart Tools from R  
+highcharter | R interface for highcharts, a javascript charting library  
+crosstalk   | extends htmlwidgets with a set of classes, functions, and conventions for implementing cross-widget interactions   
+
+# Example - dataset
+```{r}
+dat1<-(read_csv("stock_price.csv")
+       %>% select(c(Company,Date,Close,Volume)))
+head(dat1)
+```
+
+# Example - plot using ggplotly
+```{r}
+gg1<-(ggplot(dat1,aes(x=Volume,y=Close,colour=Company))+
+        geom_line()
+)
+ggp1<-ggplotly(gg1)
+ggp1
+```
+  
+  
+  
+***
+<br>
+<br>
+<br>
+<br>
+<br> 
+<br> 
+<center><h3> The greatest value of a picture is when it forces us to notice what we never expected to see.</h3><center>  
+<center><h3> ---John Tukey</h3><center>  
