@@ -36,9 +36,10 @@ There are also a few packages available, such as
 ###RnavGraph (Mac) 
 To install packages, when we put `install.packages('RnavGraph')` , there will be an error about `rjava`. To fix this, we have to open the command line:
 
-* `Sys.getenv("JAVA_HOME")`
 * `sudo R CMD javareconf`
-* `export JAVA_HOME=/Library/Java/JavaVirtualMachines/`
+* `export JAVA_HOME=` (The sudo provided Java home path)
+* which is usually `/Library/Java/JavaVirtualMachines/` 
+ `jdk1.8.0_121.jdk/Contents/Home/jre`
 * `cd /usr/local/lib`
 * `ln -s $JAVA_HOME/lib/server/libjvm.dylib`
 * `ls -lt | head`
