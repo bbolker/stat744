@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stats 744 High-Dimensional Data Visualization</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Mu He, Ruoyuan Li" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Stats 744 High-Dimensional Data Visualization
+## Theories and Demos
+### Mu He, Ruoyuan Li
+### 2018/03/13
+
+---
+
+###High Dimensional Data: Why
+“MSRI Hot topics: Mathematical and Statistical Methods for Visualization and Analysis of High Dimensional Data.”
+Berkeley, CA. December 2004.
+
+One important fact about high-dimensional sets is that they are hard to be visualized. Analysis and understanding of data sets in dimensions 1, 2 and 3 is greatly simplified by visualization. It permits us to quickly identify qualitative aspects of the data, from which one can then frequently go further and obtain more precise quantitative information.
+
+This quick identification of qualitative aspects is typically unavailable in higher dimensions, and an important priority is to obtain methods to carry out such qualitative analysis, to act as substitutes for or complements to direct intuitive analysis. 
+
+---
+###High Dimensional Data: How
+
+Several directions presented in the conference:
+* Topological methods, as exemplified by the work of H. Edelsbrunner and Carlsson-de Silva.
+
+* Statistical methods: traditional clustering, multidimensional scaling and extensions, including the ISOMAP and LLE algorithms of J.Tenenbaum and S. Roweis, respectively. 
+
+* Differential geometric methods: variational approaches to segmentation of images, and R.Coifmans' work on diffusion geometries and harmonic analysis. 
+
+* Projection pursuit methods: including the applications of XGOBI, GGOBI, CaTourr and other software. (Visualization)
+
+---
+###Topological methods
+&lt;iframe src="http://www.youtube.com/embed/XfWibrh6stw" width="100%" height="400px"&gt;&lt;/iframe&gt;
+
+Some useful links about Topological Data Analysis and Visualization.:
+
+* https://web.stanford.edu/group/mmds/slides2008/carlsson.pdf
+---
+###Projection pursuit methods
+Useful talks:
+
+* http://www.dicook.org/talk/imshighd/
+
+Useful packages:
+
+* tourr and tourrGui (https://www.jstatsoft.org/article/view/v049i06)
+* RnavGraph
+* rggobi (only available in windows system)
+* Mondrian
+
+Some other related packages: 
+* qtlcharts (devtools::install_github("kbroman/qtlcharts"))
+* rcharts (devtools::install_github("ramnathv/rCharts"))
+* Acinonyx (install.packages("Acinonyx",,"http://rforge.net"))
+qtlcharts (devtools::install_github("kbroman/qtlcharts"))
+* gWidgets
+* rpanel
+* gridSVG
+---
+### What is a Tour
+
+We define a tour to consist of the following three components:
+
+* Data matrix (n `\(\times\)` p)
+
+* A tour path that produces a smooth sequence of projection matrices (p `\(\times\)` d)
+
+* A display method that renders the projected data.
+
+This allows us to recombine tours to produce new ones. It also allows us to better understand
+how existing tours relate to one another, and to see where there are holes that could be filled
+with new methods.
+
+---
+### Tour (Based on Tourr, Pic from Dr. D.Cook's talk)
+![](tour_path.png)&lt;!-- --&gt;
+---
+###Display methods
+* 1D: animate_density with method specified as “histogram” or “density”
+
+* 2D: animate_xy
+
+* 3D: animate_stereo with anaglyphs, animate_depth with 3-D depth cues
+
+* k-D:
+  + Parallel coordinates (Wegman 1990; Inselberg 1985)
+  
+  + Andrews curves (Andrews 1972) with display_andrews.
+  
+  + Scatterplot matrices, display_scatmat. Also used in CrystalView.
+  
+  + Glyph based displays: stars (display_stars) and Chernoff faces (faces).
+---
+###Parallel Coordinates
+![](ParCorFisherIris.png)&lt;!-- --&gt;
+---
+### Andrews curves
+![](Andrews_plot_example.png)&lt;!-- --&gt;
+---
+###Scatterplot matrices
+![](P3_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;![](P3_files/figure-html/unnamed-chunk-5-2.png)&lt;!-- --&gt;
+---
+###Glyph based displays: stars (display_stars)
+![](staraut2.gif)&lt;!-- --&gt;
+---
+###Glyph based displays: Chernoff faces (faces)
+
+![](ChernoffFaces_1000.gif)&lt;!-- --&gt;
+---
+###Tour Path
+
+Tour paths can be saved as variables, but re-using these variables will not replay the same
+tour as the path is stochastic. 
+
+The tour path is made up of two parts: 
+
+* interpolator 
+* generator
+
+Interpolator which smoothly interpolates between a pair of projections produced by the basis generator. 
+
+The smooth interpolation is an important part of the tour as it ensures that the data appears to move smoothly from one basis projection to the next.
+---
+###Generator: 
+
+The tourr package includes five generators:
+
+* Grand tour
+
+* Guided tour 
+
+* Planned tour
+
+* Independence tour 
+
+* local tour
+
+All generators have the same basic structure: each generator consists of a function with two
+arguments, the current projection matrix (which is NULL for the first projection) and the
+data.
+
+Common to all tours, the code ensures that subsequent bases in the sequence are at least a
+small distance apart, and to end the tour when it is done or has, in the case of a guided tour,
+reached a (local) maximum and can not find a “better” projection.
+---
+###Grand Tour
+
+A grand tour is by definition a movie of low-dimensional projections constructed in such a way that it comes arbitrarily close to any low-dimensional projection; in other words, a grand tour is a space-filling curve in the manifold of low-dimensional projections of high-dimensional data spaces.
+
+The grand_tour (Asimov 1985; Buja and Asimov 1986) picks a new p `\(\times\)` d projection matrix
+at random. Its generator has a single argument d, the dimension of the projection matrix.
+The grand tour provides a curve filling the space of projections, ensuring thereby to (eventually) show every possible projection of the data. It useful for getting a comprehensive overview of a dataset, but even for a moderate number of dimensions it can take a long time to see everything.
+
+A variant on the grand tour is the frozen_tour: it picks a new target projection at random,
+while holding some variables constant.
+---
+###Guided tour
+
+Instead of picking a new projection completely at random, we pick one that is more interesting.  T
+
+Then from time to time, the projects picked that are closer to the current projection, so that we eventually converge to a single maximally interesting projection, in a spirit similar to simulated annealing. (Kirkpatrick, Gelatt, and Vecchi 1983).
+
+The guided tour is a dynamic form of projection pursuit (Huber 1985; Friedman and Tukey
+1974) with the difference that instead of just seeing the final “best” result, we see all of
+the interesting local maxima on the way. 
+
+Like projection pursuit, we need to define what we mean by interesting, by describing a mathematical index that quantifies the interestingness of a data projection. 
+
+The tourr package comes with four indices:
+
+* holes (holes)
+* central mass (cm)
+* lda (lda_pp)
+* pda (pda_pp)
+
+Each of these indices takes a n `\(\times\)`d data matrix as input and returns a single number as
+output.
+
+---
+###Planned tour
+The planned_tour is the most constrained tour: we already know where we want to go and
+simply cycle through a pre-specified set of frames. 
+
+This idea is also the basis for the little tour. The little tour is a special case of a planned tour that cycles through all axis parallel projections of dimension d, i.e. it provides a smooth sequence between views of all d-dimensional sets of variables in the data.
+---
+###Dependence tour
+The dependence_tour combines n independent 1-D tours. This generator has a single argument,
+a numeric vector that specifies which 1-D tour each variable should be assigned to. 
+
+For example, c(1, 1, 2, 2) specifies that the first two variables will be displayed with a 1-D
+tour on the first axis, and the second two with a 1-D tour on the second axis.
+
+The correlation tour (Buja et al. 1986) is the two dimensional special case of this method.
+
+In corresponds to canonical correlation analysis in the same way, as the grand tour is analogous
+to PCA. Similarly, the independence tour corresponds to generalised canonical correlation
+analysis.
+
+---
+###Local tour
+The local_tour alternates between a specified starting position and nearby random projections.
+
+This allows us to inspect the local neighborhood of a projection.
+
+---
+###Interpolator
+
+All of the generators currently rely on geodesic interpolation as the means for a smooth
+interpolation between planes. 
+
+This method was first described by Asimov (1985) and Buja
+and Asimov (1986)
+
+More generally speaking, this is the way how you render the projection output into a moving graph, more details could be found in Dr. Cook's talk in IMS.
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
