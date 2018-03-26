@@ -10,7 +10,7 @@ start date,topic,reading/viewing,notes
 # 5 Mar,dynamic graphics, `plotly`; `highcharter`; `googleVis`; [D3.js](https://d3js.org/); [HTML widget gallery](http://gallery.htmlwidgets.org/); [Hans Rosling's TED talks on Gapminder](https://www.gapminder.org/tag/ted);  [`ggvis`](http://ggvis.rstudio.com/), Cai; Wang
 5 Mar,dynamic graphics, [example data](data/stock_price.csv); [HTML widget gallery](http://gallery.htmlwidgets.org/); [Hans Rosling's TED talks on Gapminder](https://www.gapminder.org/tag/ted);  [`ggvis`](http://ggvis.rstudio.com/), Cai; Wang
 12 Mar,high-dimensional data,`ggobi` (articles on GGobi by Cook et al.),Li; He
-19 Mar,spatial data and mapping,[working directory](https://github.com/aleksandarjovic/Stat744/tree/master/Work/SpatialData%2BMapping/presentation); [presentation files](),Bushby; Jovic
+19 Mar,spatial data and mapping,[working directory](https://github.com/aleksandarjovic/Stat744/tree/master/Work/SpatialData%2BMapping/presentation); [presentation files](https://bbolker.github.io/stat744/spatial/index.html),Bushby; Jovic
 26 Mar, alternative platforms for data visualization,[intro to D3](http://square.github.io/intro-to-d3/); [Vega](https://vega.github.io/vega/); Python (`matplotlib`; `seaborn`; ...),Lopez; Kuzmin
 2 Apr,network/tree data,`igraph`/`ggdendro` packages etc.; @swayne_exploratory_2004, Chen; Zhang
 9 Apr, meet if it seems like a good idea
@@ -19,3 +19,4 @@ start date,topic,reading/viewing,notes
 # color; color maps and the colorically challenged, [`colorblindr` package](https://github.com/clauswilke/colorblindr); [`cividis` package](https://github.com/marcosci/cividis); @nunez_optimizing_2017; [`dichromat` package](https://CRAN.R-project.org/package=dichromat); @meeks_color_2018; [colorgorical](http://vrl.cs.brown.edu/color)
 # aggregation and smoothing for graphical display, Cleveland? more on splines/loess/kernel densities/etc.
 # compositional data,ternary plots etc. [e.g. `ggtern`]
+
