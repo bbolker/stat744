@@ -1,0 +1,208 @@
+---
+title: "Part1"
+author: "Alex Kuzmin and Joan Lopez"
+date: '2018-03-26'
+output: html_document
+---
+
+### Alternative platforms - D3.js in R 
+
+The idea of using D3.js is to be able to take storytelling through data to a higher level. It's going away from your typical approach of fitting data to a chart Even though the ability to be able to communicate effectively through data sounds like common sense, it can be a struggle and a lot of businesses are looking for people who have those skills. When people think of data storytelling, they think of info-graphics, data presentations, etc. It's common to interpret its meaning as having the ability to effectively visualize data, but really, it's about combining the elements of data, visuals, and narrative. It can be easier for the audience to see patterns or get insights on the data.  
+
+### Packages
+
+* networkD3
+* d3heatmap 
+* sunburstR
+
+#### Part 1: Network Visualization 
+
+* Networks are used in different disciplines: 
+    - analyses of social networks 
+    - protein interactions in biology
+    - transportation routes 
+* can be a complex problem - large scale network  
+* important: consider the message we are trying to convey for audience to understand underlying structural patterns, and being able to identify important nodes/edges
+* Some of the goals of network visualization include: 
+    - relationship strength (width of link)
+    - connecting key actors and links 
+    - using networks as maps, for persuasion, or as art 
+
+There are some different types of network visualization that are not network maps 
+
+* heat maps 
+* hive plots
+* arc diagrams 
+
+There are some network visualization controls: 
+
+* colour
+* position
+* size 
+* shape 
+* arrows
+* labels 
+
+Some layout aesthetics to consider: 
+
+* minimize edge crossing 
+* uniform edge length 
+* prevent overlap 
+* symmetry 
+
+Examples of graphs: 
+
+* force directed networks with simpleNetwork() and forceNetwork() 
+* Sankey diagrams with sankeyNetwork() 
+* Radial networks with radialNetwork() 
+* Dendro networks with dendroNetwork() 
+
+### Example 1.1 - simple force directed networks 
+```{r}
+library(networkD3)
+source <- c("A", "A", "A", "A", "B", "B", "C", "C", "D")
+target <- c("B", "C", "D", "J", "E", "F", "G", "H", "I")
+networkData <- data.frame(source, target)
+simpleNetwork(Data = networkData, 
+              Source = 1, 
+              Target = 2,
+              opacity = 0.5,
+              fontFamily = "sans",
+              fontSize = 20,
+              linkColour = "#123abc",
+              nodeColour = "black",
+              zoom = T
+              )
+```
+
+We're creating a small random dataset to show a network. It's important to note that when using simpleNetwork, the dataframe is made up of 3 columns: unless otherwise specified, the 1st column will be considered the source, the 2nd column will be considered to be the target, and the 3rd column records an edge value but does not impact the graph. 
+
+### Example 1.2 - force directed networks
+
+```{r}
+library(networkD3)
+data(MisLinks)
+data(MisNodes)
+forceNetwork(Links = MisLinks,
+             Nodes = MisNodes,
+             Source = "source",
+             Target = "target",
+             Value = "value",
+             NodeID = "name",
+             Group = "group",
+             opacity = 0.9,
+             zoom = TRUE,
+             arrows = TRUE,
+             linkDistance = 100,
+             fontSize = 20
+             )
+```
+
+The data used here is found under the networkD3 package. This data pertains to characters' co-appearances in "Les Miserables". 
+"MisLinks" is Les Miserables character links, which is a dataset of 254 observations and 3 variables.
+"MisNodes" is Les Miserables character nodes, which is also a dataset of 77 observations, 2 variables, and a made up node size variable.  
+The forceNetwork() function allows us to plot more complicated graphs and to have more control of its overall appearance. Since it's convoluted, it's also pretty slow. 
+The data in this library needs to have the Node Ids be numeric and they have to start from 0. One thing to do is transform the character IDs to a factor variable, then transform that to numeric, and subtract 1. 
+
+### Example 1.3 - radial network 
+
+"List" refers to a hierarchical list object with a root node and children. 
+One thing that's really neat is multiple formats for colour are supported, so you can use hexadecimal and colour palettes from colourbrewer. 
+
+* paste0() is short for paste(x, sep="")
+
+```{r}
+URL <- paste0(
+        "https://cdn.rawgit.com/christophergandrud/networkD3/",
+        "master/JSONdata//flare.json")
+
+Flare <- jsonlite::fromJSON(URL, simplifyDataFrame = FALSE)
+Flare$children = Flare$children[1:3]
+radialNetwork(List = Flare, 
+              fontSize = 10, 
+              opacity = 0.9,
+              linkColour = "red",
+              nodeColour = "blue",
+              textColour = "orange"
+              )
+```
+
+
+### Example 1.4 - Sankey Diagrams
+
+You can use Sankey diagrams to visualize response patterns and survey flow, for example. This is good if you have surveys where people skip certain questions and go on a different route. It also helps with missing data. These diagrams consist of 3 main elements: nodes, links, and instructions that determine position. The node is where the line changes direction or breaks off. The links contain a certain value and is represented by the thickness of the link. Then the instructions tell the nodes where to go in relation to one another.  
+
+
+```{r}
+library(networkD3)
+nodes = data.frame("name" = 
+ c("Node A", # Node 0
+ "Node B", # Node 1
+ "Node C", # Node 2
+ "Node D"))# Node 3
+links = as.data.frame(matrix(c(
+ 0, 1, 10, # Each row represents a link. The first number is the node being conntected from. 
+ 0, 2, 20, # The second number is the node connected to.
+ 1, 3, 30, # The third number is the value of the node
+ 2, 3, 40),
+ byrow = TRUE, ncol = 3))
+
+names(links) = c("source", "target", "value")
+
+sankeyNetwork(Links = links, 
+              Nodes = nodes,
+              Source = "source", 
+              Target = "target",
+              Value = "value", 
+              NodeID = "name",
+              fontSize= 12, 
+              nodeWidth = 30)
+```
+
+When working with Sankey diagrams, it is important to note that the data is in 3 columns: source, target, and value. This basically decribes the connection that we're using to connect stuff and the thickness or value of the line. One way to do this is by using the tidyverse package and creating a key/value. 
+
+<br>
+
+Here's a more complex example that models energy consumption from the UK through the Department of Energy and Climate Changes.
+
+* TWh: terawatt hours 
+
+```{r}
+library(networkD3)
+URL <- paste0(
+  "https://cdn.rawgit.com/christophergandrud/networkD3/",
+  "master/JSONdata/energy.json")
+Energy <- jsonlite::fromJSON(URL)
+sankeyNetwork(Links = Energy$links,
+              Nodes = Energy$nodes,
+              Source = "source",
+              Target = "target",
+              Value = "value",
+              NodeID = "name",
+              units = "TWh",
+              fontSize = 12,
+              nodeWidth = 30
+              )
+```
+
+
+### Example 1.5 - Dendro network 
+
+This helps to create hierarchical cluster network diagrams. 
+The object "hc" refers to the hierarchical cluster object. 
+This example is Violent crime rates by US state. 
+
+```{r}
+library(networkD3)
+hc <- hclust(dist(USArrests), 
+             "ave")
+dendroNetwork(hc, 
+              height = 600,
+              linkColour = "blue",
+              nodeColour = "orange"
+              )
+```
+
+### Resources for the package 
+
+https://christophergandrud.github.io/networkD3/

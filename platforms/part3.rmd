@@ -1,0 +1,75 @@
+---
+title: "part3"
+author: "Alex Kuzmin and Joan Lopez"
+date: '2018-03-26'
+output: html_document
+---
+
+### Part 3 - Other graphics 
+
+### Example 3.1 - Chord diagrams 
+
+This is used to show inter-relationships between data in matrix. The data are arranged around a circle and the relationships between the data are the arcs that go from one end of the circle to another. 
+
+Here's a small example: 
+
+
+```{r}
+library(chorddiag)
+
+students = data.frame(Math = c(50, 25, 5, 12),
+                      Art = c(10, 55, 5, 20),
+                      Science = c(45,12,29, 20),
+                      PE = c(24,67,27,15))
+
+students = as.matrix(students)
+row.names(students) = c("Section A", "Section B", "Section C", "Section D")
+
+chorddiag(students, 
+          type = "bipartite", 
+          palette = "YlOrRd",
+          showTicks = F, 
+          groupnameFontsize = 14, 
+          groupnamePadding = 10, 
+          margin = 90
+          )
+```
+
+"type" refers to the type of chord diagram. can be either "directional" or "bipartite"
+"palette" is the name of the colourbrewer palette. 
+
+<br>
+<br>
+
+
+### Example 3.2 - interactive heatmap 
+
+```{r}
+library(d3heatmap)
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/bad-drivers/bad-drivers.csv"
+drivers <- read.csv(url, row.names = 1)
+d3heatmap(drivers, 
+          scale = "column",
+          colors = "YlGnBu",
+          #dendrogram = "none",
+          #Rowv = FALSE,
+          #Colv = FALSE
+          dendrogram = "row", 
+          k_row = 3,
+          xaxis_font_size = "6pt"
+          )
+```
+
+<br>
+<br>
+<br>
+
+This dataset was obtained from FiveThirtyEight and they were looking at different variables to see if there was a way to show which state had the worst drivers.
+
+<br>
+<br>
+<br>
+
+For the assignment: replicate one of the graphs/make your own plot OR find an example online and comment on the lines of code (R code).  
+
+
