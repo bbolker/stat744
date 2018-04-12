@@ -49,12 +49,13 @@ pages/%.html: admin/%.rmd
 	cd admin && $(MAKE) $*.html
 	cp admin/$*.html $@
 
-platforms = $(wildcard platforms/*.rmd)
+platforms = $(wildcard platforms/*.rmd platforms/Makefile)
 platforms: $(platforms:platforms/%.rmd=pages/%.html)
 pages/%.html: platforms/%.rmd
 	cd platforms && $(MAKE) $*.html
 	cp platforms/$*.html $@
 
+Ignore += sched.html
 pages/sched.html: admin/sched.csv
 
 ######################################################################
