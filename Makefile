@@ -56,6 +56,7 @@ pages/%.html: platforms/%.rmd
 	cd platforms && $(MAKE) $*.html
 	cp platforms/$*.html $@
 
+Ignore += sched.html
 pages/sched.html: admin/sched.csv
 
 ######################################################################
