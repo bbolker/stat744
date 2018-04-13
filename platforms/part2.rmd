@@ -132,12 +132,13 @@ library(data.table)
 
 ```{r include=FALSE}
 url <- "https://storage.googleapis.com/kaggle-competitions-data/kaggle/3136/train.csv?GoogleAccessId=web-data@kaggle-161607.iam.gserviceaccount.com&Expires=1522382180&Signature=hPC3B13zq5snZ9JOyZgEnxpy7ywL2QJVxKTnQkFToOw%2BFLzP9hOMg83AUZizTDPmexSPo%2BCR9FYHI53%2Fz3UPeTb2pNtMVjr4HkCuf8V42q%2Foq30tPEoIcFfXdKSAAMU%2Fl6CBblZtF3AhUl5VjQLSuTlATBJ1rBujmthGj0PZ%2BykAFBZVZauzcBEe3eBo9TW5uIhcV38U4MiMWeH%2B%2Bo7JsPw8caBnDTB5Bh3TkYV7cJidIr3bBM0NI6Rg%2BtFanG7w%2Bfp8F%2BpO6M7gh7GG%2BJ%2BqcJAkNrq6TQX3NEvjduJj4ftsI3wIbguYA%2BniASg4GETJsMdJZkixJm2gBtjBDgtSog%3D%3D"
+url <- "https://raw.githubusercontent.com/pcsanwald/kaggle-titanic/master/train.csv"
 ```
 
 ```{r}
 titanic_data <- fread(url, sep = ",", header = T)
 
-var_names=c('Sex','Embarked','Pclass','Survived')
+var_names=c('sex','embarked','pclass','survived')
 data_plot=titanic_data[,.N,by=var_names]
 data_plot[,(var_names):=lapply(var_names,function(x){data_plot[[x]]=paste0(x,' ',data_plot[[x]])
 })]
@@ -146,7 +147,7 @@ library(magrittr)
 D3partitionR() %>%
   add_data(data_plot,
            count ='N',
-           steps=c('Sex','Embarked','Pclass','Survived')) %>%
+           steps=c('sex','embarked','pclass','survived')) %>%
   add_title('Titanic') %>%
 
 plot()
@@ -165,7 +166,7 @@ You can change the chart with the set_chart_type() function, which is the follow
 ### Example 2.4 - Tree map 
 ```{r}
 D3partitionR() %>%
-  add_data(data_plot,count = 'N',steps=c('Sex','Embarked','Pclass','Survived')) %>%
+  add_data(data_plot,count = 'N',steps=c('sex','embarked','pclass','survived')) %>%
   set_chart_type('treemap') %>%
   plot()
 ```
@@ -176,7 +177,7 @@ D3partitionR() %>%
 ### Example 2.5 - Circle tree map
 ```{r}
 D3partitionR() %>%
-  add_data(data_plot,count = 'N',steps=c('Sex','Embarked','Pclass','Survived')) %>%
+  add_data(data_plot,count = 'N',steps=c('sex','embarked','pclass','survived')) %>%
   set_chart_type('circle_treemap') %>%
   plot()
 ```
