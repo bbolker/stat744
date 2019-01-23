@@ -19,7 +19,7 @@ Sources += admin/sched.csv
 
 ######################################################################
 
-clonedirs += pages
+## clonedirs += pages
 
 rmd += $(wildcard */*.rmd)
 Sources += $(rmd)
