@@ -10,7 +10,7 @@ numBins <- 10
 
 ## Age vs fev
 
-af <- ggplot(smoke, aes(x=age, y=fev)
+af <- (ggplot(smoke, aes(x=age, y=fev))
 	+ ylab("Lung capacity")
 )
 

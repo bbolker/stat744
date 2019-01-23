@@ -198,13 +198,14 @@ Sources += choices.txt
 choices.draft.pdf: choices.txt
 choices.handouts.pdf: choices.txt
 
+## Where the hell does this come from?
+## Ignore += anscombe.html
 anscombe.Rout: anscombe.R
-
 ansplot.Rout: anscombe.Rout ansplot.R
 
 ######################################################################
 
-## Hasty overview lecture for other course
+## Hasty overview lecture for other course (QMEE)
 
 Sources += overview.txt
 overview.draft.pdf: overview.txt
