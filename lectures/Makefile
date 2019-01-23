@@ -118,9 +118,12 @@ explore.handouts.pdf: explore.txt
 git_cache/bikes.zip:
 	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
 
-Ignore += day.csv hour.csv
-hour.csv: slow/bikes.zip
+## There is some craziness here; patch pipeline at a later point
+## ln -s git_cache/bikes.zip .
+Ignore += day.csv hour.csv bikes.zip
+hour.csv: bikes.zip
 	unzip $< $@
+	touch $@
 
 bikes.Rout: hour.csv bike_weather.csv bikes.R
 Sources += bike_weather.csv
@@ -132,7 +135,7 @@ bike_plots.Rout: bikes.Rout bike_plots.R
 git_cache/fev.csv: 
 	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
 
-smoke.Rout: slow/fev.csv smoke.R
+smoke.Rout: git_cache/fev.csv smoke.R
 
 ## Show the confounding
 smoke_ques.Rout: smoke.Rout smoke_ques.R
@@ -190,6 +193,15 @@ ansplot.Rout: anscombe.Rout ansplot.R
 
 ######################################################################
 
+## Hasty overview lecture for other course
+
+Sources += overview.txt
+overview.draft.pdf: overview.txt
+overview.final.pdf: overview.txt
+overview.handouts.pdf: overview.txt
+
+######################################################################
+
 Sources += copy.tex
 
 ## Should be in webpix
@@ -205,7 +217,7 @@ include ../rmd.mk
 
 -include $(ms)/texdeps.mk
 -include $(ms)/newtalk.mk
--include $(ms)/cache.mk
+-include $(ms)/oldcache.mk
 
 # -include $(ms)/modules.mk
 
