@@ -1,12 +1,13 @@
 
 ## Visual course Lectures directory (repo subdirectory)
+## Highly deprecated but still working here! 2019 Jan 23 (Wed)
 
 ######################################################################
 
 ## Hooks
 
 current: target
-target = Makefile
+target = Makefile README.md
 -include target.mk
 
 ###################################################################
@@ -207,10 +208,12 @@ ansplot.Rout: anscombe.Rout ansplot.R
 
 ## Hasty overview lecture for other course (QMEE)
 
-Sources += overview.txt
+Sources += overview.txt overview.sources
 overview.draft.pdf: overview.txt
 overview.final.pdf: overview.txt
 overview.handouts.pdf: overview.txt
+
+Ignore += anscombe.html
 
 ######################################################################
 
