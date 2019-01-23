@@ -7,14 +7,14 @@
 ## Hooks
 
 current: target
-target = Makefile README.md
+target = Makefile
 -include target.mk
 
 ###################################################################
 
 # stuff
 
-Sources += Makefile
+Sources += Makefile README.md
 
 ms = makestuff
 Ignore += $(ms)
