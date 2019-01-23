@@ -13,12 +13,17 @@ target = Makefile
 
 # stuff
 
-Sources += Makefile .ignore README.md upstuff.mk LICENSE.md
+Sources += Makefile
 
-## Change Drop with untracked local.mk (called automatically from substuff.mk)
-Drop = ~/Dropbox
+ms = makestuff
+Ignore += $(ms)
+Makefile: $(ms)/Makefile
+	touch $@
+$(ms)/Makefile:
+	ls ../makestuff/Makefile && /bin/ln -s ../makestuff 
 
--include upstuff.mk
+-include $(ms)/os.mk
+
 -include $(ms)/perl.def
 -include $(ms)/newtalk.def
 # -include $(ms)/repos.def
@@ -80,8 +85,13 @@ bananas.Rout: bananas.csv bananas.R
 
 ## Too scared to try to make a slick .html talk 2018 Jan 14 (Sun), so I'm going to see if I can make a slick pdf talk using old technology
 
+## And still here (with a different course) 2019 Jan 23 (Wed)!
+
 ## makestuff/newtalk.md
 ## makestuff/newtalk.mk
+
+## This should be changed
+imageDrop = ~/Dropbox/
 
 Sources += $(wildcard *.step)
 
@@ -102,6 +112,9 @@ temps.csv:
 temps.Rout: temps.csv temps.R
 temppix.Rout: temps.Rout temppix.R
 
+Ignore += logo.png
+logo.png: 
+
 Sources += circulation.csv
 circulation.Rout: circulation.csv circulation.R
 
@@ -118,10 +131,8 @@ explore.handouts.pdf: explore.txt
 git_cache/bikes.zip:
 	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
 
-## There is some craziness here; patch pipeline at a later point
-## ln -s git_cache/bikes.zip .
-Ignore += day.csv hour.csv bikes.zip
-hour.csv: bikes.zip
+Ignore += day.csv hour.csv 
+hour.csv: git_cache/bikes.zip
 	unzip $< $@
 	touch $@
 

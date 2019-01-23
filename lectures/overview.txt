@@ -7,7 +7,7 @@ HLINK http://sfew.websitetoolbox.com/post/clevelands-graphical-features-hierarch
 
 ----------------------------------------------------------------------
 
-Scales
+TSEC Scales
 
 	The top of the hierarchy involves putting things on scales
 
@@ -21,9 +21,10 @@ Scales
 
 ----------------------------------------------------------------------
 
-SEC Anchors
+SS Anchors
 
 ----------------------------------------------------------------------
+
 
 Golem bait call
 
@@ -105,7 +106,7 @@ Advertisement lessons
 
 ----------------------------------------------------------------------
 
-SEC Transformations
+SS Transformations
 
 ----------------------------------------------------------------------
 
@@ -211,7 +212,13 @@ Extreme values
 
 	Our transformations take extreme values to infinity.
 
-	Use link functions: this is like using estimated values instead of observed; they are rarely infinite
+	Use link functions
+	
+		this is like using estimated values instead of observed
+		
+			rarely infinite
+
+			matches analysis
 
 	Extend the scale (e.g., use $\log(1+x)$ instead of $\log(x)$)
 
@@ -219,14 +226,15 @@ Extreme values
 
 		Should often be \emph{avoided} for analysis
 
-		Usually \emph{OK} for visualization
-
+		But can be good for visualization
 
 ----------------------------------------------------------------------
 
-Exploring data
+SEC Exploring data
 
-SUBH Rote analysis vs. snooping 
+----------------------------------------------------------------------
+
+Rote analysis vs. snooping 
 
 BCC
 

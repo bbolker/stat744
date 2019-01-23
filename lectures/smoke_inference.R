@@ -33,7 +33,7 @@ std <- lm(smoke$fev ~ age + height + sex + smoking, data=stdsmoke)
 print(
 	dwplot(std)
 	+ geom_vline(xintercept=0,lty=2)
-	+ ggtitle("Standardized effect on fev (L/s)")
+	+ ggtitle("Standardized effect on lung capacity (L/s)")
 )
 
 partial <- lm(fev ~ age + height + sex + smoking, data=stdsmoke)
@@ -41,6 +41,6 @@ partial <- lm(fev ~ age + height + sex + smoking, data=stdsmoke)
 print(
 	dwplot(partial)
 	+ geom_vline(xintercept=0,lty=2)
-	+ ggtitle("Partial correlations with fev")
+	+ ggtitle("Partial correlations with lung capacity")
 )
 

@@ -6,7 +6,9 @@ uni <- lm(fev ~ age, data=smoke)
 pointPred <- as_data_frame(predict(uni, interval="confidence"))
 termPred <- predict(uni, interval="confidence", type="terms")
 
-base <- ggplot(smoke, aes(age, fev))
+base <- ggplot(smoke, aes(age, fev)
+	+ ylab("Lung capacity")
+)
 
 print(scatter <- base + geom_point(alpha=0.1))
 
