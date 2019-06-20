@@ -1,6 +1,5 @@
 
 ## Visual course Lectures directory (repo subdirectory)
-## Highly deprecated but still working here! 2019 Jan 23 (Wed)
 
 ######################################################################
 
@@ -14,20 +13,19 @@ target = Makefile
 
 # stuff
 
-Sources += Makefile README.md
+Sources += Makefile .ignore README.md upstuff.mk LICENSE.md
 
-ms = makestuff
-Ignore += $(ms)
-Makefile: $(ms)/Makefile
-	touch $@
-$(ms)/Makefile:
-	ls ../makestuff/Makefile && /bin/ln -s ../makestuff 
+## Change Drop with untracked local.mk (called automatically from substuff.mk)
+Drop = ~/Dropbox
 
--include $(ms)/os.mk
-
+-include upstuff.mk
 -include $(ms)/perl.def
 -include $(ms)/newtalk.def
 # -include $(ms)/repos.def
+
+######################################################################
+
+part2.html: part2.rmd
 
 ######################################################################
 
@@ -86,13 +84,8 @@ bananas.Rout: bananas.csv bananas.R
 
 ## Too scared to try to make a slick .html talk 2018 Jan 14 (Sun), so I'm going to see if I can make a slick pdf talk using old technology
 
-## And still here (with a different course) 2019 Jan 23 (Wed)!
-
 ## makestuff/newtalk.md
 ## makestuff/newtalk.mk
-
-## This should be changed
-imageDrop = ~/Dropbox/
 
 Sources += $(wildcard *.step)
 
@@ -113,9 +106,6 @@ temps.csv:
 temps.Rout: temps.csv temps.R
 temppix.Rout: temps.Rout temppix.R
 
-Ignore += logo.png
-logo.png: 
-
 Sources += circulation.csv
 circulation.Rout: circulation.csv circulation.R
 
@@ -132,10 +122,9 @@ explore.handouts.pdf: explore.txt
 git_cache/bikes.zip:
 	wget -O $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip
 
-Ignore += day.csv hour.csv 
-hour.csv: git_cache/bikes.zip
+Ignore += day.csv hour.csv
+hour.csv: slow/bikes.zip
 	unzip $< $@
-	touch $@
 
 bikes.Rout: hour.csv bike_weather.csv bikes.R
 Sources += bike_weather.csv
@@ -147,7 +136,7 @@ bike_plots.Rout: bikes.Rout bike_plots.R
 git_cache/fev.csv: 
 	wget -O $@ "http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/FEV.csv"
 
-smoke.Rout: git_cache/fev.csv smoke.R
+smoke.Rout: slow/fev.csv smoke.R
 
 ## Show the confounding
 smoke_ques.Rout: smoke.Rout smoke_ques.R
@@ -199,21 +188,9 @@ Sources += choices.txt
 choices.draft.pdf: choices.txt
 choices.handouts.pdf: choices.txt
 
-## Where the hell does this come from?
-## Ignore += anscombe.html
 anscombe.Rout: anscombe.R
+
 ansplot.Rout: anscombe.Rout ansplot.R
-
-######################################################################
-
-## Hasty overview lecture for other course (QMEE)
-
-Sources += overview.txt overview.sources
-overview.draft.pdf: overview.txt
-overview.final.pdf: overview.txt
-overview.handouts.pdf: overview.txt
-
-Ignore += anscombe.html
 
 ######################################################################
 
@@ -232,7 +209,7 @@ include ../rmd.mk
 
 -include $(ms)/texdeps.mk
 -include $(ms)/newtalk.mk
--include $(ms)/oldcache.mk
+-include $(ms)/cache.mk
 
 # -include $(ms)/modules.mk
 

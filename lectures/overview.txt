@@ -1,0 +1,517 @@
+
+Cleveland's hierarchy
+
+FIG ClevelandHierarchyR.png
+
+HLINK http://sfew.websitetoolbox.com/post/clevelands-graphical-features-hierarchy-4598555
+
+----------------------------------------------------------------------
+
+TSEC Scales
+
+	The top of the hierarchy involves putting things on scales
+
+	But what scale do we use?
+
+		Are our data anchored to zero?
+
+			If so, are we interested in differences or ratios?
+
+		Are they anchored somewhere else?
+
+----------------------------------------------------------------------
+
+SS Anchors
+
+----------------------------------------------------------------------
+
+
+Golem bait call
+
+FIG temppix.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Global climate
+
+FIG temppix.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+
+Global climate
+
+FIG temppix.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+
+Global climate
+
+FIG temppix.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Global climate
+
+FIG temppix.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Climate lessons
+
+	Choosing an anchor is a scientific decision
+
+	Remember: graphic design is communication
+
+----------------------------------------------------------------------
+
+Magazine circulation (advertisement)
+
+FIG circulation.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Magazine circulation (absolute amount)
+
+FIG circulation.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Magazine circulation (trend)
+
+FIG circulation.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Area and volume
+
+WFIG 0.9 steel_production.png
+
+CREDIT How to Lie with Statistics
+
+----------------------------------------------------------------------
+
+Advertisement lessons
+
+	Use area to indicate fair comparisons
+
+		On a physical scale
+
+	Areas that can be compared linearly should be preferred 
+
+		Depends on importance of feature
+
+	Avoid using (or hinting at) volume
+
+----------------------------------------------------------------------
+
+SS Transformations
+
+----------------------------------------------------------------------
+
+Physical quantities
+
+	1 is to 10 as 10 is to what?
+
+		ANS If you said 19, you are thinking on a linear scale
+
+		ANS If you said 100, you are thinking on a log scale
+
+	The log scale is often good for physical quantities:
+
+		When zero means zero
+
+----------------------------------------------------------------------
+
+Log vs.~linear
+
+DOUBLEPDF orchard.Rout
+
+----------------------------------------------------------------------
+
+Making room
+
+DOUBLEFIG orchard.Rout-1.pdf orchard.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+	There are a lot of different ways to show data shape
+
+	Choices will depend on your data set:
+
+		Overall size
+
+		Number of replicates
+
+		Number of levels, predictor variables, etc.
+
+----------------------------------------------------------------------
+
+Different scales
+
+DOUBLEFIG orchard.Rout-3.pdf orchard.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+More detail
+
+DOUBLEFIG orchard.Rout-6.pdf orchard.Rout-7.pdf
+
+----------------------------------------------------------------------
+
+Orchard lessons
+
+	Choices about log vs.~linear scale are scientific choices
+
+		Neither is more valid, or closer to the data
+
+	You can also make choices about
+
+		sending a simple message
+
+		providing more information about shape
+
+	Log scales are almost never physical
+
+		Don't mislead with area information on a log scale
+
+----------------------------------------------------------------------
+
+Probabilities
+
+	1% is to 2% as 50% is to what?
+
+		ANS 51% is way too small
+
+		ANS 100% is way too large
+
+	The natural distance to use on a probability scale is log odds
+
+		ANS 1% is to 2% as 50% is to 67%
+
+		ANS \ldots as 2% is to 4%
+
+		ANS \ldots as 98% is to 99%
+
+----------------------------------------------------------------------
+
+Odds
+
+	Odds are a ratio between the probability of something and the probability of its opposite:
+
+		$o = p/(1-p)$
+
+	Log odds give a natural distance on probability space
+
+----------------------------------------------------------------------
+
+Extreme values
+
+	Our transformations take extreme values to infinity.
+
+	Use link functions
+	
+		this is like using estimated values instead of observed
+		
+			rarely infinite
+
+			matches analysis
+
+	Extend the scale (e.g., use $\log(1+x)$ instead of $\log(x)$)
+
+		This usually involves arbitrary choices
+
+		Should often be \emph{avoided} for analysis
+
+		But can be good for visualization
+
+----------------------------------------------------------------------
+
+SEC Exploring data
+
+----------------------------------------------------------------------
+
+Rote analysis vs. snooping 
+
+BCC
+
+CFIG webpix/atlas.jpg
+
+NCC
+
+CFIG webpix/detective.jpg
+
+EC
+
+----------------------------------------------------------------------
+
+Spurious correlations
+
+HREF http://www.tylervigen.com/spurious-correlations There's a whole website about this
+
+----------------------------------------------------------------------
+
+What can you do?
+
+SUBH The best you can
+
+	Identify scientific questions
+
+	Distinguish between exploratory and confirmatory analysis
+
+	Pre-register studies when possible
+
+	Keep an exploration and analysis journal
+
+	Explore predictors and responses separately at first
+
+----------------------------------------------------------------------
+
+Bike example
+
+FIG bike_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Standard errors
+
+FIG bike_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Standard deviations
+
+FIG bike_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-7.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Data shape
+
+FIG bike_plots.Rout-8.pdf
+
+----------------------------------------------------------------------
+
+Data shape and weight
+
+FIG bike_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Log scales
+
+	In general:
+
+		If your logged data span $<3$ decades, use human-readable numbers
+		(e.g., 10-5000 kilotons per hectare)
+
+		If not, just embrace ``logs'' (log10 particles per ul is from
+		3--8)
+
+			But remember these are not physical values
+
+	I love natural logs, but not as axis values
+
+----------------------------------------------------------------------
+
+SEC Bivariate data
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Smoking data
+
+FIG smoke_ques.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Scatter plots
+
+	Depending on how many data points you have, scatter plots may
+	indicate relationships clearly
+
+	They can often be improved with trend interpolations
+
+		Interpolations may be particularly good for discrete responses (count or
+		true-false)
+
+----------------------------------------------------------------------
+
+Scatter plot
+
+FIG smoke_plots.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density better
+
+FIG smoke_plots.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Seeing the density worse
+
+FIG smoke_plots.Rout-2.pdf
+
+----------------------------------------------------------------------
+
+Use area in a principled way!
+
+FIG smoke_plots.Rout-3.pdf
+
+----------------------------------------------------------------------
+
+A loess trend line
+
+FIG smoke_plots.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Two loess trend lines
+
+FIG smoke_plots.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Many loess trend lines
+
+FIG smoke_plots.Rout-6.pdf
+
+----------------------------------------------------------------------
+
+Density plots
+
+	Contours
+
+		use \url{_density_2d()} to fit a two-dimensional kernel to the density
+
+	hexes
+
+		use \url{geom_hex} to plot densities using hexes
+
+		this can also be done using rectangles for data with more discrete values
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Contours
+
+FIG smoke_levels.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-4.pdf
+
+----------------------------------------------------------------------
+
+Hexes
+
+FIG smoke_levels.Rout-5.pdf
+
+----------------------------------------------------------------------
+
+Color principles
+
+	Use clear gradients
+
+	If zero has a physical meaning (like density), go in just one direction
+
+		e.g., white to blue, white to red
+
+		If the map contrasts with a background, zero should match the background
+
+	If there's a natural \emph{middle}, you can use blue to white to red, or
+	something similar
+
+----------------------------------------------------------------------
+
+Principles
+
+	Graphs tell stories better than tables do
+
+		Use graphs to illustrate comparisons
+
+		Be careful about \emph{units}
+
+	Distinguish between (scientific) variables and (statistical) parameters
+
+	Show data when you can do it without obscuring the key patterns
+
+----------------------------------------------------------------------
+
+PSLIDE Choosing what to show
+
+FIG ansplot.Rout-0.pdf
+
+----------------------------------------------------------------------
+
+Choosing what to show
+
+FIG ansplot.Rout-1.pdf
+
+----------------------------------------------------------------------
+
+Avoiding choices
+
+	Provide users with alternatives
+
+		Supplementary material for the curious
+
+	Avoid choices by providing more information
+
+		Use more than one figure
+
+		Or dynamic features in figures
+
+----------------------------------------------------------------------
+
+Conclusions
+
+	Give thought to your goals
+
+	Give thought to your decisions
+
+	Be conscious when you are withholding information
+
+		Be willing to use more than one picture
+
+		Use dynamic features to give access to detail
+

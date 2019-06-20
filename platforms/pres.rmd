@@ -1,0 +1,91 @@
+---
+title: 'Alternative Platforms: D3.js'
+author: "A. Kuzmin & J. Lopez"
+date: "March 21, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+#### What is D3.js? <br>
+  - D3.js is a javascript library that uses documents based on data to create interactive & dynamic visualizations. <br>
+  - D3 stands for Data-Driven Document. <br>
+  - Mike Bostock is one of the main developers for D3.js.
+
+<b>Javascript</b> is a scripting language that is embedded in the HTML to make web pages interactive and dynamics. 
+
+<b>Scalable Vector Graphics</b>  (SVG) is an image format that is necessary for javascript to bind with its elements, and make them interactive.
+
+***
+
+#### Why use D3.js? <br>
+  - visualizations created with R are static, unless used in conjunction with a package,
+  but even then, it won't be as customizable as using javascript. <br>
+  - we'll show you why in a bit. <br>
+  - nonetheless, R produces great plots through packages like ggplot2 <br>
+  - the functions provided in the D3.js library makes bindind javascript to data easier.
+  
+***
+
+The structure of an HTML source code is as follows:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>This is a title</title>
+    <style>Styling elements in the html document</style>
+    <script>"javascript for adding dynamics to html"</script>
+  </head>
+  <body>
+    <p>Hello world!</p>
+    <script>"also add interactivity and dynamics to the visuals that will appear" </script>
+  </body>
+</html>
+```
+  - the <b>head</b> tag contains information about the styling of the document
+  - the <b>body</b> body contains information about visuals that will be displayed on the html document, like text and images.
+  
+***
+  
+#### 2 Methods for creating interactive plots with R and javascript
+
+  1. Use R for data processing and creating a graphic. The we export the graphic in SVG format and bind javascript to the elements we desire.
+  Example of manually binding javascript: (http://vanhumbeecka.github.io/R-and-D3/svg-simple.html)
+    - manually binding the javascript can be done of course, but it's a hassle
+    - we have packages that complete the javascript binding for us
+      - plotly example: (http://vanhumbeecka.github.io/R-and-D3/plotly.html)
+<br>
+<br>
+  
+  2. Use R only for data processing & use javascript for entire visualization process. We get more customization & these can potentially result in some pretty graphics. You can inspect the elements for the exmaples below to see if d3 functions are present. 
+
+Here is the vaccine graphic from earlier in the course: http://www.sciencemag.org/news/2017/04/here-s-visual-proof-why-vaccines-do-more-good-harm
+
+Here is another: http://www.nytimes.com/newsgraphics/2014/01/05/poverty-map/index.html
+
+One more interactive plot that doesn't use d3.js: https://www.nytimes.com/interactive/2017/04/02/technology/uber-drivers-psychological-tricks.html
+
+Both methods require the use of javascript to create these customized plots.
+  
+***
+  
+Here's a gallery of different plots that use the D3.js library: https://github.com/d3/d3/wiki/Gallery
+
+***
+
+#### Final words
+- we wanted to show you the customization and visualizations possible with the aid of D3.js
+- the D3.js library provides functions that makes it easier to customize graphics with data in consideration. 
+- javascript allows you to make tweaks in graphics.
+- utilizing javascript may be more work than required for some basic plots
+- Unless, we wanted immense customization to create something novel, perhaps using R or other packages like plotly may be enough.
+- Fortunately, Mike  Bostock and other developers are creating R packages that integrate D3.js libraries for particular plots. E.g. scatterD3, sunburstR, etc.
+
+***
+
+#### Some Useful Resources
+https://www.w3schools.com/js/ (Javascript tutorials)<br>
+https://www.w3schools.com/html/default.asp (HTML tutorials)<br>
+https://www.rdocumentation.org/collaborators/name/Mike%20Bostock (Mike Bostock's packages)<br>
+https://github.com/d3 (D3 github repositories)
+https://github.com/d3/d3/wiki/Tutorials (D3.js tutorials)

@@ -1,8 +1,0 @@
-## Content from .ignore
-.gitignore
-local.mk
-target.mk
-.*.sw*
-make.log
-lectures/
-

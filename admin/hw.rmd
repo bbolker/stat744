@@ -63,6 +63,10 @@ or download the data directly from [here](http://sciencestatic.aws.aaas.org.s3.a
 
 * A possible table to use would be Table 3 of @mccallum_situ_2017, or a [simpler, earlier version of the same table](https://github.com/bbolker/stat744/blob/master/data/POCIS_Raw_McCallum.csv) (you should look at the paper for reference if you use this one). For your convenience, we have also posted a data file that gives the correspondences between drug abbreviations and full names as well as drug categories  [here](https://github.com/bbolker/stat744/blob/master/data/drugnames.csv).
 
+## Student-led assignments
+
+__Spatial data:__ 
+
 ## Presentations
 
 * For your presentation week, you should plan a lecture on Monday, and an activity for Tuesday

@@ -5,7 +5,10 @@ point_alpha <- 0.4
 
 ## Age vs fev
 
-af <- ggplot(smoke, aes(x=age, y=fev))
+af <- (ggplot(smoke, aes(x=age, y=fev))
+	+ ylab("Lung capacity")
+)
+
 print(af + geom_point()) 
 print(af + geom_point(alpha=point_alpha)) 
 print(af + geom_count(alpha=point_alpha)) ## Dumb!

@@ -1,0 +1,184 @@
+---
+title: "Part2"
+author: "Alex Kuzmin and Joan Lopez"
+date: '2018-03-26'
+output: html_document
+---
+ 
+### Part 2: Sequential and hierarchical data
+
+* packages: 
+
+    - SunburstR
+    - D3partitionR
+    
+When do we use these types of graphs: 
+
+* when looking to describe a sequence of events that lead up to a final value 
+* it lets you highlight the sequential progression of the nodes that lead to the final value
+* example: webpage redirects or product retention 
+
+What kind of data would you need?
+
+* the data will have 2 lists: the list of the different/unique paths and the values/size of these paths (number of people, etc)
+
+### Sunburst, what?
+
+As defined by the "Data Visualization Catalogue", a sunburst plot is:
+
+> ... shows hierarchy through a series of rings, that are sliced for each category node. Each ring corresponds to a level in the hierarchy, with the central circle representing the root node and the hierarchy moving outwards from it. Rings are sliced up and divided based on their hierarchical relationship to the parent slice. The angle of each slice is either divided equally under its parent node or can be made proportional to a value.
+
+### Example 2.1 - Original sunburst example
+
+A popular example is using a sequence sunburst diagram to display sequence data such as website navigation paths. This can make it easier for people to see where the visits originated from and the path taken for the final location. This function can work with data that is in CSV format. 
+
+If you're looking to reuse the example with your data, there are some things to take into account: 
+
+* you don't need a header but it's ok to have one
+* when separating the steps, use hyphens
+* step names should be short and one word (not entirely sure how it handles non-alphanumeric characters)
+* the last element of the sequence should be an "end" marker - meaning that we should be able to distinguish from a true end point vs an end point forced by truncation 
+* the sequences should be a complete path from root to leaf 
+* use a small number of distinct step names and have a small max sequence length 
+
+<br>
+<br>
+
+```{r}
+library(sunburstR)
+sequence_data <- read.csv(
+  paste0(
+    "https://gist.githubusercontent.com/kerryrodden/7090426/",
+    "raw/ad00fcf422541f19b70af5a8a4c5e1460254e6be/visit-sequences.csv"),
+  header=F,
+  stringsAsFactors = FALSE
+)
+sunburst(sequence_data)
+```
+
+<br>
+<br>
+
+### Example 2.2 - Another sunburst plot 
+
+Sunburst plots tend to work well with sports data. In this example, we're going to use some baseball data from the "pitchRx" package. If you like baseball, this package has tools that collects info on MLB Gameday data.  
+
+
+```{r eval=FALSE, include=FALSE}
+devtools::install_github("cpsievert/XML2R")
+devtools::install_github("cpsievert/pitchRx")
+devtools::install_github("timelyportfolio/sunburstR")
+install.packages("rvest")
+```
+
+```{r include=FALSE}
+library(sunburstR)
+library(pitchRx)
+library(dplyr)
+library(XML2R)
+library(rvest)
+```
+
+```{r include=FALSE}
+baseball <- scrape(start = "2016-08-25", end = "2016-08-25")
+names(baseball)
+```
+
+What is the scrape() function? Great question. IDK but what I found out was, using the "rvest" package, you can take data that is presented in an unstructured format, like HTML tags found on the web, and convert that into a structured format that is easily accessible. Examples for applications for scrapping data are scrapping user reviews from Amazon to scrapping ratings of movies to create recommendation engines. 
+
+To be able to put the data in a sunburst graph, the example suggests to use the data on the runner to get an idea of action with a runner on base. 
+
+<br>
+<br>
+
+```{r echo=TRUE}
+action <- baseball$runner %>%
+  group_by(event_num) %>%
+  filter(row_number() == 1) %>%
+  ungroup() %>%
+  group_by(gameday_link, inning, inning_side) %>%
+  summarize(event = paste(c(event),collapse="-"))
+
+sequences <- action %>%
+  ungroup() %>%
+  group_by(event) %>%
+  summarize(count = n())
+
+sequences$depth <- unlist(lapply(strsplit(sequences$event,"-"),length))
+```
+
+```{r}
+plot1 <- sequences %>%
+  arrange(desc(depth), event) %>%
+  sunburst()
+plot1
+```
+
+<br>
+<br>
+
+### Example 2.3 - Interactive Charts of Nested and Hierarchical Data with 'D3.js'
+
+The general idea of the package is broken down into mostly 2 groups of functions: 
+
+* there are functions that add data, like add_data(), add_nodes(), add_title(), etc
+* there are also functions that can customize your plots, like set_chart_type(), set_legend_parameter(), etc
+* the function D3partitionR() will put everything together 
+
+```{r}
+library(D3partitionR)
+library(data.table)
+```
+
+```{r include=FALSE}
+url <- "https://storage.googleapis.com/kaggle-competitions-data/kaggle/3136/train.csv?GoogleAccessId=web-data@kaggle-161607.iam.gserviceaccount.com&Expires=1522382180&Signature=hPC3B13zq5snZ9JOyZgEnxpy7ywL2QJVxKTnQkFToOw%2BFLzP9hOMg83AUZizTDPmexSPo%2BCR9FYHI53%2Fz3UPeTb2pNtMVjr4HkCuf8V42q%2Foq30tPEoIcFfXdKSAAMU%2Fl6CBblZtF3AhUl5VjQLSuTlATBJ1rBujmthGj0PZ%2BykAFBZVZauzcBEe3eBo9TW5uIhcV38U4MiMWeH%2B%2Bo7JsPw8caBnDTB5Bh3TkYV7cJidIr3bBM0NI6Rg%2BtFanG7w%2Bfp8F%2BpO6M7gh7GG%2BJ%2BqcJAkNrq6TQX3NEvjduJj4ftsI3wIbguYA%2BniASg4GETJsMdJZkixJm2gBtjBDgtSog%3D%3D"
+url <- "https://raw.githubusercontent.com/pcsanwald/kaggle-titanic/master/train.csv"
+```
+
+```{r}
+titanic_data <- fread(url, sep = ",", header = T)
+
+var_names=c('sex','embarked','pclass','survived')
+data_plot=titanic_data[,.N,by=var_names]
+data_plot[,(var_names):=lapply(var_names,function(x){data_plot[[x]]=paste0(x,' ',data_plot[[x]])
+})]
+
+library(magrittr)
+D3partitionR() %>%
+  add_data(data_plot,
+           count ='N',
+           steps=c('sex','embarked','pclass','survived')) %>%
+  add_title('Titanic') %>%
+
+plot()
+```
+
+* the add_data() function tells use what dataframe and variables to use
+* count: refers to defines the size of the nodes
+* steps: steps/levels that need to be plotted 
+
+<br>
+<br>
+<br>
+
+You can change the chart with the set_chart_type() function, which is the following 2 examples: 
+
+### Example 2.4 - Tree map 
+```{r}
+D3partitionR() %>%
+  add_data(data_plot,count = 'N',steps=c('sex','embarked','pclass','survived')) %>%
+  set_chart_type('treemap') %>%
+  plot()
+```
+
+<br>
+<br>
+
+### Example 2.5 - Circle tree map
+```{r}
+D3partitionR() %>%
+  add_data(data_plot,count = 'N',steps=c('sex','embarked','pclass','survived')) %>%
+  set_chart_type('circle_treemap') %>%
+  plot()
+```
+

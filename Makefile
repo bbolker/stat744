@@ -7,8 +7,17 @@ target = Makefile
 
 ##################################################################
 
-Sources += Makefile .ignore .gitignore README.md sub.mk LICENSE.md
-include sub.mk
+Sources += Makefile README.md 
+
+msrepo = https://github.com/dushoff
+ms = makestuff
+-include $(ms)/os.mk
+
+Ignore += $(ms)
+Makefile: $(ms)/Makefile
+$(ms)/Makefile:
+	git clone $(msrepo)/$(ms)
+	ls $@
 
 ######################################################################
 
@@ -19,7 +28,8 @@ Sources += admin/sched.csv
 
 ######################################################################
 
-clonedirs += pages
+## Avoid this huge messy branch/subdirectory
+## clonedirs += pages
 
 rmd += $(wildcard */*.rmd)
 Sources += $(rmd)
@@ -49,6 +59,14 @@ pages/%.html: admin/%.rmd
 	cd admin && $(MAKE) $*.html
 	cp admin/$*.html $@
 
+Sources += platforms/Makefile
+platforms = $(wildcard platforms/*.rmd)
+platforms: $(platforms:platforms/%.rmd=pages/%.html)
+pages/%.html: platforms/%.rmd
+	cd platforms && $(MAKE) $*.html
+	cp platforms/$*.html $@
+
+Ignore += sched.html
 pages/sched.html: admin/sched.csv
 
 ######################################################################
