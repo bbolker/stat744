@@ -1,16 +1,16 @@
 ---
-title: "STAT 744: Data visualization (Winter 2018)"
+title: "STAT 744: Data visualization (Fall 2019)"
 date: "`r as.character(Sys.time())`"
 ---
 
 ## Personnel
 
 - When e-mailing the instructors about the course, **please include "STAT 744" in the subject and your Mac ID in the body of the e-mail**.
-- *Instructor*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff (`dushoff@mcmaster.ca`). 
+- *Instructors*: Ben Bolker (`bolker@mcmaster.ca`) and Jonathan Dushoff (`dushoff@mcmaster.ca`). 
 
 ## Class meetings
 
-Hamilton Hall 207:
+Hamilton Hall (TBA):
 - Mon 10:30-11:20
 - Tue 1:30-3:20
 
@@ -22,7 +22,14 @@ Hamilton Hall 207:
 
 ## Assignments and assessment
 
-- There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project. Final grades will be based on the following components: class participation (15%, see below); homework (30%); class presentations (25%); project (30%).
+- There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project (possibly in pairs or groups). Final grades will be based on the following components: class participation (15%, see below); homework (35%); project presentations (20%); project writeup (30%).
+
+### participation marks
+
+In an attempt to make participation marks more objective, part of this component will be based on out-of-class participation. At various times during the term, you will be asked to write a few sentences to a paragraph on a particular topic. The purpose of these assignments is to assess your general depth of engagement and understanding. This will allow us to give you feedback and will hopefully make the preparation of your final report at the end of the term less stressful. If you do not come to lecture you will not hear about these participatory emails. If you do complete these assignments you will receive a low participation mark. You can also enhance your participation mark by engaging in class.
+
+You can gain your first participation mark by sending an e-mail to the instructors whose subject line is "stat744: <your_macid> read the outline". For example, my subject line would be "math 3MB: bolkerb read the outline".
+
 
 ## Course objective and content
 
@@ -33,11 +40,6 @@ Cleveland, Tufte, and Wilkinson and recent developments and controversies
 in the area of data visualization. For practical applications the course
 will focus on the `ggplot` package for R, but other more specialized
 platforms (e.g. ggobi, leaflet, D3.js) will also be discussed.
-
-The first half of the course will consist of lectures and demonstrations
-presented by the instructors. The second half of the course will shift
-to a student-led model, where students give presentations focusing on
-various advanced topics and work on a group project.
 
 ### part 1: core topics
 
@@ -53,7 +55,7 @@ various advanced topics and work on a group project.
 - approaches to big data
 - colour theory
 
-### part 2: specialized/student-led topics
+### part 2: specialized topics
 
 (which of these topics are covered and in what order will depend on student feedback)
 
@@ -86,13 +88,7 @@ various advanced topics and work on a group project.
     notes, read them over, and then ask your instructor if there is
     something that you do not understand.
 
-3.  No calculators or other aids will be allowed during examinations
-    unless explicitly indicated.
-     
-4.  You will be required to bring your official McMaster University
-    photo identification card to the final examination.
-     
-5.  Students' grades will be returned on Avenue.
+2.  Students' grades will be returned on Avenue.
 
 ### Accommodations
 
@@ -119,7 +115,7 @@ In most cases, missed work or tests will be addressed by reweighting the remaini
 
 ### Late work
 
-All assignments are due, either on Avenue to Learn or as commits to a GitHub repository, prior to class, unless otherwise stated. We will penalize late work by 10% per day.
+All assignments are due, as commits to a GitHub repository, prior to class, unless otherwise stated. We reserve the right to penalize late work by 10% per day.
 
 ### Online component
 
@@ -141,7 +137,3 @@ Some common academic dishonesty issues:
 ----------------------------------------
 
 This outline will be linked from the course home page. However, it is your responsibility to check the course home page and syllabus regularly for further announcements, course handouts, assigned work and its due dates, information about test dates and locations when this information becomes available, downloadable course related material, etc.. Recorded marks for tests and assignments will be posted on Avenue. You should check these once they become available and bring any discrepancies to the attention of the instructor or the TA as soon as possible.
-
-
-
-
