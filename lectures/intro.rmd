@@ -50,12 +50,12 @@ opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4,out.width=400)
 
 General introduction to data viz principles and tools
 
-## Course structures
+## Course structure
 
-- lectures from professors on basic ideas (first half)
+- lectures
 - in-class work
 - homework
-- lectures from students on topics/advanced ideas (second half)
+- student projects & presentations
 
 # Tools
 
@@ -98,7 +98,7 @@ enter commit message > click "Commit" button (*ignore "amend previous commit" bu
     - speed
 	- new hotness
 - disadvantages
-    - minor incompatibilities with base R
+    - (minor) incompatibilities with base R
 	- rapid evolution
 	- non-standard evaluation
 
@@ -129,7 +129,7 @@ x <- group_by(x,course)
 summarise(x,mean_score=mean(score),sd_score=sd(score))
 ```
           
-- equivalent to `plyr::ddply()` or
+- equivalent to
 
 ```{r split_apply_combine,eval=FALSE,echo=TRUE}
 d_split <- split(d,d$var)       ## split
@@ -153,7 +153,7 @@ d_res <- do.call(rbind,d_proc)  ## combine
 
 ## tidyverse: tibbles
 
-- extension of data frames (sort of)
+- extension of data frames
 - differences
     - printing
 	     - only prints first few rows/columns
@@ -177,7 +177,7 @@ d_res <- do.call(rbind,d_proc)  ## combine
 - find patterns in data, explore hypotheses
 - emphasize **robust** approaches
 - minimize (parametric) assumptions
-- Tukey, Cleveland
+- [John Tukey](https://en.wikipedia.org/wiki/John_Tukey), [William Cleveland](https://en.wikipedia.org/wiki/William_S._Cleveland)
 
 ## diagnostic
 
@@ -193,13 +193,13 @@ d_res <- do.call(rbind,d_proc)  ## combine
 - coefficient plots
 - replacement for tables
 - also: tests of inference @wickham_graphical_2010
-- Gelman
+- [Andrew Gelman](https://en.wikipedia.org/wiki/Andrew_Gelman)
 
 ## expository: data-viz
 
 - tell an accurate story
 - high information density
-- Tufte, Cleveland
+- Cleveland, [Edward Tufte](https://en.wikipedia.org/wiki/Edward_Tufte#Criticism_of_Tufte)
 
 ## presentation: info-viz
 
@@ -210,12 +210,14 @@ d_res <- do.call(rbind,d_proc)  ## combine
 
 - present a quick overview of a data set
 - user control
+- business-oriented
 
 ## dynamic
 
+- time dimension
 - engage
-- allow reader to drill down
-- Cook
+- allow viewer to drill down
+- [Dianne Cook](https://en.wikipedia.org/wiki/Dianne_Cook_(statistician))
 
 <!-- http://stackoverflow.com/questions/30990262/applying-css-to-make-code-smaller-in-ioslides-style -->
 
