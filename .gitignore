@@ -32,3 +32,9 @@ pages
 data/shapefiles/*
 \#*#
 .Rhistory
+
+## machinery
+old/
+private/
+makestuff/
+gh-pages/

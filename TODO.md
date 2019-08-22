@@ -1,8 +1,9 @@
+## new (for Fall 2019)
 
-## ASAP
+- clean out repos
+- class list
 
-* HW assignment
-	* Look at the list of presentation topics (including the ones in your head) and send us your top 3, with thoughts (optional) and conflicts (if hard)
+## OLD
 
 * HW ideas:
 	* convert a table of numbers to a graph
