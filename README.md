@@ -6,7 +6,7 @@ Go to [GitHub pages](https://bbolker.github.io/stat744) for a user-friendly (out
 
 **Instructors**: Ben Bolker and Jonathan Dushoff
 
-**Schedule**: Tues 1:30-2:30, Friday 9:30-11:30, location TBA
+**Schedule**: Tues 2:30-3:20, Friday 9:30-11:30, location TBA
 
 **Course goal/plan**: A broad, practically oriented survey of data visualization from a statistical point of view.
 

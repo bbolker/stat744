@@ -2,7 +2,10 @@
 
 - clean out repos
 - class list
-
+- schedule
+    - midterm recess Mon 14 Oct - Sun 20 Oct
+    - classes end Wed Dec 4
+	
 ## OLD
 
 * HW ideas:
