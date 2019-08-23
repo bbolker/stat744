@@ -16,7 +16,7 @@
 	 - size of annotations
 	 - aspect ratio
 - we should make students do more reading
-
+- http://people.eecs.berkeley.edu/~ddgarcia/tufte.html ?
 ## OLD
 
 * HW ideas:
