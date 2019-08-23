@@ -15,6 +15,7 @@
 	 - appropriate redundancy of aesthetics
 	 - size of annotations
 	 - aspect ratio
+- we should make students do more reading
 
 ## OLD
 
