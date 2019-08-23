@@ -5,7 +5,17 @@
 - schedule
     - midterm recess Mon 14 Oct - Sun 20 Oct
     - classes end Wed Dec 4
-	
+- work on Makefile etc. (outline, sched, etc.); nice rmd -> PDF rules?
+- graphics rubric?
+     - ordering of categorical variables
+	 - use of colour
+	 - juxtaposition of salient comparisons
+	 - appropriate axis extents/zero points
+	 - respect of Cleveland hierarchy
+	 - appropriate redundancy of aesthetics
+	 - size of annotations
+	 - aspect ratio
+
 ## OLD
 
 * HW ideas:

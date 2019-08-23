@@ -1,6 +1,7 @@
 ---
 title: intro material
 author: Ben Bolker
+date: "`r format(Sys.time(), '%d %b %Y')`"
 bibliography: ../vis.bib
 csl: reflist2.csl
 output:

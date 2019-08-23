@@ -1,6 +1,6 @@
 ---
 title: "STAT 744: Data visualization (Fall 2019)"
-date: "`r as.character(Sys.time())`"
+date: "`r format(as.character(Sys.time(), '%d %b %Y'))`"
 ---
 
 ## Personnel
@@ -10,25 +10,26 @@ date: "`r as.character(Sys.time())`"
 
 ## Class meetings
 
-Hamilton Hall (TBA):
-- Tues 2:30-3:20
-- Friday 9:30-11:30
+- Tues 2:30-3:20 PM (HH 312)
+- Friday 9:30-11:30 AM (HH 207)
+
+First class (organizational meeting only) will be Sep 6 from 9:30-10 AM.
 
 ## General info
 
-- [**Schedule:** ](./sched.html)
+- Schedule: see separate [**link** ](./sched.html)
 - **Textbook:** Tufte, Cleveland?
 - **Prerequisites:** intermediate proficiency in R
 
 ## Assignments and assessment
 
-- There will be 3-5 homework assignments; students will be responsible for presenting some of the course material, probably in groups; and there will be a final project (possibly in pairs or groups). Final grades will be based on the following components: class participation (15%, see below); homework (35%); project presentations (20%); project writeup (30%).
+- There will be some weekly reading assignments and 3-7 homework assignments, as well as a final project (possibly in pairs or groups). Final grades will be based on the following components: class participation (15%, see below); homework (35%); project presentations (20%); project writeup (30%).
 
 ### participation marks
 
-In an attempt to make participation marks more objective, part of this component will be based on out-of-class participation. At various times during the term, you will be asked to write a few sentences to a paragraph on a particular topic. The purpose of these assignments is to assess your general depth of engagement and understanding. This will allow us to give you feedback and will hopefully make the preparation of your final report at the end of the term less stressful. If you do not come to lecture you will not hear about these participatory emails. If you do complete these assignments you will receive a low participation mark. You can also enhance your participation mark by engaging in class.
+In an attempt to make participation marks more objective, part of this component will be based on out-of-class participation. At various times during the term, you will be asked to write a few sentences to a paragraph on a particular topic. The purpose of these assignments is to assess your general depth of engagement and understanding. If you don't come to lecture you might not hear about these participatory emails. If you don't complete these assignments you will receive a low participation mark. You can also enhance your participation mark by engaging in class.
 
-You can gain your first participation mark by sending an e-mail to the instructors whose subject line is "stat744: <your_macid> read the outline". For example, my subject line would be "math 3MB: bolkerb read the outline".
+You can gain your first participation mark by sending an e-mail to the instructors with the subject line "stat 744: <your_macid> read the outline". For example, my subject line would be "stat 744: bolkerb read the outline".
 
 
 ## Course objective and content
@@ -131,9 +132,7 @@ Some common academic dishonesty issues:
 
 - *Plagiarism*: For example, the submission of work that is not one's own or for which other credit has been obtained.
 - *Improper collaboration*: In this course, you are encouraged to discuss the assigned problems with other students in your class. You may *discuss* the solutions to problem sets, but **you must write up your solutions yourself without copying phrasing from other students’ work. If you work with others, you must clearly indicate on your write-up who you worked with.**  When work is not explicitly assigned as a group project you must write the solutions in your own words without referring to any other students' work. The copying or even paraphrasing of anyone's solutions will be considered academic dishonesty. For group projects, you will be asked to report your own assessment of how you contributed to the group's work.
-- *Copying or using unauthorized aids in examinations*: In this course you are not allowed to talk to or communicate in any way (e.g. pass notes) with anyone but the instructor or the invigilators during an examination. In the case of a take-home exam, we will clearly indicate at the time what resources you may or may not use. You are on your honor to observe any specified time limits and to refrain from communicating with anyone other than the instructor/TA about the contents of the exam.
-- While it does not technically constitute academic dishonesty, *continuing to write once the announcement that the allotted time for a test or examination is over* without the express consent of the instructor or one of the invigilators will be penalized.
  
 ----------------------------------------
 
-This outline will be linked from the course home page. However, it is your responsibility to check the course home page and syllabus regularly for further announcements, course handouts, assigned work and its due dates, information about test dates and locations when this information becomes available, downloadable course related material, etc.. Recorded marks for tests and assignments will be posted on Avenue. You should check these once they become available and bring any discrepancies to the attention of the instructor or the TA as soon as possible.
+This outline will be linked from the course home page. However, it is your responsibility to check the course home page and syllabus regularly for further announcements, course handouts, assigned work and its due dates, information about test dates and locations when this information becomes available, downloadable course related material, etc.. Recorded marks for tests and assignments will be posted on Avenue. You should check these once they become available and bring any discrepancies to the attention of the instructors as soon as possible.
