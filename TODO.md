@@ -17,6 +17,8 @@
 	 - aspect ratio
 - we should make students do more reading
 - http://people.eecs.berkeley.edu/~ddgarcia/tufte.html ?
+- https://serialmentor.com/dataviz/
+
 ## OLD
 
 * HW ideas:
