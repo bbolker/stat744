@@ -32,6 +32,7 @@ pages
 data/shapefiles/*
 \#*#
 .Rhistory
+.#*
 
 ## machinery
 old/
