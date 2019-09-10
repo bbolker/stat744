@@ -136,7 +136,7 @@ DOUBLEPDF orchard.Rout
 
 Making room
 
-DOUBLEFIG orchard.Rout-1.pdf orchard.Rout-2.pdf
+DOUBLEFIG orchard.Rout-2.pdf orchard.Rout-3.pdf
 
 ----------------------------------------------------------------------
 
@@ -156,25 +156,19 @@ Data shape
 
 Showing points
 
-FIG orchard.Rout-3.pdf
-
-----------------------------------------------------------------------
-
-Combination
-
-FIG orchard.Rout-4.pdf
+FIG orchard.Rout-6.pdf
 
 ----------------------------------------------------------------------
 
 Boxplot
 
-FIG orchard.Rout-5.pdf
+FIG orchard.Rout-7.pdf
 
 ----------------------------------------------------------------------
 
 Violin plot
 
-FIG orchard.Rout-6.pdf
+FIG orchard.Rout-8.pdf
 
 ----------------------------------------------------------------------
 
